@@ -1,3 +1,4 @@
+*.gerated.sln
 *.swp
 *.*~
 project.lock.json
