@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-08-2024 a las 05:36:27
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 20-08-2024 a las 20:42:17
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -77,12 +77,12 @@ CREATE TABLE `inmuebles` (
 --
 
 CREATE TABLE `inquilinos` (
-  `id_inquilino` int(11) NOT NULL,
-  `dni` varchar(20) NOT NULL,
-  `telefono` varchar(30) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
-  `telefono_secundario` varchar(30) DEFAULT NULL
+  `Id` int(11) NOT NULL,
+  `Dni` varchar(20) NOT NULL,
+  `Apellido` varchar(50) NOT NULL,
+  `Nombre` varchar(50) NOT NULL,
+  `Telefono` varchar(30) NOT NULL,
+  `TelefonoSecundario` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -194,8 +194,8 @@ ALTER TABLE `inmuebles`
 -- Indices de la tabla `inquilinos`
 --
 ALTER TABLE `inquilinos`
-  ADD PRIMARY KEY (`id_inquilino`),
-  ADD UNIQUE KEY `dni` (`dni`);
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Dni` (`Dni`) USING BTREE;
 
 --
 -- Indices de la tabla `pagos`
@@ -251,7 +251,7 @@ ALTER TABLE `inmuebles`
 -- AUTO_INCREMENT de la tabla `inquilinos`
 --
 ALTER TABLE `inquilinos`
-  MODIFY `id_inquilino` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
@@ -291,7 +291,7 @@ ALTER TABLE `auditoria`
 -- Filtros para la tabla `contratos`
 --
 ALTER TABLE `contratos`
-  ADD CONSTRAINT `contratos_ibfk_1` FOREIGN KEY (`id_inquilino`) REFERENCES `inquilinos` (`id_inquilino`),
+  ADD CONSTRAINT `contratos_ibfk_1` FOREIGN KEY (`id_inquilino`) REFERENCES `inquilinos` (`Id`),
   ADD CONSTRAINT `contratos_ibfk_2` FOREIGN KEY (`id_inmueble`) REFERENCES `inmuebles` (`id_inmueble`);
 
 --
