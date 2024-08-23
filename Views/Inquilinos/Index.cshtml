@@ -1,0 +1,62 @@
+@model IEnumerable<InmobiliariaVargasHuancaTorrez.Models.Inquilino>
+@{
+  ViewData["Title"] = "Listado de Inquilinos";
+}
+
+<div class="text-center">
+  <h2 class="mt-4">Listado de Inquilinos </h2>
+  <a href="/Inquilinos/Editar" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear inquilino</a>
+</div>
+
+<table class="table" id="tablaInquilinos">
+  <thead>
+    <tr>
+      <th>
+        @Html.DisplayNameFor(model => model.Dni)
+      </th>
+      <th>
+        @Html.DisplayNameFor(model => model.Apellido)
+      </th>
+      <th>
+        @Html.DisplayNameFor(model => model.Nombre)
+      </th>
+      <th>
+        @Html.DisplayNameFor(model => model.Estado)
+      </th>
+      <th>
+        Acciones
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>
+          @Html.DisplayFor(modelItem => item.Dni)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Apellido)
+        </td>
+        <td>
+          @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+          @(item.Estado ? "Activo" : "Inactivo")
+        </td>
+        <td>
+          <a href="/Inquilinos/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i> Detalle</a>
+          <a href="/Inquilinos/Editar/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i> Editar</a>
+          @if (item.Estado)
+          {
+            <a href="/Inquilinos/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i> Eliminar</a>
+          }
+          else
+          {
+            <a href="/Inquilinos/Activar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Activar</a>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
