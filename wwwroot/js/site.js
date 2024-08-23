@@ -1,4 +1,24 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿/**
+ *  Script para el manejo de DataTable
+ */
 
-// Write your JavaScript code.
+let options = {
+  language: {
+    "emptyTable": "No hay datos disponibles en la tabla",
+    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+    "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+    "infoFiltered": "(Filtrado de _MAX_ registros en total)",
+    "lengthMenu": "_MENU_ registros por página",
+    "loadingRecords": "Cargando...",
+    "processing": "Procesando...",
+    "search": "Buscar:",
+    "zeroRecords": "No se encontraron registros coincidentes"
+  },
+  columnDefs: [
+    { className: 'dt-center', targets: '_all' }
+  ],
+  ordering: true,
+  order: []
+}
+
+new DataTable("#tablaInquilinos", options);
