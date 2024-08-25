@@ -12,7 +12,7 @@ public class RepositorioPropietario
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
             var query = $@"SELECT {nameof(Propietario.Id)}, {nameof(Propietario.Dni)}, {nameof(Propietario.Apellido)}, {nameof(Propietario.Nombre)},  {nameof(Propietario.Telefono)},  {nameof(Propietario.Direccion)},  {nameof(Propietario.Estado)} 
-				FROM propietarios WHERE {nameof(Propietario.Estado)} = 1";
+				FROM propietarios";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 connection.Open();
@@ -36,35 +36,6 @@ public class RepositorioPropietario
         }
     }
 
-    public List<Propietario> ObtenerEliminados()
-    {
-        List<Propietario> propietarios = new List<Propietario>();
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
-        {
-            var query = $@"SELECT {nameof(Propietario.Id)}, {nameof(Propietario.Dni)}, {nameof(Propietario.Apellido)}, {nameof(Propietario.Nombre)},  {nameof(Propietario.Telefono)},  {nameof(Propietario.Direccion)},  {nameof(Propietario.Estado)} 
-				FROM propietarios WHERE {nameof(Propietario.Estado)} = 0";
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                connection.Open();
-                var reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    propietarios.Add(new Propietario
-                    {
-                        Id = reader.GetInt32(nameof(Propietario.Id)),
-                        Dni = reader.GetString(nameof(Propietario.Dni)),
-                        Apellido = reader.GetString(nameof(Propietario.Apellido)),
-                        Nombre = reader.GetString(nameof(Propietario.Nombre)),
-                        Telefono = reader.GetString(nameof(Propietario.Telefono)),
-                        Direccion = reader.GetString(nameof(Propietario.Direccion)),
-                        Estado = reader.GetBoolean(nameof(Propietario.Estado))
-                    });
-                }
-                connection.Close();
-            }
-            return propietarios;
-        }
-    }
 
     public Propietario? Obtener(int id)
     {

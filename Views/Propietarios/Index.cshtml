@@ -3,15 +3,13 @@
     ViewData["Title"] = "Listado de Propietarios";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Lista de Propietarios</h1>
-</div>
-<h4>
-	<a href="/Propietarios/Edicion">Crear</a> 	<a href="/Propietarios/Eliminados/">Eliminados</a>
 
-</h4>
-<table class="table">
-    <thead>
+<div class="text-center">
+    <h2 class="mt-4">Listado de Propietarios </h2>
+    <a href="/Propietarios/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Propietario</a>
+</div>
+<table class="table" id="tablaPropietarios">
+    <thead> 
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Id)
@@ -25,56 +23,45 @@
             <th>
                 @Html.DisplayNameFor(model => model.Dni)
             </th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
+
         @foreach (var item in Model)
         {
-            //MOSTRAR LAS QUE ESTEN CON ESTADO TRUE/1
-            if (item.Estado == true)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Apellido)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Dni)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Editar", "Edicion", new { id = item.Id }) |
-                        @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Id })
-                    </td>
-                </tr>
-            }else{
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Apellido)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Dni)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Editar", "Edicion", new { id = item.Id }) |
-                        @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Habilitar", "Habilitar", new { id = item.Id })
-                    </td>
-                </tr>
-            }
-
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dni)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @(item.Estado ? "Activo" : "Inactivo")
+                </td>
+                <td>
+                    <a href="/Propietarios/Detalle/@item.Id" class="btn btn-sm btn-primary"><i
+                            class="bi bi-info-circle"></i>
+                        Detalle</a>
+                    <a href="/Propietarios/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i>
+                        Editar</a>
+                    @if (item.Estado)
+                    {
+                        <a href="/Propietarios/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i>
+                            Eliminar</a>
+                    }
+                    else
+                    {
+                        <a href="/Inquilinos/Activar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i>
+                            Activar</a>
+                    }
+                </td>
+            </tr>
         }
+
     </tbody>
 </table>

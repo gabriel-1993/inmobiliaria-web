@@ -21,26 +21,21 @@ public class PropietariosController : Controller
         return View(lista);
     }
 
-    public IActionResult Eliminados()
-    {
-        var lista = repo.ObtenerEliminados();
-        return View(lista);
-    }
 
-public IActionResult Edicion(int? id)
-{
-    if (id == null || id == 0)
+    public IActionResult Edicion(int? id)
     {
-        // Crear un nuevo propietario
-        return View(new Propietario());
+        if (id == null || id == 0)
+        {
+            // Crear un nuevo propietario
+            return View(new Propietario());
+        }
+        else
+        {
+            // Obtener el propietario con el id proporcionado
+            var propietario = repo.Obtener(id.Value); // Usa id.Value para obtener el valor int
+            return View(propietario);
+        }
     }
-    else
-    {
-        // Obtener el propietario con el id proporcionado
-        var propietario = repo.Obtener(id.Value); // Usa id.Value para obtener el valor int
-        return View(propietario);
-    }
-}
 
     [HttpPost]
 
@@ -63,12 +58,24 @@ public IActionResult Edicion(int? id)
         return RedirectToAction(nameof(Index));
     }
 
+
     public IActionResult Habilitar(int id)
     {
         repo.Habilitar(id);
         return RedirectToAction(nameof(Index));
     }
 
+
+    public IActionResult Detalle(int id)
+    {
+        var propietario = repo.Obtener(id);
+        if (propietario == null)
+        {
+            return NotFound();
+        }
+        return View(propietario);
+    }
+    
     public IActionResult Privacy()
     {
         return View();
