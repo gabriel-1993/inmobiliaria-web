@@ -1,0 +1,82 @@
+﻿@model InmobiliariaVargasHuancaTorrez.Models.Inmueble
+@{
+    ViewData["Title"] = "Edición de Inmueble";
+}
+
+
+<div class="row mt-4 d-flex justify-content-center">
+    <div class="col-md-5">
+        @if (@Model.Id_inmueble == 0)
+    {
+            <h2 class="text-center">Crear inmueble</h2>
+    }
+    else
+    {
+            <h2 class="text-center">Editar inmueble</h2>
+    }
+        <form asp-action="Guardar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="Id_inmueble" value="@Model.Id_inmueble" />
+            
+            <div class="form-group">
+                <label asp-for="Id_propietario" class="control-label"></label>
+                <input asp-for="Id_propietario" class="form-control" />
+                <span asp-validation-for="Id_propietario" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Id_tipo" class="control-label"></label>
+                <input asp-for="Id_tipo" class="form-control" />
+                <span asp-validation-for="Id_tipo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Uso" class="control-label"></label>
+                <select asp-for="Uso" class="form-control">
+                <option value="">Selecciona un uso</option>
+                <option value="Comercial">Comercial</option>
+                <option value="Residencial">Residencial</option>
+                </select>
+                <span asp-validation-for="Uso" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="CantidadAmbientes" class="control-label"></label>
+                <input asp-for="CantidadAmbientes" class="form-control" />
+                <span asp-validation-for="CantidadAmbientes" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Coordenadas" class="control-label"></label>
+                <input asp-for="Coordenadas" class="form-control" />
+                <span asp-validation-for="Coordenadas" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                <input asp-for="Estado" class="form-check-input" type="checkbox" />
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+            
+            <br>
+            
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+<div>
+    <a asp-action="Index" class="btn btn-primary">Volver</a>
+</div>
+

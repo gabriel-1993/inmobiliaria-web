@@ -1,0 +1,54 @@
+﻿@model IEnumerable<InmobiliariaVargasHuancaTorrez.Models.Inmueble>
+@{
+    ViewData["Title"] = "Listado de Inmueble";
+}
+
+<div class="text-center">
+    <h2 class="mt-4">Listado de Inmuebles</h2>
+    <a href="/Inmuebles/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Inmueble</a>
+</div>
+
+<table class="table" id="tablaInmuebles">
+    <thead>
+        <tr>
+            <th><p>Numero</p></th>
+            <th>@Html.DisplayNameFor(model => model.Id_propietario)</th>
+            <th>@Html.DisplayNameFor(model => model.Id_tipo)</th>
+            <th>@Html.DisplayNameFor(model => model.Direccion)</th>
+            <th>@Html.DisplayNameFor(model => model.Uso)</th>
+            <th>@Html.DisplayNameFor(model => model.CantidadAmbientes)</th>
+            <th>@Html.DisplayNameFor(model => model.Coordenadas)</th>
+            <th>@Html.DisplayNameFor(model => model.Precio)</th>
+            <th>@Html.DisplayNameFor(model => model.Estado)</th>
+            <th>Acciones</th> <!-- Columna para las acciones -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="@(item.Estado ? "" : "table-danger")">
+                <td>@Html.DisplayFor(modelItem => item.Id_inmueble)</td>
+                <td>@Html.DisplayFor(modelItem => item.Id_propietario)</td>
+                <td>@Html.DisplayFor(modelItem => item.Id_tipo)</td>
+                <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                <td>@Html.DisplayFor(modelItem => item.Uso)</td>
+                <td>@Html.DisplayFor(modelItem => item.CantidadAmbientes)</td>
+                <td>@Html.DisplayFor(modelItem => item.Coordenadas)</td>
+                <td>@Html.DisplayFor(modelItem => item.Precio)</td>
+                <td>@(item.Estado ? "Activo" : "Inactivo")</td>
+                <td>
+                    <a href="/Inmuebles/Detalle/@item.Id_inmueble" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i> Detalle</a>
+                    <a href="/Inmuebles/Edicion/@item.Id_inmueble" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i> Editar</a>
+                    @if (item.Estado)
+                    {
+                        <a href="/Inmuebles/Eliminar/@item.Id_inmueble" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i> Eliminar</a>
+                    }
+                    else
+                    {
+                        <a href="/Inmuebles/Activar/@item.Id_inmueble" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Activar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
