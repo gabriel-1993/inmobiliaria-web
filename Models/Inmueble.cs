@@ -2,6 +2,8 @@ namespace InmobiliariaVargasHuancaTorrez.Models;
 
 public class Inmueble
 {
+
+    public Propietario Propietario { get; set; }= new Propietario();
     public int Id_inmueble { get; set; }
 
     public int Id_propietario { get; set; } 

@@ -14,11 +14,36 @@ public class InmueblesController : Controller
     repo = new RepositorioInmueble();
   }
 
-  public IActionResult Index()
-  {
+  public IActionResult Index(string estado)
+{
     var lista = repo.ObtenerTodos();
+    var repoPropietario = new RepositorioPropietario();
+
+    // Crear un diccionario para mapear Id_propietario con los nombres
+    var propietariosDict = repoPropietario.ObtenerTodos()
+                                           .ToDictionary(p => p.Id, p => p.Nombre + " " + p.Apellido);
+
+    // Asignar el nombre del propietario a cada inmueble
+    foreach (var inmueble in lista)
+    {
+        if (propietariosDict.TryGetValue(inmueble.Id_propietario, out var nombrePropietario))
+        {
+            inmueble.Propietario = new Propietario { Nombre = nombrePropietario };
+        }
+    }
+
+    // Filtrar los inmuebles según el estado
+    if (estado == "activo")
+    {
+        lista = lista.Where(i => i.Estado).ToList();
+    }
+    else if (estado == "desactivado")
+    {
+        lista = lista.Where(i => !i.Estado).ToList();
+    }
+
     return View(lista);
-  }
+}
 
   public IActionResult Edicion(int id)
   {
