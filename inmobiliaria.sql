@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-08-2024 a las 23:50:37
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 28-08-2024 a las 17:24:52
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ CREATE TABLE `auditoria` (
   `Accion` varchar(255) NOT NULL,
   `FechaHora` datetime NOT NULL,
   `Detalle` varchar(255) DEFAULT NULL,
-  `Estado` tinyint(1) NOT NULL
+  `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -51,7 +51,7 @@ CREATE TABLE `contratos` (
   `MontoAlquiler` decimal(10,2) NOT NULL,
   `FechaTerminacion` date DEFAULT NULL,
   `Multa` decimal(10,2) DEFAULT NULL,
-  `Estado` tinyint(1) NOT NULL
+  `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -85,7 +85,7 @@ CREATE TABLE `inquilinos` (
   `Nombre` varchar(50) NOT NULL,
   `Telefono` varchar(30) NOT NULL,
   `TelefonoSecundario` varchar(30) DEFAULT NULL,
-  `Estado` tinyint(1) NOT NULL
+  `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -93,7 +93,7 @@ CREATE TABLE `inquilinos` (
 --
 
 INSERT INTO `inquilinos` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `TelefonoSecundario`, `Estado`) VALUES
-(1, '22222', 'Messi', 'Leonel', '987654432', '987876654', 1),
+(1, '22222', 'Messi', 'Leonel', '987654432', '987876654', 0),
 (2, '321', 'Test', 'Prueba', '123', '456', 1),
 (3, '321322', 'Martino', 'Tata', '567567343', '456456546', 1),
 (8, '321222', 'asd', 'wewq', '123445', NULL, 0),
@@ -136,11 +136,12 @@ CREATE TABLE `propietarios` (
 --
 
 INSERT INTO `propietarios` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `Direccion`, `Estado`) VALUES
-(1, '123459', 'Peressss', 'Juannnn', '2664', 'SL capital, Calle 3 N123', 1),
-(2, '1234', 'Sosa', 'Mariaaa', '2665', 'SL capital, calle 4 n1234', 1),
-(3, '12567', 'prueba', 'pepe', '1254', 'San Luis, La Punta. m3 c19', 0),
+(1, '123459', 'Perez', 'Juan', '2664', 'SL capital, Calle 3 N123', 1),
+(2, '1234', 'Sosa', 'Maria', '2665', 'SL capital, calle 4 n1234', 1),
+(3, '12567', 'prueba', 'pepe', '1254', 'San Luis, La Punta. m3 c19', 1),
 (4, '101918', 'prueba', 'prueba', '12567', 'san luis capital m5 c6', 1),
-(5, '89877878', 'jhhjkj', 'jkhkhj', '877878', 'fgjgkhjhl hlhkhkl', 1);
+(5, '89877878', 'jhhjkj', 'jkhkhj', '877878', 'fgjgkhjhl hlhkhkl', 0),
+(6, '124343434', 'prueba', 'Ejemplo', '121212', 'asdasd', 0);
 
 -- --------------------------------------------------------
 
@@ -208,8 +209,7 @@ ALTER TABLE `inmuebles`
 -- Indices de la tabla `inquilinos`
 --
 ALTER TABLE `inquilinos`
-  ADD PRIMARY KEY (`Id`),
-  ADD UNIQUE KEY `Dni` (`Dni`) USING BTREE;
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indices de la tabla `pagos`
@@ -222,8 +222,7 @@ ALTER TABLE `pagos`
 -- Indices de la tabla `propietarios`
 --
 ALTER TABLE `propietarios`
-  ADD PRIMARY KEY (`Id`),
-  ADD UNIQUE KEY `dni` (`Dni`);
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indices de la tabla `tipos_inmueble`
@@ -275,7 +274,7 @@ ALTER TABLE `pagos`
 -- AUTO_INCREMENT de la tabla `propietarios`
 --
 ALTER TABLE `propietarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_inmueble`
