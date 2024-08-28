@@ -22,7 +22,10 @@ public class InmueblesController : Controller
 
   public IActionResult Edicion(int id)
   {
-    if(id == 0) 
+    var repoPropietario = new RepositorioPropietario(); // Asegúrate de tener un repositorio para los propietarios
+    ViewBag.Propietario = repoPropietario.ObtenerTodos(); // Asigna la lista de propietarios al ViewBag
+
+    if (id == 0)
     {
       return View(new Inmueble());
     }
@@ -35,19 +38,19 @@ public class InmueblesController : Controller
 
   [HttpPost]
   [HttpPost]
-public IActionResult Guardar(int id_inmueble, Inmueble inmueble)
-{
+  public IActionResult Guardar(int id_inmueble, Inmueble inmueble)
+  {
     if (id_inmueble == 0)
     {
-        repo.Agregar(inmueble);
+      repo.Agregar(inmueble);
     }
     else
     {
-        inmueble.Id_inmueble = id_inmueble; // Asegurarse de asignar el Id existente
-        repo.Modificar(inmueble);
+      inmueble.Id_inmueble = id_inmueble; // Asegurarse de asignar el Id existente
+      repo.Modificar(inmueble);
     }
     return RedirectToAction(nameof(Index));
-}
+  }
 
 
   public IActionResult Eliminar(int id)

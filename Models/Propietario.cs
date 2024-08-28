@@ -16,6 +16,14 @@ public class Propietario
 
     public bool Estado { get; set; }
 
+    public override string ToString()
+    {
+        var res = $"{Nombre} {Apellido} ";
+        if(!String.IsNullOrEmpty(Dni)){
+            res += $"({Dni})";
+        }
+        return res;
+    }
 }
 
 

@@ -1,6 +1,7 @@
 ﻿@model InmobiliariaVargasHuancaTorrez.Models.Inmueble
 @{
     ViewData["Title"] = "Edición de Inmueble";
+    var listProp = (IList<Propietario>)ViewBag.Propietario;
 }
 
 
@@ -20,8 +21,11 @@
             
             <div class="form-group">
                 <label asp-for="Id_propietario" class="control-label"></label>
-                <input asp-for="Id_propietario" class="form-control" />
-                <span asp-validation-for="Id_propietario" class="text-danger"></span>
+                <select class="form-control" name="Propietario">
+                    @foreach (var item in listProp){
+                            <option value="@item.Id">@(item.ToString())</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Id_tipo" class="control-label"></label>
