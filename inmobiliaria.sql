@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-08-2024 a las 17:24:52
+-- Tiempo de generación: 30-08-2024 a las 04:12:21
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -51,8 +51,16 @@ CREATE TABLE `contratos` (
   `MontoAlquiler` decimal(10,2) NOT NULL,
   `FechaTerminacion` date DEFAULT NULL,
   `Multa` decimal(10,2) DEFAULT NULL,
-  `Estado` tinyint(1) NOT NULL DEFAULT 1
+  `Estado` tinyint(1) NOT NULL DEFAULT 1,
+  `Id_Propietario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `contratos`
+--
+
+INSERT INTO `contratos` (`Id`, `Id_Inquilino`, `Id_Inmueble`, `FechaInicio`, `FechaFin`, `MontoAlquiler`, `FechaTerminacion`, `Multa`, `Estado`, `Id_Propietario`) VALUES
+(2, 2, 2, '2024-08-01', '2024-08-08', 190.00, '2024-08-08', 0.00, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -71,6 +79,14 @@ CREATE TABLE `inmuebles` (
   `Precio` decimal(10,2) NOT NULL,
   `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `inmuebles`
+--
+
+INSERT INTO `inmuebles` (`Id`, `Id_Propietario`, `Id_Tipo`, `Direccion`, `Uso`, `CantidadAmbientes`, `Coordenadas`, `Precio`, `Estado`) VALUES
+(1, 2, 3, 'San Luis, Nogoli. Calle Principal 103', 'Residencial', 3, '100.20', 150000.00, 1),
+(2, 3, 4, 'San Luis capital, San Martin 997', 'Residencial', 1, '400,20', 180000.00, 1);
 
 -- --------------------------------------------------------
 
@@ -93,7 +109,7 @@ CREATE TABLE `inquilinos` (
 --
 
 INSERT INTO `inquilinos` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `TelefonoSecundario`, `Estado`) VALUES
-(1, '22222', 'Messi', 'Leonel', '987654432', '987876654', 0),
+(1, '22222', 'Messi', 'Leonel', '987654432', '987876654', 1),
 (2, '321', 'Test', 'Prueba', '123', '456', 1),
 (3, '321322', 'Martino', 'Tata', '567567343', '456456546', 1),
 (8, '321222', 'asd', 'wewq', '123445', NULL, 0),
@@ -136,7 +152,7 @@ CREATE TABLE `propietarios` (
 --
 
 INSERT INTO `propietarios` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `Direccion`, `Estado`) VALUES
-(1, '123459', 'Perez', 'Juan', '2664', 'SL capital, Calle 3 N123', 1),
+(1, '123459', 'Perez', 'Juan', '2664', 'SL capital, Calle 3 N123', 0),
 (2, '1234', 'Sosa', 'Maria', '2665', 'SL capital, calle 4 n1234', 1),
 (3, '12567', 'prueba', 'pepe', '1254', 'San Luis, La Punta. m3 c19', 1),
 (4, '101918', 'prueba', 'prueba', '12567', 'san luis capital m5 c6', 1),
@@ -195,7 +211,8 @@ ALTER TABLE `auditoria`
 ALTER TABLE `contratos`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `id_inmueble` (`Id_Inmueble`),
-  ADD KEY `id_inquilino` (`Id_Inquilino`) USING BTREE;
+  ADD KEY `id_inquilino` (`Id_Inquilino`) USING BTREE,
+  ADD KEY `fk_propietario` (`Id_Propietario`);
 
 --
 -- Indices de la tabla `inmuebles`
@@ -250,13 +267,13 @@ ALTER TABLE `auditoria`
 -- AUTO_INCREMENT de la tabla `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `inmuebles`
 --
 ALTER TABLE `inmuebles`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilinos`
@@ -303,7 +320,8 @@ ALTER TABLE `auditoria`
 --
 ALTER TABLE `contratos`
   ADD CONSTRAINT `contratos_ibfk_1` FOREIGN KEY (`Id_Inquilino`) REFERENCES `inquilinos` (`Id`),
-  ADD CONSTRAINT `contratos_ibfk_2` FOREIGN KEY (`Id_Inmueble`) REFERENCES `inmuebles` (`Id`);
+  ADD CONSTRAINT `contratos_ibfk_2` FOREIGN KEY (`Id_Inmueble`) REFERENCES `inmuebles` (`Id`),
+  ADD CONSTRAINT `fk_propietario` FOREIGN KEY (`Id_Propietario`) REFERENCES `inmuebles` (`Id_Propietario`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `inmuebles`

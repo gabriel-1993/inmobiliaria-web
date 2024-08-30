@@ -24,3 +24,4 @@ let options = {
 new DataTable("#tablaInquilinos", options);
 new DataTable("#tablaPropietarios", options);
 new DataTable("#tablaInmuebles", options);
+new DataTable("#tablaContratos", options);
