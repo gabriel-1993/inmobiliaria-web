@@ -6,101 +6,184 @@ public class RepositorioContrato
 {
     string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
 
+
     public List<Contrato> ObtenerTodos()
     {
         List<Contrato> listaContratos = new List<Contrato>();
 
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = $@"SELECT {nameof(Contrato.Id)}, {nameof(Contrato.Id_Inquilino)}, {nameof(Contrato.Id_Inmueble)}, {nameof(Contrato.FechaInicio)},  {nameof(Contrato.FechaTerminacion)},  {nameof(Contrato.Estado)}
-				FROM contratos";
+            var query = $@"
+                        SELECT 
+                                c.Id AS ContratoId,
+                                c.Id_Inquilino AS ContratoId_Inquilino, 
+                                c.Id_Inmueble AS ContratoId_Inmueble, 
+                                c.FechaInicio,  
+                                c.FechaTerminacion,  
+                                c.Estado AS ContratoEstado,
+                                i.Id AS InmuebleId,
+                                i.Id_propietario AS InmuebleId_propietario,
+                                i.Id_tipo AS InmuebleId_tipo,
+                                i.Direccion AS InmuebleDireccion,
+                                i.Uso AS InmuebleUso,
+                                i.CantidadAmbientes AS InmuebleCantidadAmbientes,
+                                i.Coordenadas AS InmuebleCoordenadas,
+                                i.Precio AS InmueblePrecio,
+                                i.Estado AS InmuebleEstado,
+                                p.Id AS PropietarioId,
+                                p.Nombre AS PropietarioNombre,
+                                p.Apellido AS PropietarioApellido,
+                                p.Telefono AS PropietarioTelefono,
+                                inq.Id AS InquilinoId,
+                                inq.Nombre AS InquilinoNombre,
+                                inq.Apellido AS InquilinoApellido,
+                                inq.Telefono AS InquilinoTelefono
+                            FROM contratos c
+                            JOIN inmuebles i ON c.Id_Inmueble = i.Id
+                            JOIN propietarios p ON i.Id_propietario = p.Id
+                            JOIN inquilinos inq ON c.Id_Inquilino = inq.Id";
+
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 connection.Open();
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    listaContratos.Add(new Contrato
+                    var contrato = new Contrato
                     {
-                        Id = reader.GetInt32(nameof(Contrato.Id)),
-                        Id_Inquilino = reader.GetInt32(nameof(Contrato.Id_Inquilino)),
-                        Id_Inmueble = reader.GetInt32(nameof(Contrato.Id_Inmueble)),
-                        FechaInicio = reader.GetDateTime(nameof(Contrato.FechaInicio)),
+                        Id = reader.GetInt32("ContratoId"),
+                        Id_Inquilino = reader.GetInt32("ContratoId_Inquilino"),
+                        Id_Inmueble = reader.GetInt32("ContratoId_Inmueble"),
+                        FechaInicio = reader.GetDateTime("FechaInicio"),
                         FechaTerminacion = reader.IsDBNull(reader.GetOrdinal("FechaTerminacion")) ? (DateTime?)null : reader.GetDateTime("FechaTerminacion"),
-                        Estado = reader.GetBoolean(nameof(Contrato.Estado))
-                    });
+                        Estado = reader.GetBoolean("ContratoEstado"),
+                        Inquilino = new Inquilino
+                        {
+                            Id = reader.GetInt32("InquilinoId"),
+                            Nombre = reader.GetString("InquilinoNombre"),
+                            Apellido = reader.GetString("InquilinoApellido"),
+                            Telefono = reader.GetString("InquilinoTelefono"),
+                        },
+                        Inmueble = new Inmueble
+                        {
+                            Id_inmueble = reader.GetInt32("InmuebleId"),
+                            Id_propietario = reader.GetInt32("InmuebleId_propietario"),
+                            Id_tipo = reader.GetInt32("InmuebleId_tipo"),
+                            Direccion = reader.GetString("InmuebleDireccion"),
+                            Uso = reader.GetString("InmuebleUso"),
+                            CantidadAmbientes = reader.GetInt32("InmuebleCantidadAmbientes"),
+                            Coordenadas = reader.GetString("InmuebleCoordenadas"),
+                            Precio = reader.GetDouble("InmueblePrecio"),
+                            Estado = reader.GetBoolean("InmuebleEstado"),
+                            Propietario = new Propietario
+                            {
+                                Id = reader.GetInt32("PropietarioId"),
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido"),
+                                Telefono = reader.GetString("PropietarioTelefono"),
+                            }
+                        }
+                    };
+
+                    listaContratos.Add(contrato);
                 }
                 connection.Close();
             }
-            return listaContratos;
+        }
+
+        return listaContratos;
+    }
+
+
+public Contrato? Obtener(int id)
+{
+    Contrato? contrato = null;
+
+    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    {
+        var query = $@"
+            SELECT 
+                c.Id AS ContratoId,
+                c.Id_Inquilino AS ContratoId_Inquilino, 
+                c.Id_Inmueble AS ContratoId_Inmueble, 
+                c.FechaInicio,  
+                c.FechaTerminacion,  
+                c.Estado AS ContratoEstado,
+                i.Id AS InmuebleId,
+                i.Id_propietario AS InmuebleId_propietario,
+                i.Id_tipo AS InmuebleId_tipo,
+                i.Direccion AS InmuebleDireccion,
+                i.Uso AS InmuebleUso,
+                i.CantidadAmbientes AS InmuebleCantidadAmbientes,
+                i.Coordenadas AS InmuebleCoordenadas,
+                i.Precio AS InmueblePrecio,
+                i.Estado AS InmuebleEstado,
+                p.Id AS PropietarioId,
+                p.Nombre AS PropietarioNombre,
+                p.Apellido AS PropietarioApellido,
+                p.Telefono AS PropietarioTelefono,
+                inq.Id AS InquilinoId,
+                inq.Nombre AS InquilinoNombre,
+                inq.Apellido AS InquilinoApellido,
+                inq.Telefono AS InquilinoTelefono
+            FROM contratos c
+            JOIN inmuebles i ON c.Id_Inmueble = i.Id
+            JOIN propietarios p ON i.Id_propietario = p.Id
+            JOIN inquilinos inq ON c.Id_Inquilino = inq.Id
+            WHERE c.Id = @id";
+
+        using (MySqlCommand command = new MySqlCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@id", id);
+            connection.Open();
+            var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                contrato = new Contrato
+                {
+                    Id = reader.GetInt32("ContratoId"),
+                    Id_Inquilino = reader.GetInt32("ContratoId_Inquilino"),
+                    Id_Inmueble = reader.GetInt32("ContratoId_Inmueble"),
+                    FechaInicio = reader.GetDateTime("FechaInicio"),
+                    FechaTerminacion = reader.IsDBNull(reader.GetOrdinal("FechaTerminacion")) ? (DateTime?)null : reader.GetDateTime("FechaTerminacion"),
+                    Estado = reader.GetBoolean("ContratoEstado"),
+                    Inquilino = new Inquilino
+                    {
+                        Id = reader.GetInt32("InquilinoId"),
+                        Nombre = reader.GetString("InquilinoNombre"),
+                        Apellido = reader.GetString("InquilinoApellido"),
+                        Telefono = reader.GetString("InquilinoTelefono"),
+                    },
+                    Inmueble = new Inmueble
+                    {
+                        Id_inmueble = reader.GetInt32("InmuebleId"),
+                        Id_propietario = reader.GetInt32("InmuebleId_propietario"),
+                        Id_tipo = reader.GetInt32("InmuebleId_tipo"),
+                        Direccion = reader.GetString("InmuebleDireccion"),
+                        Uso = reader.GetString("InmuebleUso"),
+                        CantidadAmbientes = reader.GetInt32("InmuebleCantidadAmbientes"),
+                        Coordenadas = reader.GetString("InmuebleCoordenadas"),
+                        Precio = reader.GetDouble("InmueblePrecio"),
+                        Estado = reader.GetBoolean("InmuebleEstado"),
+                        Propietario = new Propietario
+                        {
+                            Id = reader.GetInt32("PropietarioId"),
+                            Nombre = reader.GetString("PropietarioNombre"),
+                            Apellido = reader.GetString("PropietarioApellido"),
+                            Telefono = reader.GetString("PropietarioTelefono"),
+                        }
+                    }
+                };
+            }
+            connection.Close();
         }
     }
 
-    public Contrato? Obtener(int id)
-    {
-        Contrato? res = null;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
-        {
-            var query = $@"SELECT {nameof(Contrato.Id)}, {nameof(Contrato.Id_Inquilino)}, {nameof(Contrato.Id_Inmueble)}, {nameof(Contrato.FechaInicio)}, {nameof(Contrato.FechaFin)}, {nameof(Contrato.MontoAlquiler)}, {nameof(Contrato.FechaTerminacion)}, {nameof(Contrato.Multa)}, {nameof(Contrato.Estado)} 
-                       FROM contratos
-                       WHERE {nameof(Contrato.Id)} = @id";
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@id", id);
-                connection.Open();
-                var reader = command.ExecuteReader();
-                if (reader.Read())
-                {
-                    res = new Contrato
-                    {
-                        Id = reader.GetInt32(nameof(Contrato.Id)),
-                        Id_Inquilino = reader.GetInt32(nameof(Contrato.Id_Inquilino)),
-                        Id_Inmueble = reader.GetInt32(nameof(Contrato.Id_Inmueble)),
-                        FechaInicio = reader.GetDateTime(nameof(Contrato.FechaInicio)),
-                        FechaFin = reader.GetDateTime(nameof(Contrato.FechaFin)),
-                        MontoAlquiler = reader.GetDouble(nameof(Contrato.MontoAlquiler)),
-                        FechaTerminacion = reader.IsDBNull(reader.GetOrdinal(nameof(Contrato.FechaTerminacion))) ? (DateTime?)null : reader.GetDateTime(nameof(Contrato.FechaTerminacion)),
-                        Multa = reader.GetDouble(nameof(Contrato.Multa)),
-                        Estado = reader.GetBoolean(nameof(Contrato.Estado))
-                    };
-                }
-                connection.Close();
-            }
-        }
-        return res;
-    }
-    // public Contrato? Obtener(int id)
-    // {
-    //     Contrato? res = null;
-    //     using (MySqlConnection connection = new MySqlConnection(ConectionString))
-    //     {
-    //         var query = $@"SELECT {nameof(Contrato.Id)}, {nameof(Contrato.Id_Inquilino)}, {nameof(Contrato.Id_Inmueble)}, {nameof(Contrato.FechaInicio)},  {nameof(Contrato.FechaFin)},  {nameof(Contrato.MontoAlquiler)},  {nameof(Contrato.FechaTerminacion), {nameof(Contrato.Multa)}, {nameof(Contrato.Estado)}} 
-    // 			FROM contratos
-    // 			WHERE {nameof(Contrato.Id)} = @id";
-    //         using (MySqlCommand command = new MySqlCommand(query, connection))
-    //         {
-    //             command.Parameters.AddWithValue("@id", id);
-    //             connection.Open();
-    //             var reader = command.ExecuteReader();
-    //             if (reader.Read())
-    //             {
-    //                 res = new Contrato
-    //                 {
-    //                     Id = reader.GetInt32(nameof(Contrato.Id)),
-    //                     Id_Inquilino = reader.GetInt32(nameof(Contrato.Id_Inquilino)),
-    //                     Id_Inmueble = reader.GetString(nameof(Contrato.Id_Inmueble)),
-    //                     FechaInicio = reader.GetString(nameof(Contrato.FechaInicio)),
-    //                     FechaFin = reader.GetString(nameof(Contrato.FechaFin)),
-    //                     MontoAlquiler = reader.GetString(nameof(Contrato.MontoAlquiler)),
-    //                     FechaTerminacion = reader.GetString(nameof(Contrato.FechaTerminacion)),
-    //                     Estado = reader.GetBoolean(nameof(Contrato.Estado))
-    //                 };
-    //             }
-    //             connection.Close();
-    //         }
-    //         return res;
-    //     }
-    // }
+    return contrato;
+}
+
+
+
 
     public int Alta(Contrato contrato)
     {
@@ -195,7 +278,7 @@ public class RepositorioContrato
                        WHERE {nameof(Contrato.Id)} = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@estado", 1); // Asignar 0 al parámetro @estado
+                command.Parameters.AddWithValue("@estado", 1);
                 command.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 res = command.ExecuteNonQuery();

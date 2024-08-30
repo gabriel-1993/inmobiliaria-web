@@ -1,0 +1,116 @@
+@* @model InmobiliariaVargasHuancaTorrez.Models.Contrato
+@{
+    ViewData["Title"] = "Contratos";
+    var listaInquilinos = ViewBag.Inquilinos as IList<InmobiliariaVargasHuancaTorrez.Models.Inquilino>;
+    var listaInmuebles = ViewBag.Inmuebles as IList<InmobiliariaVargasHuancaTorrez.Models.Inmueble>;
+    var listaPropietarios = ViewBag.Propietarios as IList<InmobiliariaVargasHuancaTorrez.Models.Propietario>;
+}
+<div class="row mt-4 d-flex justify-content-center">
+    <div class="col-md-5">
+        @if (@Model.Id == 0)
+        {
+            <h2 class="text-center">Crear Contrato</h2>
+        }
+        else
+        {
+            <h2 class="text-center">Editar Contrato</h2>
+        }
+        <hr />
+        <form asp-action="Guardar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="Id" value="@Model.Id" />
+            
+            <div class="form-group">
+                <label class="control-label">Inquilino</label>
+                <select class="form-control" name="Id_Inquilino">
+                    @if (listaInquilinos != null)
+                    {
+                        @foreach (var item in listaInquilinos)
+                        {
+                            <option value="@item.Id">@(item.ToString())</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">No hay inquilinos disponibles</option>
+                    }
+                </select>
+                <span asp-validation-for="Id_Inquilino" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label">Inmueble</label>
+                <select class="form-control" name="Id_Inmueble">
+                    @if (listaInmuebles != null)
+                    {
+                        @foreach (var item in listaInmuebles)
+                        {
+                            <option value="@item.Id_inmueble">@(item.ToString())</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">No hay inmuebles disponibles</option>
+                    }
+                </select>
+                <span asp-validation-for="Id_Inmueble" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" class="form-control" />
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="FechaFin" class="control-label"></label>
+                <input asp-for="FechaFin" class="form-control" />
+                <span asp-validation-for="FechaFin" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="MontoAlquiler" class="control-label"></label>
+                <input asp-for="MontoAlquiler" class="form-control" />
+                <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label">Propietario</label>
+                <select class="form-control" name="Id_Propietario">
+                    @if (listaPropietarios != null)
+                    {
+                        @foreach (var item in listaPropietarios)
+                        {
+                            <option value="@item.Id">@(item.ToString())</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">No hay propietarios disponibles</option>
+                    }
+                </select>
+                <span asp-validation-for="Id_Propietario" class="text-danger"></span>
+            </div>
+            
+            @if (@Model.Id > 0) 
+            {
+                <div class="form-group">
+                    <label asp-for="FechaTerminacion" class="control-label"></label>
+                    <input asp-for="FechaTerminacion" class="form-control" />
+                    <span asp-validation-for="FechaTerminacion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Multa" class="control-label"></label>
+                    <input asp-for="Multa" class="form-control" />
+                    <span asp-validation-for="Multa" class="text-danger"></span>
+                </div>
+            }
+            
+            <div class="form-group mb-3 d-grid">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a>
+</div> *@

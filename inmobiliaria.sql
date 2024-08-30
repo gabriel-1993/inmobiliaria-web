@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-08-2024 a las 04:12:21
+-- Tiempo de generación: 31-08-2024 a las 00:33:20
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -51,16 +51,19 @@ CREATE TABLE `contratos` (
   `MontoAlquiler` decimal(10,2) NOT NULL,
   `FechaTerminacion` date DEFAULT NULL,
   `Multa` decimal(10,2) DEFAULT NULL,
-  `Estado` tinyint(1) NOT NULL DEFAULT 1,
-  `Id_Propietario` int(11) NOT NULL
+  `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `contratos`
 --
 
-INSERT INTO `contratos` (`Id`, `Id_Inquilino`, `Id_Inmueble`, `FechaInicio`, `FechaFin`, `MontoAlquiler`, `FechaTerminacion`, `Multa`, `Estado`, `Id_Propietario`) VALUES
-(2, 2, 2, '2024-08-01', '2024-08-08', 190.00, '2024-08-08', 0.00, 1, 3);
+INSERT INTO `contratos` (`Id`, `Id_Inquilino`, `Id_Inmueble`, `FechaInicio`, `FechaFin`, `MontoAlquiler`, `FechaTerminacion`, `Multa`, `Estado`) VALUES
+(3, 2, 1, '2024-08-01', '2024-08-07', 190.00, '2024-08-07', 0.00, 1),
+(4, 2, 1, '2024-08-01', '2024-08-08', 190.00, '2024-08-08', 0.00, 1),
+(5, 2, 1, '2024-08-01', '2024-08-08', 190.00, '2024-08-08', 0.00, 1),
+(6, 8, 2, '2024-08-15', '2024-08-30', 200.00, NULL, NULL, 1),
+(7, 8, 2, '2024-08-15', '2024-08-30', 200.00, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -211,8 +214,7 @@ ALTER TABLE `auditoria`
 ALTER TABLE `contratos`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `id_inmueble` (`Id_Inmueble`),
-  ADD KEY `id_inquilino` (`Id_Inquilino`) USING BTREE,
-  ADD KEY `fk_propietario` (`Id_Propietario`);
+  ADD KEY `id_inquilino` (`Id_Inquilino`) USING BTREE;
 
 --
 -- Indices de la tabla `inmuebles`
@@ -267,7 +269,7 @@ ALTER TABLE `auditoria`
 -- AUTO_INCREMENT de la tabla `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `inmuebles`
@@ -320,8 +322,7 @@ ALTER TABLE `auditoria`
 --
 ALTER TABLE `contratos`
   ADD CONSTRAINT `contratos_ibfk_1` FOREIGN KEY (`Id_Inquilino`) REFERENCES `inquilinos` (`Id`),
-  ADD CONSTRAINT `contratos_ibfk_2` FOREIGN KEY (`Id_Inmueble`) REFERENCES `inmuebles` (`Id`),
-  ADD CONSTRAINT `fk_propietario` FOREIGN KEY (`Id_Propietario`) REFERENCES `inmuebles` (`Id_Propietario`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `contratos_ibfk_2` FOREIGN KEY (`Id_Inmueble`) REFERENCES `inmuebles` (`Id`);
 
 --
 -- Filtros para la tabla `inmuebles`

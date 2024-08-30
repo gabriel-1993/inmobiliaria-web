@@ -22,7 +22,11 @@ public class Inmueble
 
     public bool Estado { get; set; }
 
-    
+          public override string ToString()
+    {
+        var res = $"{Direccion} ";
+        return res;
+    }
 
 }
 

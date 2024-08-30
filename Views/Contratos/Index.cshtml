@@ -2,12 +2,7 @@
 
 @{
     ViewData["Title"] = "Listado de Contratos";
-    @* var listaPropietarios = (IList<Propietario>)ViewBag.Propietarios;
-var listaInquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
-var listaInmuebles = (IList<Inmueble>)ViewBag.Inmuebles; *@
-    var listaPropietarios = ViewBag.Propietarios as IList<InmobiliariaVargasHuancaTorrez.Models.Propietario>;
-    var listaInquilinos = ViewBag.Inquilinos as IList<InmobiliariaVargasHuancaTorrez.Models.Inquilino>;
-    var listaInmuebles = ViewBag.Inmuebles as IList<InmobiliariaVargasHuancaTorrez.Models.Inmueble>;
+
 }
 
 <div class="text-center">
@@ -20,7 +15,7 @@ var listaInmuebles = (IList<Inmueble>)ViewBag.Inmuebles; *@
             <th>Inmueble</th>
             <th>Inquilino</th>
             <th>Propietario</th>
-            <th>@Html.DisplayNameFor(model => model.First().FechaTerminacion)</th>
+            <th>Fecha Finalizacion</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -28,28 +23,10 @@ var listaInmuebles = (IList<Inmueble>)ViewBag.Inmuebles; *@
 
         @foreach (var item in Model)
         {
-            @* direccion inmueble *@
-
-            @* listaInmuebles "?" evita que se ejecute si es null *@
-            var inmueble = listaInmuebles?.FirstOrDefault(p => p.Id_inmueble == item.Id_Inmueble);
-            var direccion = inmueble != null ? $"{inmueble.Direccion}" : "Direccion no encontrada";
-
-            @* nombre completo inquilino *@
-            var inquilino = listaInquilinos?.FirstOrDefault(p => p.Id == item.Id_Inquilino);
-            var nombreInquilino = inquilino != null ? $"{inquilino.Nombre} {inquilino.Apellido} {inquilino.Dni}" :
-            "Inquilino no encontrado";
-
-            @* nombre completo propietario *@
-            var propietario = listaPropietarios?.FirstOrDefault(p => p.Id == item.Id_Propietario);
-            var nombrePropietario = propietario != null ? $"{propietario.Nombre} {propietario.Apellido} {propietario.Dni}" :
-            "Propietario no encontrado";
-
-
-
             <tr>
-                <td>@direccion</td>
-                <td>@nombreInquilino</td>
-                <td>@nombrePropietario</td>
+                <td>@($"{item.Inmueble.Direccion}")</td>
+                <td>@($"{item.Inquilino.Nombre} {item.Inquilino.Apellido} {item.Inquilino.Dni}")</td>
+                <td>@($"{item.Inmueble.Propietario.Nombre} {item.Inmueble.Propietario.Apellido} {item.Inmueble.Propietario.Dni}")</td>
                 <td>
                     @if (item.FechaTerminacion.HasValue)
                     {
@@ -72,7 +49,7 @@ var listaInmuebles = (IList<Inmueble>)ViewBag.Inmuebles; *@
                     }
                     else
                     {
-                        <a href="/Contratos/Activar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i>
+                        <a href="/Contratos/Habilitar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i>
                             Activar</a>
                     }
                 </td>

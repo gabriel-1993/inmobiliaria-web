@@ -1,0 +1,70 @@
+@model InmobiliariaVargasHuancaTorrez.Models.Contrato
+
+@{
+    ViewData["Title"] = "Detalle del Contrato";
+}
+
+<div class="container">
+    <h2>Detalle del Contrato</h2>
+    <table class="table">
+        <tr>
+            <th>Inmueble</th>
+            <td>@Model.Inmueble.Direccion</td>
+        </tr>
+        <tr>
+            <th>Inquilino</th>
+            <td>@($"{Model.Inquilino.Nombre} {Model.Inquilino.Apellido} {Model.Inquilino.Dni}")</td>
+        </tr>
+        <tr>
+            <th>Propietario</th>
+            <td>@($"{Model.Inmueble.Propietario.Nombre} {Model.Inmueble.Propietario.Apellido} {Model.Inmueble.Propietario.Dni}")</td>
+
+        </tr>
+        <tr>
+            <th>Fecha Finalizacion</th>
+             <td>
+                    @if (Model.FechaTerminacion.HasValue)
+                    {
+                        @Model.FechaTerminacion.Value.ToString("dd/MM/yyyy")
+                    }
+                    else
+                    {
+                        <span>Contrato en curso</span>
+                    }
+                </td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
+        </tr>
+        <tr>
+            <th>Tel Prop</th>
+            <td>@Model.Inmueble.Propietario.Telefono</td>
+        </tr>
+        <tr>
+            <th>Tel Inqui</th>
+            <td>@Model.Inquilino.Telefono</td>
+        </tr>
+        <tr>
+            <th>Dirección</th>
+            <td>@Model.Inmueble.Direccion</td>
+        </tr>
+        <tr>
+            <th>Desde</th>
+            <td>@Model.FechaInicio</td>
+        </tr>
+        <tr>
+            <th>Hasta</th>
+            <td>@Model.FechaFin</td>
+        </tr>    
+        <tr>
+            <th>Monto</th>
+            <td>@Model.MontoAlquiler</td>
+        </tr> 
+        <tr>
+            <th>Multa</th>
+            <td>@Model.Multa</td>
+        </tr>                            
+    </table>
+    <a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a>
+</div>

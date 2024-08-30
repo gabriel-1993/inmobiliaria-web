@@ -12,34 +12,25 @@ public class ContratosController : Controller
 
     //  REPOSITORIOS PARA MOSTRAR DATOS ESPECIFICOS DEL CONTRATO: DUEÑO,INQUILINO,PROPIEDAD(sino solo tenemos el id)
     //Se recuperan datos en Views--Contratos--Index--linea 3
-    private RepositorioPropietario repoPropietario;
 
-    private RepositorioInquilino repoInquilino;
-
-    private RepositorioInmueble repoInmueble;
 
 
     public ContratosController(ILogger<ContratosController> logger)
     {
         _logger = logger;
         repoContrato = new RepositorioContrato();
-        repoPropietario = new RepositorioPropietario();
-        repoInquilino = new RepositorioInquilino();
-        repoInmueble = new RepositorioInmueble();
+
     }
 
     public IActionResult Index()
     {
-       var contratos = repoContrato.ObtenerTodos(); // Lista de Contratos
-        ViewBag.Propietarios = repoPropietario.ObtenerTodos(); // Lista de Propietarios
-        ViewBag.Inquilinos = repoInquilino.ObtenerTodos(); // Lista de Inquilinos
-        ViewBag.Inmuebles = repoInmueble.ObtenerTodos(); // Lista de Inmuebles
-
+        var contratos = repoContrato.ObtenerTodos(); // Lista de Contratos
         return View(contratos);
     }
 
 
     public IActionResult Edicion(int? id)
+
     {
         if (id == null || id == 0)
         {

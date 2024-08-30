@@ -2,6 +2,10 @@ namespace InmobiliariaVargasHuancaTorrez.Models;
 
 public class Contrato
 {
+    public Inmueble? Inmueble {get; set;}
+
+    public Inquilino? Inquilino {get; set;}
+
     public int Id { get; set; }
 
     public int Id_Inquilino { get; set; }
@@ -20,8 +24,6 @@ public class Contrato
     public double? Multa { get; set; }
 
     public bool Estado { get; set; }
-
-    public int Id_Propietario { get; set; }
 
 
 }
