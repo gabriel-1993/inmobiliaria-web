@@ -20,6 +20,17 @@ public class InquilinosController : Controller
     return View(lista);
   }
 
+  public IActionResult Detalle(int id)
+  {
+    var inquilino = repo.Obtener(id);
+    if (inquilino == null)
+    {
+      return RedirectToAction(nameof(Index));
+    }
+    return View(inquilino);
+  }
+    
+
   public IActionResult Editar(int id)
   {
     if(id == 0) 

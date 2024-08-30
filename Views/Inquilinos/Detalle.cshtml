@@ -1,0 +1,35 @@
+@model InmobiliariaVargasHuancaTorrez.Models.Inquilino
+
+@{
+    ViewData["Title"] = "Detalle Inquilino";
+}
+
+<div class="container">
+    <h2>Detalle inquilino</h2>
+    <table class="table">
+        <tr>
+            <th>Dni</th>
+            <td>@Model.Dni</td>
+        </tr>
+        <tr>
+            <th>Apellido</th>
+            <td>@Model.Apellido</td>
+        </tr>
+        <tr>
+            <th>Nombre</th>
+            <td>@Model.Nombre</td>
+        </tr>
+        <tr>
+            <th>Telefono</th>
+            <td>@Model.Telefono</td>
+        </tr>
+        <tr>
+            <th>Telefono Secundario</th>
+            <td>@(Model.TelefonoSecundario == null ? "-" : Model.TelefonoSecundario)</td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
+        </tr>
+    </table>
+    <a href="@Url.Action("Index", "Inquilinos")" class="btn btn-primary">Volver</a>
