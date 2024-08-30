@@ -42,7 +42,6 @@ public class RepositorioContrato
                             JOIN inmuebles i ON c.Id_Inmueble = i.Id
                             JOIN propietarios p ON i.Id_propietario = p.Id
                             JOIN inquilinos inq ON c.Id_Inquilino = inq.Id";
-
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 connection.Open();
@@ -84,13 +83,11 @@ public class RepositorioContrato
                             }
                         }
                     };
-
                     listaContratos.Add(contrato);
                 }
                 connection.Close();
             }
         }
-
         return listaContratos;
     }
 

@@ -46,16 +46,12 @@
             <td>@Model.Inquilino.Telefono</td>
         </tr>
         <tr>
-            <th>Dirección</th>
-            <td>@Model.Inmueble.Direccion</td>
-        </tr>
-        <tr>
             <th>Desde</th>
-            <td>@Model.FechaInicio</td>
+            <td>@Model.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
         </tr>
         <tr>
             <th>Hasta</th>
-            <td>@Model.FechaFin</td>
+            <td>@Model.FechaFin.Value.ToString("dd/MM/yyyy")</td>
         </tr>    
         <tr>
             <th>Monto</th>
