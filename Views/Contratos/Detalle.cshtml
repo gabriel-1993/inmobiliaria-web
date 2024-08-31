@@ -9,15 +9,15 @@
     <table class="table">
         <tr>
             <th>Inmueble</th>
-            <td>@Model.Inmueble.Direccion</td>
+            <td>@Model.Inmueble?.Direccion</td>
         </tr>
         <tr>
             <th>Inquilino</th>
-            <td>@($"{Model.Inquilino.Nombre} {Model.Inquilino.Apellido} {Model.Inquilino.Dni}")</td>
+            <td>@($"{Model.Inquilino?.Nombre} {Model.Inquilino?.Apellido} {Model.Inquilino?.Dni}")</td>
         </tr>
         <tr>
             <th>Propietario</th>
-            <td>@($"{Model.Inmueble.Propietario.Nombre} {Model.Inmueble.Propietario.Apellido} {Model.Inmueble.Propietario.Dni}")</td>
+            <td>@($"{Model.Inmueble?.Propietario?.Nombre} {Model.Inmueble?.Propietario?.Apellido} {Model.Inmueble?.Propietario?.Dni}")</td>
 
         </tr>
         <tr>
@@ -39,19 +39,28 @@
         </tr>
         <tr>
             <th>Tel Prop</th>
-            <td>@Model.Inmueble.Propietario.Telefono</td>
+            <td>@Model.Inmueble?.Propietario?.Telefono</td>
         </tr>
         <tr>
             <th>Tel Inqui</th>
-            <td>@Model.Inquilino.Telefono</td>
+            <td>@Model.Inquilino?.Telefono</td>
         </tr>
         <tr>
             <th>Desde</th>
-            <td>@Model.FechaInicio.Value.ToString("dd/MM/yyyy")</td>
+            <td>@Model.FechaInicio.ToString("dd/MM/yyyy")</td>
         </tr>
         <tr>
             <th>Hasta</th>
-            <td>@Model.FechaFin.Value.ToString("dd/MM/yyyy")</td>
+            <td>
+                @if (Model.FechaTerminacion.HasValue)
+                {
+                    @Model.FechaTerminacion.Value.ToString("dd/MM/yyyy")
+                }
+                else
+                {
+                    <span>Contrato en curso</span>
+                }
+            </td>
         </tr>    
         <tr>
             <th>Monto</th>

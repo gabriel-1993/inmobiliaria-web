@@ -24,9 +24,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@($"{item.Inmueble.Direccion}")</td>
-                <td>@($"{item.Inquilino.Nombre} {item.Inquilino.Apellido} {item.Inquilino.Dni}")</td>
-                <td>@($"{item.Inmueble.Propietario.Nombre} {item.Inmueble.Propietario.Apellido} {item.Inmueble.Propietario.Dni}")</td>
+                <td>
+                    @item.Inmueble?.Direccion
+                </td>
+                <td>
+                    @($"{item.Inquilino?.Nombre} {item.Inquilino?.Apellido} {item.Inquilino?.Dni}")
+                </td>
+                <td>
+                    @($"{item.Inmueble?.Propietario?.Nombre} {item.Inmueble?.Propietario?.Apellido} {item.Inmueble?.Propietario?.Dni}")
+                </td>
                 <td>
                     @if (item.FechaTerminacion.HasValue)
                     {

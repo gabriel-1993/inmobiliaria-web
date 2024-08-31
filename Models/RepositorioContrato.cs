@@ -65,9 +65,9 @@ public class RepositorioContrato
                         },
                         Inmueble = new Inmueble
                         {
-                            Id_inmueble = reader.GetInt32("InmuebleId"),
-                            Id_propietario = reader.GetInt32("InmuebleId_propietario"),
-                            Id_tipo = reader.GetInt32("InmuebleId_tipo"),
+                            Id = reader.GetInt32("InmuebleId"),
+                            Id_Propietario = reader.GetInt32("InmuebleId_propietario"),
+                            Id_Tipo = reader.GetInt32("InmuebleId_tipo"),
                             Direccion = reader.GetString("InmuebleDireccion"),
                             Uso = reader.GetString("InmuebleUso"),
                             CantidadAmbientes = reader.GetInt32("InmuebleCantidadAmbientes"),
@@ -153,9 +153,9 @@ public Contrato? Obtener(int id)
                     },
                     Inmueble = new Inmueble
                     {
-                        Id_inmueble = reader.GetInt32("InmuebleId"),
-                        Id_propietario = reader.GetInt32("InmuebleId_propietario"),
-                        Id_tipo = reader.GetInt32("InmuebleId_tipo"),
+                        Id = reader.GetInt32("InmuebleId"),
+                        Id_Propietario = reader.GetInt32("InmuebleId_propietario"),
+                        Id_Tipo = reader.GetInt32("InmuebleId_tipo"),
                         Direccion = reader.GetString("InmuebleDireccion"),
                         Uso = reader.GetString("InmuebleUso"),
                         CantidadAmbientes = reader.GetInt32("InmuebleCantidadAmbientes"),
