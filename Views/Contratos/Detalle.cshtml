@@ -20,19 +20,7 @@
             <td>@($"{Model.Inmueble?.Propietario?.Nombre} {Model.Inmueble?.Propietario?.Apellido} {Model.Inmueble?.Propietario?.Dni}")</td>
 
         </tr>
-        <tr>
-            <th>Fecha Finalizacion</th>
-             <td>
-                    @if (Model.FechaTerminacion.HasValue)
-                    {
-                        @Model.FechaTerminacion.Value.ToString("dd/MM/yyyy")
-                    }
-                    else
-                    {
-                        <span>Contrato en curso</span>
-                    }
-                </td>
-        </tr>
+      
         <tr>
             <th>Estado</th>
             <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
@@ -61,14 +49,38 @@
                     <span>Contrato en curso</span>
                 }
             </td>
+        </tr>
+          <tr>
+            <th>Fecha Finalizacion</th>
+             <td>
+                    @if (Model.FechaTerminacion.HasValue)
+                    {
+                        @Model.FechaTerminacion.Value.ToString("dd/MM/yyyy")
+                    }
+                    else
+                    {
+                        <span>Contrato en curso</span>
+                    }
+                </td>
         </tr>    
         <tr>
-            <th>Monto</th>
-            <td>@Model.MontoAlquiler</td>
+            <th>Precio</th>
+            <td>@Model.Inmueble?.Precio</td>
         </tr> 
         <tr>
             <th>Multa</th>
-            <td>@Model.Multa</td>
+            <td>
+                    @if (Model.Multa.HasValue)
+                    {
+                        @Model.Multa
+                    }
+                    else
+                    {
+                        <span>0</span>
+                    }
+                
+                
+                @* @(Model.Multa ?? 0)</td> *@
         </tr>                            
     </table>
     <a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a>

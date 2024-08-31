@@ -10,6 +10,10 @@ public class ContratosController : Controller
 
     private RepositorioContrato repoContrato;
 
+    private RepositorioInquilino repoInquilino;
+
+    private RepositorioInmueble repoInmueble;
+
     //  REPOSITORIOS PARA MOSTRAR DATOS ESPECIFICOS DEL CONTRATO: DUEÑO,INQUILINO,PROPIEDAD(sino solo tenemos el id)
     //Se recuperan datos en Views--Contratos--Index--linea 3
 
@@ -19,6 +23,9 @@ public class ContratosController : Controller
     {
         _logger = logger;
         repoContrato = new RepositorioContrato();
+        repoInquilino = new RepositorioInquilino();
+        // Dentro de cada <Inmueble> tenemos <Propietario> 
+        repoInmueble = new RepositorioInmueble();
 
     }
 
@@ -32,6 +39,14 @@ public class ContratosController : Controller
     public IActionResult Edicion(int? id)
 
     {
+        // Obtener listas de inquilinos, inmuebles y propietarios
+        var listaInquilinos = repoInquilino.ObtenerTodos();
+        var listaInmuebles = repoInmueble.ObtenerTodos();
+
+        // Pasar listas a la vista a través de ViewBag
+        ViewBag.Inquilinos = listaInquilinos;
+        ViewBag.Inmuebles = listaInmuebles;
+
         if (id == null || id == 0)
         {
             // Crear un nuevo contrato
