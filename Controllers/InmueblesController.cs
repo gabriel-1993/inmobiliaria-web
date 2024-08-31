@@ -14,41 +14,28 @@ public class InmueblesController : Controller
     repo = new RepositorioInmueble();
   }
 
-  public IActionResult Index(string estado)
-{
+  public IActionResult Index()
+  {
     var lista = repo.ObtenerTodos();
-    var repoPropietario = new RepositorioPropietario();
-
-    // Crear un diccionario para mapear Id_propietario con los nombres
-    var propietariosDict = repoPropietario.ObtenerTodos()
-                                           .ToDictionary(p => p.Id, p => p.Nombre + " " + p.Apellido);
-
-    // Asignar el nombre del propietario a cada inmueble
-    foreach (var inmueble in lista)
-    {
-        if (propietariosDict.TryGetValue(inmueble.Id_propietario, out var nombrePropietario))
-        {
-            inmueble.Propietario = new Propietario { Nombre = nombrePropietario };
-        }
-    }
-
-    // Filtrar los inmuebles según el estado
-    if (estado == "activo")
-    {
-        lista = lista.Where(i => i.Estado).ToList();
-    }
-    else if (estado == "desactivado")
-    {
-        lista = lista.Where(i => !i.Estado).ToList();
-    }
-
     return View(lista);
-}
+  }
+
+  public IActionResult Detalle(int id)
+  {
+    var inmueble = repo.Obtener(id);
+    if (inmueble == null)
+    {
+      return RedirectToAction(nameof(Index));
+    }
+    return View(inmueble);
+  }
 
   public IActionResult Edicion(int id)
   {
     var repoPropietario = new RepositorioPropietario(); // Asegúrate de tener un repositorio para los propietarios
     ViewBag.Propietario = repoPropietario.ObtenerTodos(); // Asigna la lista de propietarios al ViewBag
+
+    // ACA PASAR TIPO INMUEBLE A LA VISTA
 
     if (id == 0)
     {
@@ -62,21 +49,18 @@ public class InmueblesController : Controller
   }
 
   [HttpPost]
-  [HttpPost]
-  public IActionResult Guardar(int id_inmueble, Inmueble inmueble)
+  public IActionResult Guardar(int id, Inmueble inmueble)
   {
-    if (id_inmueble == 0)
+    if (id == 0)
     {
       repo.Agregar(inmueble);
     }
     else
     {
-      inmueble.Id_inmueble = id_inmueble; // Asegurarse de asignar el Id existente
       repo.Modificar(inmueble);
     }
     return RedirectToAction(nameof(Index));
   }
-
 
   public IActionResult Eliminar(int id)
   {
