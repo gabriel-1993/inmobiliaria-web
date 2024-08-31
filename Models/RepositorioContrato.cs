@@ -183,34 +183,6 @@ public class RepositorioContrato
 
 
 
-
-    // public int Alta(Contrato contrato)
-    // {
-    //     int res = -1;
-    //     using (MySqlConnection connection = new MySqlConnection(ConectionString))
-    //     {
-    //         var query = $@"INSERT INTO contratos 
-    // 			({nameof(Contrato.Id_Inquilino)}, {nameof(Contrato.Id_Inmueble)}, {nameof(Contrato.FechaInicio)},  {nameof(Contrato.FechaFin)},  {nameof(Contrato.MontoAlquiler)}, {nameof(Contrato.FechaTerminacion)}, {nameof(Contrato.Multa)}, {nameof(Contrato.Estado)} )
-    // 			VALUES (@Id_Inquilino, @Id_Inmueble, @FechaInicio, @FechaFin, @MontoAlquiler);
-    // 			SELECT LAST_INSERT_ID();";
-    //         using (MySqlCommand command = new MySqlCommand(query, connection))
-    //         {
-    //             // id es autoincremental
-    //             // al crear estado por defecto es 1 
-    //             command.Parameters.AddWithValue("@Id_Inquilino", contrato.Id_Inquilino);
-    //             command.Parameters.AddWithValue("@Id_Inmueble", contrato.Id_Inmueble);
-    //             command.Parameters.AddWithValue("@FechaInicio", contrato.FechaInicio);
-    //             command.Parameters.AddWithValue("@FechaFin", contrato.FechaFin);
-    //             command.Parameters.AddWithValue("@MontoAlquiler", contrato.MontoAlquiler);
-
-    //             connection.Open();
-    //             res = Convert.ToInt32(command.ExecuteScalar());
-    //             connection.Close();
-    //         }
-    //     }
-    //     return res;
-    // }
-
 public int Alta(Contrato contrato)
 {
     int res = -1;
