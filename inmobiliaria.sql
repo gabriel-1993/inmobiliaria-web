@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-08-2024 a las 00:33:20
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 31-08-2024 a las 21:43:55
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,10 +30,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `auditoria` (
   `Id` int(11) NOT NULL,
   `Id_Usuario` int(11) NOT NULL,
+  `Id_Contrato` int(11) NOT NULL,
+  `Id_Pago` int(11) NOT NULL,
   `Accion` varchar(255) NOT NULL,
   `FechaHora` datetime NOT NULL,
-  `Detalle` varchar(255) DEFAULT NULL,
-  `Estado` tinyint(1) NOT NULL DEFAULT 1
+  `Detalle` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -59,11 +60,8 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`Id`, `Id_Inquilino`, `Id_Inmueble`, `FechaInicio`, `FechaFin`, `MontoAlquiler`, `FechaTerminacion`, `Multa`, `Estado`) VALUES
-(3, 2, 1, '2024-08-01', '2024-08-07', 190.00, '2024-08-07', 0.00, 1),
-(4, 2, 1, '2024-08-01', '2024-08-08', 190.00, '2024-08-08', 0.00, 1),
-(5, 2, 1, '2024-08-01', '2024-08-08', 190.00, '2024-08-08', 0.00, 1),
-(6, 8, 2, '2024-08-15', '2024-08-30', 200.00, NULL, NULL, 1),
-(7, 8, 2, '2024-08-15', '2024-08-30', 200.00, NULL, NULL, 1);
+(2, 1, 1, '2024-08-01', '0001-01-19', '0.00', '2024-08-08', '0.00', 0),
+(4, 1, 4, '0001-01-11', '0001-01-01', '0.00', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -88,8 +86,10 @@ CREATE TABLE `inmuebles` (
 --
 
 INSERT INTO `inmuebles` (`Id`, `Id_Propietario`, `Id_Tipo`, `Direccion`, `Uso`, `CantidadAmbientes`, `Coordenadas`, `Precio`, `Estado`) VALUES
-(1, 2, 3, 'San Luis, Nogoli. Calle Principal 103', 'Residencial', 3, '100.20', 150000.00, 1),
-(2, 3, 4, 'San Luis capital, San Martin 997', 'Residencial', 1, '400,20', 180000.00, 1);
+(1, 2, 1, 'Rivadavia 103', 'Residencial', 3, '100324', '15000000.00', 1),
+(2, 3, 2, 'San Martin 997', 'Residencial', 1, '400,20', '18000000.00', 1),
+(4, 4, 3, 'Ayacucho 123', 'Comercial', 2, '3124132', '21222000.00', 1),
+(5, 5, 1, 'Maipu 765', 'Residencial', 6, '23423', '28900000.00', 0);
 
 -- --------------------------------------------------------
 
@@ -112,11 +112,11 @@ CREATE TABLE `inquilinos` (
 --
 
 INSERT INTO `inquilinos` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `TelefonoSecundario`, `Estado`) VALUES
-(1, '22222', 'Messi', 'Leonel', '987654432', '987876654', 1),
-(2, '321', 'Test', 'Prueba', '123', '456', 1),
-(3, '321322', 'Martino', 'Tata', '567567343', '456456546', 1),
-(8, '321222', 'asd', 'wewq', '123445', NULL, 0),
-(9, '21221', 'qweasd', 'qeww', '234234', NULL, 0);
+(1, '33016244', 'Messi', 'Leonel', '987654432', NULL, 1),
+(2, '21543432', 'Ozil', 'Mesut', '+541152799578', NULL, 1),
+(3, '28868776', 'Guardiola', 'Pep', '+541150328167', '+541150331632', 1),
+(8, '35354321', 'Eto', 'Samuel', '+541152175936', '+541152193398', 0),
+(9, '41436534', 'Kross', 'Toni', '+541152799598', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -155,12 +155,12 @@ CREATE TABLE `propietarios` (
 --
 
 INSERT INTO `propietarios` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `Direccion`, `Estado`) VALUES
-(1, '123459', 'Perez', 'Juan', '2664', 'SL capital, Calle 3 N123', 0),
-(2, '1234', 'Sosa', 'Maria', '2665', 'SL capital, calle 4 n1234', 1),
-(3, '12567', 'prueba', 'pepe', '1254', 'San Luis, La Punta. m3 c19', 1),
-(4, '101918', 'prueba', 'prueba', '12567', 'san luis capital m5 c6', 1),
-(5, '89877878', 'jhhjkj', 'jkhkhj', '877878', 'fgjgkhjhl hlhkhkl', 0),
-(6, '124343434', 'prueba', 'Ejemplo', '121212', 'asdasd', 0);
+(1, '43213246', 'Perez', 'Juan', '+35 (405) 332-0245', 'SL capital, Calle 3 N123', 1),
+(2, '12345678', 'Sosa', 'Maria', '2665323212', 'SL capital, calle 4 n1234', 1),
+(3, '12578432', 'Ancelloti', 'Carlo', '+442045770077', 'San Luis, La Punta. m3 c19', 1),
+(4, '10191832', 'Mourinho', 'José', '+87957867680', 'san luis capital m5 c6', 1),
+(5, '89877878', 'Conte', 'Antonio', '+7504157879', 'Maipu 4432', 0),
+(6, '12034187', 'Makelele', 'Claude', '+50598434111', 'San Martin 221', 0);
 
 -- --------------------------------------------------------
 
@@ -170,18 +170,20 @@ INSERT INTO `propietarios` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `Dire
 
 CREATE TABLE `tipos_inmueble` (
   `Id` int(11) NOT NULL,
-  `Descripcion` varchar(50) NOT NULL
+  `Descripcion` varchar(50) NOT NULL,
+  `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipos_inmueble`
 --
 
-INSERT INTO `tipos_inmueble` (`Id`, `Descripcion`) VALUES
-(1, 'Local'),
-(2, 'Depósito'),
-(3, 'Casa'),
-(4, 'Departamento');
+INSERT INTO `tipos_inmueble` (`Id`, `Descripcion`, `Estado`) VALUES
+(1, 'Local', 1),
+(2, 'Depósito', 1),
+(3, 'Casa', 1),
+(4, 'Departamento', 1),
+(5, 'Industrial', 0);
 
 -- --------------------------------------------------------
 
@@ -205,8 +207,7 @@ CREATE TABLE `usuarios` (
 -- Indices de la tabla `auditoria`
 --
 ALTER TABLE `auditoria`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `id_usuario` (`Id_Usuario`);
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indices de la tabla `contratos`
@@ -221,8 +222,8 @@ ALTER TABLE `contratos`
 --
 ALTER TABLE `inmuebles`
   ADD PRIMARY KEY (`Id`),
-  ADD KEY `id_propietario` (`Id_Propietario`),
-  ADD KEY `id_tipo` (`Id_Tipo`);
+  ADD KEY `id_propietario` (`Id_Propietario`) USING BTREE,
+  ADD KEY `Id_Tipo` (`Id_Tipo`) USING BTREE;
 
 --
 -- Indices de la tabla `inquilinos`
@@ -269,13 +270,13 @@ ALTER TABLE `auditoria`
 -- AUTO_INCREMENT de la tabla `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `inmuebles`
 --
 ALTER TABLE `inmuebles`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilinos`
@@ -299,7 +300,7 @@ ALTER TABLE `propietarios`
 -- AUTO_INCREMENT de la tabla `tipos_inmueble`
 --
 ALTER TABLE `tipos_inmueble`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -310,12 +311,6 @@ ALTER TABLE `usuarios`
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `auditoria`
---
-ALTER TABLE `auditoria`
-  ADD CONSTRAINT `auditoria_ibfk_1` FOREIGN KEY (`Id_Usuario`) REFERENCES `usuarios` (`Id`);
 
 --
 -- Filtros para la tabla `contratos`
