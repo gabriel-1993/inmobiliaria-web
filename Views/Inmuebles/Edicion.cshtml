@@ -2,58 +2,70 @@
 @{
     ViewData["Title"] = "Edición de Inmueble";
     var listProp = (IList<Propietario>)ViewBag.Propietario;
+    var listTipo = (IList<TipoInmueble>)ViewBag.TipoInmueble;
 }
 
 
 <div class="row mt-4 d-flex justify-content-center">
     <div class="col-md-5">
         @if (@Model.Id == 0)
-    {
+        {
             <h2 class="text-center">Crear inmueble</h2>
-    }
-    else
-    {
+        }
+        else
+        {
             <h2 class="text-center">Editar inmueble</h2>
-    }
+        }
+        <hr/>
+
         <form asp-action="Guardar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="Id" value="@Model.Id" />
             
-            <div class="form-group">
-                <label asp-for="Id_Propietario" class="control-label"></label>
-                <select class="form-control" name="Id_Propietario">
+            <div class="form-group mb-3">
+                <label asp-for="Id_Propietario" class="control-label">Propietario</label>
+                <select class="form-select" name="Id_Propietario">
                     @foreach (var item in listProp){
                         @:<option @(item.Id == Model.Id_Propietario ? "selected" : "") value="@item.Id">@(item.ToString())</option>
                     }
                 </select>
             </div>
-            <div class="form-group">
-                <label asp-for="Id_Tipo" class="control-label"></label>
-                <input asp-for="Id_Tipo" class="form-control" />
-                <span asp-validation-for="Id_Tipo" class="text-danger"></span>
+            <div class="form-group mb-3">
+                <label asp-for="Id_Tipo" class="control-label">Tipo de Inmueble</label>
+                <div class="d-flex">
+                    <select class="form-select me-1" name="Id_Tipo">
+                        @foreach (var item in listTipo)
+                        {
+                            @if (item.Estado)
+                            {
+                                @:<option @(item.Id == Model.Id_Tipo ? "selected" : "") value="@item.Id">@(item.Descripcion)</option>
+                            }
+                        }
+                    </select>
+                    <button class="btn btn-dark" id="agregarTipo" type="button" onclick="guardar()"><i class="bi bi-plus-lg"></i></button>
+                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Direccion" class="control-label"></label>
                 <input asp-for="Direccion" class="form-control" />
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Uso" class="control-label"></label>
-                <select asp-for="Uso" class="form-control">
-                <option value="">Selecciona un uso</option>
+                <select asp-for="Uso" class="form-select">
                 <option value="Comercial">Comercial</option>
                 <option value="Residencial">Residencial</option>
                 </select>
                 <span asp-validation-for="Uso" class="text-danger"></span>
             </div>
             
-            <div class="form-group">
-                <label asp-for="CantidadAmbientes" class="control-label"></label>
+            <div class="form-group mb-3">
+                <label asp-for="CantidadAmbientes" class="control-label">Ambientes</label>
                 <input asp-for="CantidadAmbientes" class="form-control" />
                 <span asp-validation-for="CantidadAmbientes" class="text-danger"></span>
             </div>
             
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Coordenadas" class="control-label"></label>
                 <input asp-for="Coordenadas" class="form-control" />
                 <span asp-validation-for="Coordenadas" class="text-danger"></span>
@@ -75,3 +87,44 @@
     <a asp-action="Index" class="btn btn-primary">Volver</a>
 </div>
 
+<form class="modal" tabindex="-1" action="/TipoInmueble/Guardar" method="post" id="modal_guardar_tipo">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body m-3">
+        <input type="hidden" name="Id" value="0">
+        <input type="hidden" name="Estado" value="1">
+        <div class="form-floating">
+            <input type="text" name="Descripcion" class="form-control" placeholder="" id="tipo" oninput="validarInput('#tipo')">
+            <label for="floatingInput">Ingrese un nuevo tipo de inmueble</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-dark" id="botonGuardar" disabled>Guardar</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+@section Scripts {
+    <script>
+        // HACER UN BOTON QUE TE MANDE AL INDEX DE TIPO Y BORRAR TODO DE MODAL.
+        function guardar() {
+            $("#modal_guardar_tipo").modal("show");
+        }
+
+        function validarInput(elem) {
+            let e = document.querySelector(elem).value.trim();
+            const botonGuardar = document.querySelector('#botonGuardar');
+            if (e !== '') {
+                botonGuardar.disabled = false;
+            } else {
+                botonGuardar.disabled = true;
+            }
+        }
+    </script>
+}

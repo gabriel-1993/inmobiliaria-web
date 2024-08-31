@@ -1,0 +1,44 @@
+@model InmobiliariaVargasHuancaTorrez.Models.Inmueble
+
+@{
+    ViewData["Title"] = "Detalle Inmueble";
+}
+
+<div class="container">
+    <h2>Detalle inmueble</h2>
+    <table class="table">
+        <tr>
+            <th>Propietario</th>
+            <td>@Model.Propietario?.ToString()</td>
+        </tr>
+        <tr>
+            <th>Tipo de Inmueble</th>
+            <td>@Model.Tipo?.Descripcion</td>
+        </tr>
+        <tr>
+            <th>Direccion</th>
+            <td>@Model.Direccion</td>
+        </tr>
+        <tr>
+            <th>Uso</th>
+            <td>@Model.Uso</td>
+        </tr>
+        <tr>
+            <th>Ambientes</th>
+            <td>@Model.CantidadAmbientes</td>
+        </tr>
+        <tr>
+            <th>Coordenadas</th>
+            <td>@Model.Coordenadas</td>
+        </tr>
+        <tr>
+            <th>Precio</th>
+            <td>@Model.Precio</td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
+        </tr>
+    </table>
+    <a href="@Url.Action("Index", "Inmuebles")" class="btn btn-primary">Volver</a>
+</div>

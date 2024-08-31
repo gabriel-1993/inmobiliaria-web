@@ -35,7 +35,8 @@ public class InmueblesController : Controller
     var repoPropietario = new RepositorioPropietario(); // Asegúrate de tener un repositorio para los propietarios
     ViewBag.Propietario = repoPropietario.ObtenerTodos(); // Asigna la lista de propietarios al ViewBag
 
-    // ACA PASAR TIPO INMUEBLE A LA VISTA
+    var repoTipoInmueble = new RepositorioTipoInmueble();
+    ViewBag.TipoInmueble = repoTipoInmueble.ObtenerTodos();
 
     if (id == 0)
     {

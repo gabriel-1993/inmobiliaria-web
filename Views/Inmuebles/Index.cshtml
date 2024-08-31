@@ -11,7 +11,6 @@
 <table class="table" id="tablaInmuebles">
     <thead>
         <tr>
-            <th>Dueño</th>
             <th>Tipo</th>
             <th>Direccion</th>
             <th>Uso</th>
@@ -24,9 +23,8 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr class="@(item.Estado ? "" : "table-danger")">
-                <td>@Html.DisplayFor(modelItem => item.Id_Propietario)</td>
-                <td>@Html.DisplayFor(modelItem => item.Id_Tipo)</td>
+            <tr>
+                <td>@item.Tipo?.Descripcion</td>
                 <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
                 <td>@Html.DisplayFor(modelItem => item.Uso)</td>
                 <td>@Html.DisplayFor(modelItem => item.CantidadAmbientes)</td>
