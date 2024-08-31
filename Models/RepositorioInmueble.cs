@@ -11,26 +11,7 @@ public class RepositorioInmueble
         List<Inmueble> inmuebles = new List<Inmueble>();
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = $@"SELECT
-                i.Id,
-                i.Id_Propietario,
-                i.Id_Tipo,
-                i.Direccion,
-                i.Uso,
-                i.CantidadAmbientes,
-                i.Coordenadas,
-                i.Precio,
-                i.Estado,
-                p.Nombre,
-                p.Apellido,
-                p.Dni,
-                t.Descripcion
-            FROM
-                inmuebles i
-            INNER JOIN propietarios p ON
-                i.Id_Propietario = p.Id
-            INNER JOIN tipos_inmueble t ON
-                i.Id_Tipo = t.Id";
+            var query = $@"SELECT {nameof(Inmueble.Id)}, {nameof(Inmueble.Id_Propietario)}, {nameof(Inmueble.Id_Tipo)}, {nameof(Inmueble.Direccion)}, {nameof(Inmueble.Uso)}, {nameof(Inmueble.CantidadAmbientes)}, {nameof(Inmueble.Coordenadas)}, {nameof(Inmueble.Precio)}, {nameof(Inmueble.Estado)} FROM inmuebles";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 connection.Open();
@@ -47,17 +28,10 @@ public class RepositorioInmueble
                         CantidadAmbientes = reader.GetInt32(nameof(Inmueble.CantidadAmbientes)),
                         Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
                         Precio = reader.GetInt32(nameof(Inmueble.Precio)),
-                        Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
-                        Propietario = new Propietario 
-                        {
-                            Nombre = reader.GetString(nameof(Propietario.Nombre)),
-                            Apellido = reader.GetString(nameof(Propietario.Apellido)),
-                            Dni = reader.GetString(nameof(Propietario.Dni))
-                        },
-                        Tipo = new TipoInmueble
-                        {
-                            Descripcion = reader.GetString(nameof(TipoInmueble.Descripcion))
-                        }
+                        Estado = reader.GetBoolean(nameof(Inmueble.Estado))
+
+                        // ACA AGREGAR UN NEW PROPIETARIO
+
                     });
                 }
                 connection.Close();

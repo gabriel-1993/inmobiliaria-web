@@ -1,3 +1,159 @@
+@* @model InmobiliariaVargasHuancaTorrez.Models.Contrato
+@{
+ViewData["Title"] = "Contratos";
+var listaInquilinos = ViewBag.Inquilinos as IList<InmobiliariaVargasHuancaTorrez.Models.Inquilino>;
+var listaInmuebles = ViewBag.Inmuebles as IList<InmobiliariaVargasHuancaTorrez.Models.Inmueble>;
+var listaPropietarios = ViewBag.Propietarios as IList<InmobiliariaVargasHuancaTorrez.Models.Propietario>;
+}
+<div class="row mt-4 d-flex justify-content-center">
+<div class="col-md-5">
+@if (Model != null && Model.Id == 0)
+{
+<h2 class="text-center">Crear Contrato</h2>
+}
+else
+{
+<h2 class="text-center">Editar Contrato</h2>
+}
+<hr />
+<form asp-action="Guardar">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" name="Id" value="@Model?.Id" />
+
+<div class="form-group">
+<label class="control-label">Inquilino</label>
+<select class="form-control" name="Id_Inquilino">
+@if (listaInquilinos != null)
+{
+@foreach (var item in listaInquilinos)
+{
+<option value="@item.Id">@(item.ToString())</option>
+}
+}
+else
+{
+<option value="">No hay inquilinos disponibles</option>
+}
+</select>
+<span asp-validation-for="Id_Inquilino" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+<label class="control-label">Inmueble</label>
+<select class="form-control" id="selectInmueble" name="Id_Inmueble" onchange="handleInmuebleChange()">
+@if (listaInmuebles != null)
+{
+@foreach (var item in listaInmuebles)
+{
+<option value="@item.Id" data-propietario-id="@item.Id_Propietario"
+data-propietario="@item.Propietario">
+@(item.ToString())
+</option>
+}
+}
+else
+{
+<option value="">No hay inmuebles disponibles</option>
+}
+</select>
+<span asp-validation-for="Id_Inmueble" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+<label class="control-label">Propietario</label>
+<select class="form-control" id="selectPropietario" name="Id_Propietario">
+<option value="">Selecciona un inmueble primero</option>
+</select>
+</div>
+
+
+
+<script>
+function handleInmuebleChange() {
+var inmuebleSelect = document.getElementById('selectInmueble');
+var propietarioSelect = document.getElementById('selectPropietario');
+
+// Limpia el dropdown de propietarios
+propietarioSelect.innerHTML = "";
+
+// Obtén el inmueble seleccionado
+var selectedOption = inmuebleSelect.options[inmuebleSelect.selectedIndex];
+
+// Obtén el ID y nombre del propietario desde los atributos data
+var propietarioId = selectedOption.getAttribute('data-propietario-id');
+var propietario = selectedOption.getAttribute('data-propietario');
+
+// Crea una opción por defecto si no hay propietario seleccionado
+var defaultOption = document.createElement('option');
+defaultOption.value = "";
+defaultOption.text = "Selecciona un propietario";
+propietarioSelect.appendChild(defaultOption);
+
+if (propietarioId && propietario) {
+// Agrega la opción del propietario
+var option = document.createElement('option');
+option.value = propietarioId;
+option.text = propietario;
+propietarioSelect.appendChild(option);
+
+// Selecciona automáticamente el propietario
+propietarioSelect.value = propietarioId;
+} else {
+// Si no hay propietarios asociados, muestra una opción vacía
+var option = document.createElement('option');
+option.value = "";
+option.text = "No hay propietarios disponibles";
+propietarioSelect.appendChild(option);
+}
+}
+
+// Ejecuta la función al cargar la página si hay un inmueble seleccionado por defecto
+document.addEventListener('DOMContentLoaded', function () {
+handleInmuebleChange();
+});
+</script>
+
+
+<div class="form-group">
+<label asp-for="FechaInicio" class="control-label"></label>
+<input asp-for="FechaInicio" type="date" class="form-control" />
+<span asp-validation-for="FechaInicio" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+<label asp-for="FechaFin" class="control-label"></label>
+<input asp-for="FechaFin" type="date" class="form-control" />
+<span asp-validation-for="FechaFin" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+<label asp-for="MontoAlquiler" class="control-label"></label>
+<input asp-for="MontoAlquiler" class="form-control" value="@(Model?.MontoAlquiler)" />
+<span asp-validation-for="MontoAlquiler" class="text-danger"></span>
+</div>
+
+@if (Model != null && Model.Id > 0)
+{
+<div class="form-group">
+<label asp-for="FechaTerminacion" class="control-label"></label>
+<input asp-for="FechaTerminacion" type="date" class="form-control" />
+<span asp-validation-for="FechaTerminacion" class="text-danger"></span>
+</div>
+<div class="form-group">
+<label asp-for="Multa" class="control-label"></label>
+<input asp-for="Multa" class="form-control" />
+<span asp-validation-for="Multa" class="text-danger"></span>
+</div>
+}
+
+<div class="form-group mb-3 d-grid">
+<input type="submit" value="Guardar" class="btn btn-primary" />
+</div>
+</form>
+</div>
+</div>
+<a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a> *@
+
 @model InmobiliariaVargasHuancaTorrez.Models.Contrato
 @{
     ViewData["Title"] = "Contratos";
@@ -66,51 +222,6 @@
                 </select>
             </div>
 
-            @* <script>
-            function handleInmuebleChange() {
-
-            var inmuebleSelect = document.getElementById('selectInmueble');
-            var propietarioSelect = document.getElementById('selectPropietario');
-
-            // Limpia el dropdown de propietarios
-            propietarioSelect.innerHTML = "";
-
-            // Obtén el inmueble seleccionado
-            var selectedOption = inmuebleSelect.options[inmuebleSelect.selectedIndex];
-
-            // Obtén el ID y nombre del propietario desde los atributos data
-            var propietarioId = selectedOption.getAttribute('data-propietario-id');
-            var propietario = selectedOption.getAttribute('data-propietario');
-
-            console.log(propietarioId);
-            console.log(propietario);
-            // Crea una opción por defecto
-            var defaultOption = document.createElement('option');
-            defaultOption.value = "";
-            defaultOption.text = "Selecciona un propietario";
-            propietarioSelect.appendChild(defaultOption);
-
-            if (propietarioId && propietario) {
-            // Agrega la opción del propietario
-            var option = document.createElement('option');
-            option.value = propietarioId;
-            option.text = propietario;
-            propietarioSelect.appendChild(option);
-            } else {
-            // Si no hay propietarios asociados, muestra una opción vacía
-            var option = document.createElement('option');
-            option.value = "";
-            option.text = "No hay propietarios disponibles";
-            propietarioSelect.appendChild(option);
-            }
-            }
-
-            // Ejecuta la función al cargar la página si hay un inmueble seleccionado por defecto
-            document.addEventListener('DOMContentLoaded', function () {
-            handleInmuebleChange();
-            });
-            </script> *@
-
             <script>
                 function handleInmuebleChange() {
                     var inmuebleSelect = document.getElementById('selectInmueble');
@@ -156,7 +267,6 @@
                 });
             </script>
 
-
             <div class="form-group">
                 <label asp-for="FechaInicio" class="control-label"></label>
                 <input asp-for="FechaInicio" type="date" class="form-control" />
@@ -169,14 +279,14 @@
                 <span asp-validation-for="FechaFin" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="MontoAlquiler" class="control-label"></label>
-                <input asp-for="MontoAlquiler" class="form-control" />
-                <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
-            </div>
-
             @if (Model != null && Model.Id > 0)
             {
+                <div class="form-group">
+                    <label asp-for="MontoAlquiler" class="control-label"></label>
+                    <input asp-for="MontoAlquiler" class="form-control" readonly="readonly" />
+                    <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
+                </div>
+
                 <div class="form-group">
                     <label asp-for="FechaTerminacion" class="control-label"></label>
                     <input asp-for="FechaTerminacion" type="date" class="form-control" />
@@ -184,8 +294,16 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Multa" class="control-label"></label>
-                    <input asp-for="Multa" class="form-control" />
+                    <input asp-for="Multa" class="form-control" readonly="readonly" />
                     <span asp-validation-for="Multa" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="MontoAlquiler" class="control-label"></label>
+                    <input asp-for="MontoAlquiler" class="form-control" />
+                    <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
                 </div>
             }
 
