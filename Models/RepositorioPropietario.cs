@@ -106,9 +106,7 @@ public class RepositorioPropietario
                     {nameof(Propietario.Apellido)} = @apellido,
 					{nameof(Propietario.Nombre)} = @nombre,
                     {nameof(Propietario.Telefono)} = @telefono,
-					{nameof(Propietario.Direccion)} = @direccion,
-					{nameof(Propietario.Estado)} = @estado
-
+					{nameof(Propietario.Direccion)} = @direccion
 				WHERE {nameof(Propietario.Id)} = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -118,7 +116,6 @@ public class RepositorioPropietario
                 command.Parameters.AddWithValue("@nombre", propietario.Nombre);
                 command.Parameters.AddWithValue("@telefono", propietario.Telefono);
                 command.Parameters.AddWithValue("@direccion", propietario.Direccion);
-                command.Parameters.AddWithValue("@estado", propietario.Estado);
                 connection.Open();
                 res = command.ExecuteNonQuery();
                 connection.Close();

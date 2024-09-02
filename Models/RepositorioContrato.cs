@@ -229,8 +229,7 @@ public class RepositorioContrato
                     {nameof(Contrato.FechaFin)} = @FechaFin,
     				{nameof(Contrato.MontoAlquiler)} = @MontoAlquiler,
     				{nameof(Contrato.FechaTerminacion)} = @FechaTerminacion,
-    				{nameof(Contrato.Multa)} = @Multa,
-                    {nameof(Contrato.Estado)} = @Estado
+    				{nameof(Contrato.Multa)} = @Multa
 
 
     			WHERE {nameof(Contrato.Id)} = @id";
@@ -244,7 +243,6 @@ public class RepositorioContrato
                 command.Parameters.AddWithValue("@MontoAlquiler", contrato.MontoAlquiler);
                 command.Parameters.AddWithValue("@FechaTerminacion", contrato.FechaTerminacion);
                 command.Parameters.AddWithValue("@Multa", contrato.Multa);
-                command.Parameters.AddWithValue("@Estado", contrato.Estado);
 
                 connection.Open();
                 res = command.ExecuteNonQuery();

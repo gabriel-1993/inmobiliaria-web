@@ -17,6 +17,7 @@
             <th>Ambientes</th>
             <th>Coordenadas</th>
             <th>Precio</th>
+            <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -30,16 +31,17 @@
                 <td>@Html.DisplayFor(modelItem => item.CantidadAmbientes)</td>
                 <td>@Html.DisplayFor(modelItem => item.Coordenadas)</td>
                 <td>@Html.DisplayFor(modelItem => item.Precio)</td>
+                <td>@(item.Estado ? "Activo" : "Inactivo")</td>
                 <td>
-                    <a href="/Inmuebles/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i> Detalle</a>
-                    <a href="/Inmuebles/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i> Editar</a>
+                    <a href="/Inmuebles/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
+                    <a href="/Inmuebles/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i></a>
                     @if (item.Estado)
                     {
-                        <a href="/Inmuebles/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i> Eliminar</a>
+                        <a href="/Inmuebles/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
                     }
                     else
                     {
-                        <a href="/Inmuebles/Activar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Activar</a>
+                        <a href="/Inmuebles/Activar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></a>
                     }
                 </td>
             </tr>
