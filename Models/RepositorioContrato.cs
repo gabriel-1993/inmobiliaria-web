@@ -18,7 +18,8 @@ public class RepositorioContrato
                                 c.Id AS ContratoId,
                                 c.Id_Inquilino AS ContratoId_Inquilino, 
                                 c.Id_Inmueble AS ContratoId_Inmueble, 
-                                c.FechaInicio,  
+                                c.FechaInicio, 
+                                c.FechaFin, 
                                 c.FechaTerminacion,  
                                 c.Estado AS ContratoEstado,
                                 i.Id AS InmuebleId,
@@ -54,6 +55,7 @@ public class RepositorioContrato
                         Id_Inquilino = reader.GetInt32("ContratoId_Inquilino"),
                         Id_Inmueble = reader.GetInt32("ContratoId_Inmueble"),
                         FechaInicio = reader.GetDateTime("FechaInicio"),
+                        FechaFin = reader.GetDateTime("FechaFin"),
                         FechaTerminacion = reader.IsDBNull(reader.GetOrdinal("FechaTerminacion")) ? (DateTime?)null : reader.GetDateTime("FechaTerminacion"),
                         Estado = reader.GetBoolean("ContratoEstado"),
                         Inquilino = new Inquilino
@@ -104,6 +106,7 @@ public class RepositorioContrato
                 c.Id_Inquilino AS ContratoId_Inquilino, 
                 c.Id_Inmueble AS ContratoId_Inmueble, 
                 c.FechaInicio,  
+                c.FechaFin,
                 c.FechaTerminacion, 
                 c.MontoAlquiler, 
                 c.Multa,
@@ -144,6 +147,7 @@ public class RepositorioContrato
                         Id_Inquilino = reader.GetInt32("ContratoId_Inquilino"),
                         Id_Inmueble = reader.GetInt32("ContratoId_Inmueble"),
                         FechaInicio = reader.GetDateTime("FechaInicio"),
+                        FechaFin = reader.GetDateTime("FechaFin"),
                         FechaTerminacion = reader.IsDBNull(reader.GetOrdinal("FechaTerminacion")) ? (DateTime?)null : reader.GetDateTime("FechaTerminacion"),
                         Multa = reader.IsDBNull(reader.GetOrdinal("Multa")) ? (double?)null : reader.GetDouble("Multa"),
                         MontoAlquiler = reader.GetDouble("MontoAlquiler"), 
@@ -192,7 +196,7 @@ public class RepositorioContrato
         {
             var query = $@"INSERT INTO contratos 
             ({nameof(Contrato.Id_Inquilino)}, {nameof(Contrato.Id_Inmueble)}, {nameof(Contrato.FechaInicio)},  {nameof(Contrato.FechaFin)},  {nameof(Contrato.MontoAlquiler)}, {nameof(Contrato.FechaTerminacion)}, {nameof(Contrato.Multa)}, {nameof(Contrato.Estado)} )
-            VALUES (@Id_Inquilino, @Id_Inmueble, @FechaInicio, @FechaFin, @MontoAlquiler, @FechaTerminacion, @Multa, @Estado);
+            VALUES (@Id_Inquilino, @Id_Inmueble, @FechaInicio, @FechaFin, @MontoAlquiler, @FechaTerminacion, @Multa, 1);
             SELECT LAST_INSERT_ID();";
 
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -205,7 +209,6 @@ public class RepositorioContrato
                 command.Parameters.AddWithValue("@MontoAlquiler", contrato.MontoAlquiler);
                 command.Parameters.AddWithValue("@FechaTerminacion", contrato.FechaTerminacion.HasValue ? contrato.FechaTerminacion.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value);
                 command.Parameters.AddWithValue("@Multa", contrato.Multa);
-                command.Parameters.AddWithValue("@Estado", contrato.Estado);
 
                 connection.Open();
                 res = Convert.ToInt32(command.ExecuteScalar());

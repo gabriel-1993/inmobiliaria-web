@@ -16,6 +16,7 @@
             <th>Inquilino</th>
             <th>Propietario</th>
             <th>Fecha Finalizacion</th>
+            <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -34,26 +35,22 @@
                     @($"{item.Inmueble?.Propietario?.Nombre} {item.Inmueble?.Propietario?.Apellido} {item.Inmueble?.Propietario?.Dni}")
                 </td>
                 <td>
-                    @if (item.FechaTerminacion.HasValue)
-                    {
-                        @item.FechaTerminacion.Value.ToString("dd/MM/yyyy")
-                    }
-                    else
-                    {
-                        <span>Contrato en curso</span>
-                    }
+                    @item.FechaFin.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @(item.FechaTerminacion.HasValue ? "Terminado" : "En curso")
                 </td>
                 <td>
                     <a href="/Contratos/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
                     <a href="/Contratos/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i></a>
-                    @if (item.Estado)
+                    @* @if (item.Estado)
                     {
                         <a href="/Contratos/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
                     }
                     else
                     {
                         <a href="/Contratos/Habilitar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></a>
-                    }
+                    } *@
                 </td>
             </tr>
         }

@@ -22,10 +22,6 @@
         </tr>
       
         <tr>
-            <th>Estado</th>
-            <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
-        </tr>
-        <tr>
             <th>Tel Prop</th>
             <td>@Model.Inmueble?.Propietario?.Telefono</td>
         </tr>
@@ -39,16 +35,7 @@
         </tr>
         <tr>
             <th>Hasta</th>
-            <td>
-                @if (Model.FechaTerminacion.HasValue)
-                {
-                    @Model.FechaTerminacion.Value.ToString("dd/MM/yyyy")
-                }
-                else
-                {
-                    <span>Contrato en curso</span>
-                }
-            </td>
+            <td>@Model.FechaFin.ToString("dd/MM/yyyy")</td>
         </tr>
           <tr>
             <th>Fecha Finalizacion</th>
@@ -70,18 +57,20 @@
         <tr>
             <th>Multa</th>
             <td>
-                    @if (Model.Multa.HasValue)
-                    {
-                        @Model.Multa
-                    }
-                    else
-                    {
-                        <span>0</span>
-                    }
-                
-                
-                @* @(Model.Multa ?? 0)</td> *@
-        </tr>                            
+                @if (Model.Multa.HasValue)
+                {
+                    @Model.Multa
+                }
+                else
+                {
+                    <span>0</span>
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td>@(Model.FechaTerminacion.HasValue ? "Terminado" : "En curso")</td>
+        </tr>
     </table>
     <a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a>
 </div>

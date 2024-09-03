@@ -47,6 +47,8 @@ public class ContratosController : Controller
         ViewBag.Inquilinos = listaInquilinos;
         ViewBag.Inmuebles = listaInmuebles;
 
+        ViewBag.FechaActual = DateTime.Now.ToString("yyyy-MM-dd");
+
         if (id == null || id == 0)
         {
             // Crear un nuevo contrato
