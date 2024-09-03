@@ -1,0 +1,24 @@
+@model InmobiliariaVargasHuancaTorrez.Models.TipoInmueble
+
+@{
+    ViewData["Title"] = "Detalle Tipo de Inmueble";
+}
+
+<div class="container">
+    <h2>Detalle Tipo</h2>
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <th>Descripcion</th>
+            <td>@Model.Descripcion</td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
+        </tr>
+    </table>
+    <a asp-action="Index" class="btn btn-primary">Volver</a>
+</div>

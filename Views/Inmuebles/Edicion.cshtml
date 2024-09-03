@@ -87,7 +87,7 @@
     <a asp-action="Index" class="btn btn-primary">Volver</a>
 </div>
 
-<form class="modal" tabindex="-1" action="/TipoInmueble/Guardar" method="post" id="modal_guardar_tipo">
+<form class="modal" tabindex="-1" action="/TipoInmueble/Agregar" method="post" id="modal_guardar_tipo">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -95,8 +95,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body m-3">
-        <input type="hidden" name="Id" value="0">
-        <input type="hidden" name="Estado" value="1">
         <div class="form-floating">
             <input type="text" name="Descripcion" class="form-control" placeholder="" id="tipo" oninput="validarInput('#tipo')">
             <label for="floatingInput">Ingrese un nuevo tipo de inmueble</label>

@@ -1,0 +1,40 @@
+@model IEnumerable<InmobiliariaVargasHuancaTorrez.Models.TipoInmueble>
+@{
+    ViewData["Title"] = "Listado de Tipos de Inmueble";
+}
+
+<div class="text-center">
+    <h2 class="mt-4">Listado de Tipos de Inmueble </h2>
+    <a href="/TipoInmueble/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear tipo de inmueble</a>
+</div>
+
+<table class="table" id="tablaTipoInmueble">
+    <thead>
+        <tr>
+            <th>Descripcion</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                <td>@(item.Estado ? "Activo" : "Inactivo")</td>
+                <td>
+                    <a href="/TipoInmueble/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
+                    <a href="/TipoInmueble/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i></a>
+                    @if (item.Estado)
+                    {
+                        <a href="/TipoInmueble/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
+                    }
+                    else
+                    {
+                        <a href="/TipoInmueble/Activar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
