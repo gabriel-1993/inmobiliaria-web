@@ -62,6 +62,30 @@ public class ContratosController : Controller
         }
     }
 
+public IActionResult CalcularMulta(DateTime fechaTerminacion, DateTime fechaInicio, DateTime fechaFin, double montoAlquiler)
+{
+    double multa = 0;
+
+    // Calcula la duración del contrato en días
+    double duracionTotalDias = (fechaFin - fechaInicio).TotalDays;
+    double diasHastaTerminacion = (fechaTerminacion - fechaInicio).TotalDays;
+
+    // Verifica si se cumplió menos de la mitad del tiempo original de alquiler
+    if (diasHastaTerminacion < duracionTotalDias / 2)
+    {
+        multa = montoAlquiler * 2;
+    }
+    else
+    {
+        multa = montoAlquiler;
+    }
+
+    // Aquí también podrías verificar si hay meses de alquiler adeudados
+
+    return Json(new { multa = multa });
+}
+
+
     [HttpPost]
 
     public IActionResult Guardar(int id, Contrato contrato)
