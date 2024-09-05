@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-08-2024 a las 21:43:55
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 05-09-2024 a las 17:35:08
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -60,8 +60,8 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`Id`, `Id_Inquilino`, `Id_Inmueble`, `FechaInicio`, `FechaFin`, `MontoAlquiler`, `FechaTerminacion`, `Multa`, `Estado`) VALUES
-(2, 1, 1, '2024-08-01', '0001-01-19', '0.00', '2024-08-08', '0.00', 0),
-(4, 1, 4, '0001-01-11', '0001-01-01', '0.00', NULL, NULL, 1);
+(6, 8, 4, '2024-09-02', '2025-09-02', 13000.00, '2024-09-19', NULL, 1),
+(7, 1, 1, '2024-09-02', '2025-09-02', 23000.00, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -86,10 +86,10 @@ CREATE TABLE `inmuebles` (
 --
 
 INSERT INTO `inmuebles` (`Id`, `Id_Propietario`, `Id_Tipo`, `Direccion`, `Uso`, `CantidadAmbientes`, `Coordenadas`, `Precio`, `Estado`) VALUES
-(1, 2, 1, 'Rivadavia 103', 'Residencial', 3, '100324', '15000000.00', 1),
-(2, 3, 2, 'San Martin 997', 'Residencial', 1, '400,20', '18000000.00', 1),
-(4, 4, 3, 'Ayacucho 123', 'Comercial', 2, '3124132', '21222000.00', 1),
-(5, 5, 1, 'Maipu 765', 'Residencial', 6, '23423', '28900000.00', 0);
+(1, 2, 1, 'Rivadavia 103', 'Residencial', 3, '100324', 15000000.00, 1),
+(2, 3, 2, 'San Martin 997', 'Residencial', 1, '400,20', 18000000.00, 1),
+(4, 4, 3, 'Ayacucho 123', 'Comercial', 2, '3124132', 21222000.00, 1),
+(5, 5, 1, 'Maipu 765', 'Residencial', 6, '23423', 28900000.00, 0);
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ INSERT INTO `inquilinos` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `Telefo
 (1, '33016244', 'Messi', 'Leonel', '987654432', NULL, 1),
 (2, '21543432', 'Ozil', 'Mesut', '+541152799578', NULL, 1),
 (3, '28868776', 'Guardiola', 'Pep', '+541150328167', '+541150331632', 1),
-(8, '35354321', 'Eto', 'Samuel', '+541152175936', '+541152193398', 0),
+(8, '35354321', 'Eto', 'Samuel', '+541152175936', '+541152193398', 1),
 (9, '41436534', 'Kross', 'Toni', '+541152799598', NULL, 0);
 
 -- --------------------------------------------------------
@@ -182,8 +182,8 @@ INSERT INTO `tipos_inmueble` (`Id`, `Descripcion`, `Estado`) VALUES
 (1, 'Local', 1),
 (2, 'Depósito', 1),
 (3, 'Casa', 1),
-(4, 'Departamento', 1),
-(5, 'Industrial', 0);
+(4, 'Departamento', 0),
+(5, 'Industrial', 1);
 
 -- --------------------------------------------------------
 
@@ -193,11 +193,23 @@ INSERT INTO `tipos_inmueble` (`Id`, `Descripcion`, `Estado`) VALUES
 
 CREATE TABLE `usuarios` (
   `Id` int(11) NOT NULL,
+  `Nombre` varchar(100) NOT NULL,
+  `Apellido` varchar(100) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `Clave` varchar(255) NOT NULL,
-  `Rol` enum('administrador','empleado') NOT NULL,
+  `Avatar` varchar(250) DEFAULT NULL,
+  `Rol` int(11) NOT NULL,
   `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`Id`, `Nombre`, `Apellido`, `Email`, `Clave`, `Avatar`, `Rol`, `Estado`) VALUES
+(5, 'Nahuel', 'Vargas', 'nv@gmail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1, 1),
+(6, 'Kevin ', 'Huanca', 'kh@gmail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1, 1),
+(7, 'Gabriel', 'Torrez', 'gt@gmail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -270,7 +282,7 @@ ALTER TABLE `auditoria`
 -- AUTO_INCREMENT de la tabla `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `inmuebles`
@@ -300,13 +312,13 @@ ALTER TABLE `propietarios`
 -- AUTO_INCREMENT de la tabla `tipos_inmueble`
 --
 ALTER TABLE `tipos_inmueble`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restricciones para tablas volcadas

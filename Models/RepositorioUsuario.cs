@@ -25,11 +25,15 @@ public class RepositorioUsuario
                         Apellido = reader.GetString(nameof(Usuario.Apellido)),
                         Email = reader.GetString(nameof(Usuario.Email)),
                         Clave = reader.GetString(nameof(Usuario.Clave)),
-                        Avatar = reader.GetString(nameof(Usuario.Avatar)),
+                        Avatar = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Avatar)))
+                      ? null
+                      : reader.GetString(reader.GetOrdinal(nameof(Usuario.Avatar))),
                         Rol = reader.GetInt32(nameof(Usuario.Rol)),
                         Estado = reader.GetBoolean(nameof(Usuario.Estado))
                     });
+
                 }
+
                 connection.Close();
             }
             return usuarios;
@@ -56,7 +60,9 @@ public class RepositorioUsuario
                         Apellido = reader.GetString(2),
                         Email = reader.GetString(3),
                         Clave = reader.GetString(4),
-                        Avatar = reader.GetString(5),
+                        Avatar = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Avatar)))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal(nameof(Usuario.Avatar))),
                         Rol = reader.GetInt32(6),
                         Estado = reader.GetBoolean(7)
                     };
@@ -90,21 +96,58 @@ public class RepositorioUsuario
         return res;
     }
 
+
     public int Modificar(Usuario usuario)
+{
+    int res = -1;
+    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    {
+        // Construir la consulta condicionalmente
+        var query = $@"UPDATE usuarios 
+                       SET nombre = @nombre, apellido = @apellido, email = @email, avatar = @avatar, rol = @rol";
+
+        if (!string.IsNullOrEmpty(usuario.Clave)) // Si la clave no es nula o vacía, incluirla en el query
+        {
+            query += ", clave = @clave";
+        }
+
+        query += " WHERE id = @id";
+
+        using (MySqlCommand command = new MySqlCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@id", usuario.Id);
+            command.Parameters.AddWithValue("@nombre", usuario.Nombre);
+            command.Parameters.AddWithValue("@apellido", usuario.Apellido);
+            command.Parameters.AddWithValue("@email", usuario.Email);
+            command.Parameters.AddWithValue("@avatar", usuario.Avatar);
+            command.Parameters.AddWithValue("@rol", usuario.Rol);
+
+            if (!string.IsNullOrEmpty(usuario.Clave))
+            {
+                command.Parameters.AddWithValue("@clave", usuario.Clave);
+            }
+
+            connection.Open();
+            res = command.ExecuteNonQuery();
+            connection.Close();
+        }
+    }
+    return res;
+}
+
+
+    public int Baja(int id)
     {
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = $@"UPDATE usuarios SET nombre = @nombre, apellido = @apellido, email = @email, clave = @clave, avatar = @avatar, rol = @rol WHERE id = @id";
+            var query = $@"UPDATE usuarios SET
+                        {nameof(Usuario.Estado)} = @estado
+                       WHERE {nameof(Usuario.Id)} = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@id", usuario.Id);
-                command.Parameters.AddWithValue("@nombre", usuario.Nombre);
-                command.Parameters.AddWithValue("@apellido", usuario.Apellido);
-                command.Parameters.AddWithValue("@email", usuario.Email);
-                command.Parameters.AddWithValue("@clave", usuario.Clave);
-                command.Parameters.AddWithValue("@avatar", usuario.Avatar);
-                command.Parameters.AddWithValue("@rol", usuario.Rol);
+                command.Parameters.AddWithValue("@estado", 0); // Asignar 0 al parámetro @estado
+                command.Parameters.AddWithValue("@id", id);
                 connection.Open();
                 res = command.ExecuteNonQuery();
                 connection.Close();
@@ -113,5 +156,26 @@ public class RepositorioUsuario
         return res;
     }
 
-    
+    public int Habilitar(int id)
+    {
+        int res = -1;
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            var query = $@"UPDATE usuarios SET
+                        {nameof(Usuario.Estado)} = @estado
+                       WHERE {nameof(Usuario.Id)} = @id";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@estado", 1); // Asignar 0 al parámetro @estado
+                command.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                res = command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+        return res;
+    }
+
+
+
 }

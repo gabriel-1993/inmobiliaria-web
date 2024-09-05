@@ -27,27 +27,4 @@ public class Contrato
 
 
 
-  // Método para calcular la multa
-        public double CalcularMulta()
-        {
-            if (!FechaTerminacion.HasValue)
-            {
-                return 0;
-            }
-
-            var tiempoTotal = (FechaFin - FechaInicio).TotalDays;
-            var tiempoTranscurrido = (FechaTerminacion.Value - FechaInicio).TotalDays;
-
-            if (tiempoTranscurrido < tiempoTotal / 2)
-            {
-                // Multa de 2 meses de alquiler si se cumplió menos de la mitad del tiempo original de alquiler
-                return MontoAlquiler * 2;
-            }
-            else
-            {
-                // Multa de 1 mes de alquiler si se cumplió más de la mitad del tiempo original de alquiler
-                return MontoAlquiler;
-            }
-        }
-
 }

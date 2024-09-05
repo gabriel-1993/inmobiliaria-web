@@ -46,7 +46,7 @@
 
             <div class="form-group mb-3">
                 <label asp-for="Avatar" class="control-label"></label><br>
-                <input type="file" name="Avatar" />
+                <input type="file" asp-for="Avatar" />
                 <span asp-validation-for="Avatar" class="text-danger"></span>
             </div>
 
