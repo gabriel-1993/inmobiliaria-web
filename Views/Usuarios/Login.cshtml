@@ -1,0 +1,24 @@
+<div class="d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body mx-2">
+                        <h5 class="card-title text-center mt-2 mb-3">CPOE</h5>
+                        <form action="/entrar" method="POST"> // USAR ASP-ACTION
+                            <div class="form-floating mb-3"><input class="form-control" id="usuario" type="text"
+                                    placeholder="Usuario" required><label class="floatingInput"><i
+                                        class="bi bi-person-fill"></i> Usuario</label></div>
+                            <div class="form-floating mb-4"><input class="form-control" id="clave" type="password"
+                                    placeholder="Contraseña" required><label class="floatingInput"><i
+                                        class="bi bi-lock-fill"></i> Contraseña</label></div>
+                            <div class="d-grid mb-3"><button class="btn btn-success" id="ingresar"
+                                    type="submit">Ingresar</button></div>
+                            <div class="text-center mb-3"><span id="mensaje"></span></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -26,3 +26,4 @@ new DataTable("#tablaPropietarios", options);
 new DataTable("#tablaInmuebles", options);
 new DataTable("#tablaContratos", options);
 new DataTable("#tablaTipoInmueble", options);
+new DataTable("#tablaUsuarios", options);
