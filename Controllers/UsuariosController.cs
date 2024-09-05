@@ -14,14 +14,18 @@ public class UsuariosController : Controller
 
     private readonly IConfiguration configuration;
 
-    public UsuariosController(ILogger<UsuariosController> logger, IConfiguration configuration)
+    //encontrar wwwroot
+    private readonly IWebHostEnvironment environment;
+
+
+    public UsuariosController(ILogger<UsuariosController> logger, IConfiguration configuration,IWebHostEnvironment environment )
     {
         _logger = logger;
         repo = new RepositorioUsuario();
         this.configuration = configuration;
+        this.environment = environment;
 
     }
-
 
 
     public IActionResult Index()
@@ -58,11 +62,11 @@ public class UsuariosController : Controller
     public IActionResult Guardar(int id, Usuario usuario)
     {
 
-        if (!string.IsNullOrEmpty(usuario.Clave) && id != 0 ) // Solo hashear si la clave no es nula ni vacía
+        if (!string.IsNullOrEmpty(usuario.Clave) && id != 0) // Solo hashear si la clave no es nula ni vacía
         {
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: usuario.Clave,
-                salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                salt: System.Text.Encoding.ASCII.GetBytes("esperaString"),
                 prf: KeyDerivationPrf.HMACSHA1,
                 iterationCount: 1000,
                 numBytesRequested: 256 / 8));

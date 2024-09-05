@@ -1,7 +1,6 @@
 @model InmobiliariaVargasHuancaTorrez.Models.Usuario
 @{
     ViewData["Title"] = "Edición de Usuario";
-    @* var listRol = (IList<Rol>)ViewBag.Rol; *@
 }
 
 <div class="row mt-4 d-flex justify-content-center">
@@ -14,7 +13,7 @@
         {
             <h2 class="text-center">Editar usuario</h2>
         }
-        <hr/>
+        <hr />
 
         <form asp-action="Guardar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -46,20 +45,17 @@
 
             <div class="form-group mb-3">
                 <label asp-for="Avatar" class="control-label"></label><br>
-                <input type="file" asp-for="Avatar" />
+                <input type="file" asp-for="Avatar" accept="image/*"/>
                 <span asp-validation-for="Avatar" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="Rol" class="control-label">Rol</label>
                 <select class="form-select" name="Rol">
-                    <option value="1">Administrador</option>
-                    <option value="2">Empleado</option>
-                    @* @foreach (var item in listRol)
-                    {
-                        @:<option @(item.Id == Model.Rol ? "selected" : "") value="@item.Id">@(item.Descripcion)</option>
-                    } *@
+                    <option value="1" selected="@(Model.Rol==1)">Administrador</option>
+                    <option value="2" selected="@(Model.Rol==2)">Empleado</option>
                 </select>
+
             </div>
 
             <div class="form-group mb-3 d-grid">
