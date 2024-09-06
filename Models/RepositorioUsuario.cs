@@ -86,7 +86,10 @@ public class RepositorioUsuario
                 command.Parameters.AddWithValue("@apellido", usuario.Apellido);
                 command.Parameters.AddWithValue("@email", usuario.Email);
                 command.Parameters.AddWithValue("@clave", usuario.Clave);
-                command.Parameters.AddWithValue("@avatar", usuario.Avatar);
+                if (String.IsNullOrEmpty(usuario.Avatar))
+                    command.Parameters.AddWithValue("@avatar", DBNull.Value);
+                else
+                    command.Parameters.AddWithValue("@avatar", usuario.Avatar);
                 command.Parameters.AddWithValue("@rol", usuario.Rol);
                 connection.Open();
                 res = Convert.ToInt32(command.ExecuteScalar());
@@ -98,42 +101,37 @@ public class RepositorioUsuario
 
 
     public int Modificar(Usuario usuario)
-{
-    int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
     {
-        // Construir la consulta condicionalmente
-        var query = $@"UPDATE usuarios 
+        int res = -1;
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            // Construir la consulta condicionalmente
+            var query = $@"UPDATE usuarios 
                        SET nombre = @nombre, apellido = @apellido, email = @email, avatar = @avatar, rol = @rol";
 
-        if (!string.IsNullOrEmpty(usuario.Clave)) // Si la clave no es nula o vacía, incluirla en el query
-        {
-            query += ", clave = @clave";
-        }
-
-        query += " WHERE id = @id";
-
-        using (MySqlCommand command = new MySqlCommand(query, connection))
-        {
-            command.Parameters.AddWithValue("@id", usuario.Id);
-            command.Parameters.AddWithValue("@nombre", usuario.Nombre);
-            command.Parameters.AddWithValue("@apellido", usuario.Apellido);
-            command.Parameters.AddWithValue("@email", usuario.Email);
-            command.Parameters.AddWithValue("@avatar", usuario.Avatar);
-            command.Parameters.AddWithValue("@rol", usuario.Rol);
-
-            if (!string.IsNullOrEmpty(usuario.Clave))
+            if (!string.IsNullOrEmpty(usuario.Clave)) // Si la clave no es nula o vacía, incluirla en el query
             {
-                command.Parameters.AddWithValue("@clave", usuario.Clave);
+                query += ", clave = @clave";
             }
 
-            connection.Open();
-            res = command.ExecuteNonQuery();
-            connection.Close();
+            query += " WHERE id = @id";
+
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", usuario.Id);
+                command.Parameters.AddWithValue("@nombre", usuario.Nombre);
+                command.Parameters.AddWithValue("@apellido", usuario.Apellido);
+                command.Parameters.AddWithValue("@email", usuario.Email);
+                command.Parameters.AddWithValue("@clave", usuario.Clave);
+                command.Parameters.AddWithValue("@avatar", usuario.Avatar);
+                command.Parameters.AddWithValue("@rol", usuario.Rol);
+                connection.Open();
+                res = command.ExecuteNonQuery();
+                connection.Close();
+            }
         }
+        return res;
     }
-    return res;
-}
 
 
     public int Baja(int id)

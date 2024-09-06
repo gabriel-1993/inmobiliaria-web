@@ -18,7 +18,8 @@ public class UsuariosController : Controller
     private readonly IWebHostEnvironment environment;
 
 
-    public UsuariosController(ILogger<UsuariosController> logger, IConfiguration configuration,IWebHostEnvironment environment )
+
+    public UsuariosController(ILogger<UsuariosController> logger, IConfiguration configuration, IWebHostEnvironment environment)
     {
         _logger = logger;
         repo = new RepositorioUsuario();
@@ -62,7 +63,7 @@ public class UsuariosController : Controller
     public IActionResult Guardar(int id, Usuario usuario)
     {
 
-        if (!string.IsNullOrEmpty(usuario.Clave) && id != 0) // Solo hashear si la clave no es nula ni vacía
+        if (!string.IsNullOrEmpty(usuario.Clave)) // Solo hashear si la clave no es nula ni vacía
         {
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: usuario.Clave,
@@ -72,20 +73,42 @@ public class UsuariosController : Controller
                 numBytesRequested: 256 / 8));
 
             usuario.Clave = hashed; // Asignar la clave hasheada al usuario
+
         }
 
         if (id == 0)
         {
 
-            repo.Agregar(usuario);
-
+            int idNuevo = repo.Agregar(usuario);
+            if (usuario.AvatarFile != null)
+            {
+                string wwwPath = environment.WebRootPath;
+                string path = Path.Combine(wwwPath, "img");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                string fileName = "avatar_" + idNuevo + Path.GetExtension(usuario.AvatarFile.FileName);
+                string pathCompleto = Path.Combine(path, fileName);
+                usuario.Avatar = Path.Combine("/img", fileName);
+                // Esta operación guarda la foto en memoria en la ruta que necesitamos
+                using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                {
+                    usuario.AvatarFile.CopyTo(stream);
+                }
+                usuario.Id = idNuevo;
+                repo.Modificar(usuario);
+            }
         }
         else
         {
+            // if (System.IO.File.Exists(usuario.Avatar))
+            // {
+            //     System.IO.File.Delete(usuario.Avatar);
+            // }
             repo.Modificar(usuario);
         }
-
-
         return RedirectToAction(nameof(Index));
     }
 
