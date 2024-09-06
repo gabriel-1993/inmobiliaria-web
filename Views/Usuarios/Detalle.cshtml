@@ -8,6 +8,18 @@
     <h2>Detalle del Usuario</h2>
     <table class="table">
         <tr>
+            <th>Avatar</th>
+            @if(Model.Avatar!=null) 
+				{
+					<td><img src=@Model.Avatar alt="Avatar del usuario" width="100" /></td>
+				}
+				else 
+				{
+					<td><strong>Sin foto</strong></td>
+				}
+            
+        </tr>
+        <tr>
             <th>Nombre</th>
             <td>@Model.Nombre</td>
         </tr>
@@ -26,10 +38,6 @@
         <tr>
             <th>Estado</th>
             <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
-        </tr>
-        <tr>
-            <th>Avatar</th>
-            <td><img src="@Url.Content(Model.Avatar)" alt="Avatar del usuario" width="100" /></td>
         </tr>
     </table>
     <a href="@Url.Action("Index", "Usuarios")" class="btn btn-primary">Volver</a>

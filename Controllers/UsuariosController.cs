@@ -107,6 +107,25 @@ public class UsuariosController : Controller
             // {
             //     System.IO.File.Delete(usuario.Avatar);
             // }
+            if (usuario.AvatarFile != null)
+            {   
+                
+                string wwwPath = environment.WebRootPath;
+                string path = Path.Combine(wwwPath, "img");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                string fileName = "avatar_" + usuario.Id + Path.GetExtension(usuario.AvatarFile.FileName);
+                string pathCompleto = Path.Combine(path, fileName);
+                usuario.Avatar = Path.Combine("/img", fileName);
+                // Esta operación guarda la foto en memoria en la ruta que necesitamos
+                using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                {
+                    usuario.AvatarFile.CopyTo(stream);
+                }
+            }
             repo.Modificar(usuario);
         }
         return RedirectToAction(nameof(Index));

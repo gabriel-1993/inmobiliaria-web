@@ -1,6 +1,7 @@
 @model InmobiliariaVargasHuancaTorrez.Models.Usuario
 @{
     ViewData["Title"] = "Edición de Usuario";
+    var rnd = new Random();
 }
 
 <div class="row mt-4 d-flex justify-content-center">
@@ -13,7 +14,7 @@
         {
             <h2 class="text-center">Editar usuario</h2>
         }
-        <hr />
+        <hr/>
 
         <form asp-action="Guardar" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -42,9 +43,18 @@
                 <input asp-for="Clave" class="form-control" type="password">
                 <span asp-validation-for="Clave" class="text-danger"></span>
             </div>
-
+            <input type="hidden" name="Avatar" value=@Model.Avatar><!--este input sirve para mantener el avatar en el editar por si no lo quiere cambiar y lo envia vacio-->
             <div class="form-group mb-3">
                 <label asp-for="AvatarFile" class="control-label"></label><br>
+                @if(!String.IsNullOrEmpty(Model.Avatar)) 
+				{
+					var x = Model.Avatar + "?" + rnd.Next();
+					<img width="32" src="@x" />
+				}
+				else 
+				{
+					<strong>Sin foto</strong>
+				}
                 <input type="file" asp-for="AvatarFile" accept="image/*"/>
                 <span asp-validation-for="AvatarFile" class="text-danger"></span>
             </div>
