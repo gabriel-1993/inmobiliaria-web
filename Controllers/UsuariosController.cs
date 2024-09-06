@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaVargasHuancaTorrez.Models;
 using System.Runtime.Intrinsics.X86;
@@ -108,8 +110,7 @@ public class UsuariosController : Controller
             //     System.IO.File.Delete(usuario.Avatar);
             // }
             if (usuario.AvatarFile != null)
-            {   
-                
+            {
                 string wwwPath = environment.WebRootPath;
                 string path = Path.Combine(wwwPath, "img");
                 if (!Directory.Exists(path))
@@ -134,6 +135,17 @@ public class UsuariosController : Controller
 
     public IActionResult Eliminar(int id)
     {
+        var usuario = repo.Obtener(id);
+        if (usuario?.Avatar != null)
+        {
+            var ruta = Path.Combine(environment.WebRootPath, "img", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
+            if (System.IO.File.Exists(ruta))
+            {
+                System.IO.File.Delete(ruta);
+                usuario.Avatar = null;
+                repo.Modificar(usuario);
+            }
+        }
         repo.Baja(id);
         return RedirectToAction(nameof(Index));
     }
