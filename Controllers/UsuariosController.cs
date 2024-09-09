@@ -1,10 +1,20 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using InmobiliariaVargasHuancaTorrez.Models;
-using System.Runtime.Intrinsics.X86;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System.Data;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Net.Http.Headers;
 
 namespace InmobiliariaVargasHuancaTorrez.Controllers;
 
@@ -19,8 +29,6 @@ public class UsuariosController : Controller
     //encontrar wwwroot
     private readonly IWebHostEnvironment environment;
 
-
-
     public UsuariosController(ILogger<UsuariosController> logger, IConfiguration configuration, IWebHostEnvironment environment)
     {
         _logger = logger;
@@ -29,7 +37,6 @@ public class UsuariosController : Controller
         this.environment = environment;
 
     }
-
 
     public IActionResult Index()
     {
@@ -50,7 +57,6 @@ public class UsuariosController : Controller
         }
     }
 
-
     public IActionResult Detalle(int id)
     {
         var usuario = repo.Obtener(id);
@@ -60,7 +66,6 @@ public class UsuariosController : Controller
         }
         return View(usuario);
     }
-
 
     public IActionResult Guardar(int id, Usuario usuario)
     {
@@ -132,7 +137,6 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-
     public IActionResult Eliminar(int id)
     {
         var usuario = repo.Obtener(id);
@@ -150,20 +154,60 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-
     public IActionResult Habilitar(int id)
     {
         repo.Habilitar(id);
         return RedirectToAction(nameof(Index));
     }
 
-
-
     public IActionResult Login()
     {
-        // var lista = repo.ObtenerTodos();
-        // return View(lista);
         return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Entrar(Login login)
+    {
+        if (ModelState.IsValid)
+        {
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: login.Password,
+                salt: System.Text.Encoding.ASCII.GetBytes("esperaString"),
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 1000,
+                numBytesRequested: 256 / 8));
+
+            var usuario = repo.ObtenerPorEmail(login.Email);
+            if (usuario == null || usuario.Clave != hashed || !usuario.Estado)
+            {
+                ModelState.AddModelError("", "El email o la clave no son correctos");
+                // TempData["returnUrl"] = returnUrl;
+                return View("Login", "Usuarios");
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, usuario.Email),
+                new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
+                new Claim(ClaimTypes.Role, usuario.RolNombre)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+
+        }
+        return RedirectToAction("Index", "Home");
+    }
+
+    public async Task<IActionResult> Salir()
+    {
+        await HttpContext.SignOutAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Login", "Usuarios");
     }
 
 }

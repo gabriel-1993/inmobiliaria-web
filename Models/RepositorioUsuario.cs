@@ -174,6 +174,39 @@ public class RepositorioUsuario
         return res;
     }
 
-
+    public Usuario? ObtenerPorEmail(string email)
+    {
+        Usuario? usuario = null;
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            var sql = $@"SELECT
+					Id, Nombre, Apellido, Email, Clave, Avatar, Rol, Estado FROM usuarios
+					WHERE Email=@email";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@email", email);
+                connection.Open();
+                var reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    usuario = new Usuario
+                    {
+                        Id = reader.GetInt32("Id"),
+                        Nombre = reader.GetString("Nombre"),
+                        Apellido = reader.GetString("Apellido"),
+                        Email = reader.GetString("Email"),
+                        Clave = reader.GetString("Clave"),
+                        Avatar = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Avatar)))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal(nameof(Usuario.Avatar))),
+                        Rol = reader.GetInt32("Rol"),
+                        Estado = reader.GetBoolean("Estado")
+                    };
+                }
+                connection.Close();
+            }
+            return usuario;
+        }
+    }
 
 }

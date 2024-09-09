@@ -1,20 +1,30 @@
-<div class="d-flex align-items-center justify-content-center">
+<div class="d-flex align-items-center justify-content-center vh-100">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-5">
                 <div class="card">
                     <div class="card-body mx-2">
-                        <h5 class="card-title text-center mt-2 mb-3">CPOE</h5>
-                        <form action="/entrar" method="POST"> // USAR ASP-ACTION
-                            <div class="form-floating mb-3"><input class="form-control" id="usuario" type="text"
-                                    placeholder="Usuario" required><label class="floatingInput"><i
-                                        class="bi bi-person-fill"></i> Usuario</label></div>
-                            <div class="form-floating mb-4"><input class="form-control" id="clave" type="password"
-                                    placeholder="Contraseña" required><label class="floatingInput"><i
-                                        class="bi bi-lock-fill"></i> Contraseña</label></div>
-                            <div class="d-grid mb-3"><button class="btn btn-success" id="ingresar"
-                                    type="submit">Ingresar</button></div>
+                        <h5 class="card-title text-center mt-2 mb-3">Iniciar Sesion</h5>
+                        <form asp-controller="Usuarios" asp-action="Entrar">
+                            
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="email" name="Email" placeholder="" required>
+                                <label class="floatingInput"><i class="bi bi-person-fill"></i> Email</label>
+                            </div>
+
+                            <div class="form-floating mb-4">
+                                <input class="form-control" type="password" name="Password" placeholder="" required>
+                                <label class="floatingInput"><i class="bi bi-lock-fill"></i> Contraseña</label>
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <input type="submit" value="Entrar" class="btn btn-primary" />
+                            </div>
+
                             <div class="text-center mb-3"><span id="mensaje"></span></div>
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger text-center validation-summary"></div>
+
                         </form>
                     </div>
                 </div>
@@ -22,3 +32,10 @@
         </div>
     </div>
 </div>
+<style>
+    body {
+    background-image: url('../img/fondo-cuadro.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    }
+</style>

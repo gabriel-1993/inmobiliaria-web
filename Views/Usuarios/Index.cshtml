@@ -36,11 +36,11 @@
 				}
 				else 
 				{
-					<strong>Sin foto</strong>
+					<span>Sin foto</span>
 				}
 
 			</td>
-                <td>@Html.DisplayFor(modelItem => item.Rol)</td>
+                <td>@(item.Rol == 1 ? "Administrador" : "Empleado")</td>
                 <td>@(item.Estado ? "Activo" : "Inactivo")</td>
                 <td>
                     <a href="/Usuarios/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>

@@ -1,5 +1,7 @@
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 public enum enRoles
 {
     Administrador = 1,
@@ -17,4 +19,7 @@ public class Usuario
     public IFormFile? AvatarFile { get; set; }
     public int Rol { get; set; }
     public bool Estado { get; set; }
+
+    [NotMapped]//Para EF
+	public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
 }
