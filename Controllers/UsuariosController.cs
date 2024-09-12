@@ -35,19 +35,16 @@ public class UsuariosController : Controller
         repo = new RepositorioUsuario();
         this.configuration = configuration;
         this.environment = environment;
-
     }
 
-    [Authorize]
-
+    [Authorize(Policy = "Administrador")]
     public IActionResult Index()
     {
         var lista = repo.ObtenerTodos();
         return View(lista);
     }
 
-    [Authorize]
-
+    [Authorize(Policy = "Administrador")]
     public IActionResult Edicion(int id)
     {
         if (id == 0)
@@ -61,8 +58,7 @@ public class UsuariosController : Controller
         }
     }
 
-    [Authorize]
-
+    [Authorize(Policy = "Administrador")]
     public IActionResult Detalle(int id)
     {
         var usuario = repo.Obtener(id);
@@ -73,8 +69,8 @@ public class UsuariosController : Controller
         return View(usuario);
     }
 
-    [Authorize]
-
+    [HttpPost]
+    [Authorize(Policy = "Administrador")]
     public IActionResult Guardar(int id, Usuario usuario)
     {
 
@@ -145,8 +141,8 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpPost]
     [Authorize(Policy = "Administrador")]
-
     public IActionResult Eliminar(int id)
     {
         var usuario = repo.Obtener(id);
@@ -164,6 +160,7 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpPost]
     [Authorize(Policy = "Administrador")]
     public IActionResult Habilitar(int id)
     {
@@ -171,12 +168,14 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [AllowAnonymous]
     public IActionResult Login()
     {
         return View();
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Entrar(Login login)
     {
         if (ModelState.IsValid)
@@ -214,6 +213,7 @@ public class UsuariosController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [Authorize]
     public async Task<IActionResult> Salir()
     {
         await HttpContext.SignOutAsync(

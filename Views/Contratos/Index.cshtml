@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Listado de Contratos";
-
 }
 
 <div class="text-center">
@@ -12,6 +11,7 @@
 <table class="table" id="tablaContratos">
     <thead>
         <tr>
+            <th>#</th>
             <th>Inmueble</th>
             <th>Inquilino</th>
             <th>Propietario</th>
@@ -25,6 +25,7 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>@item.Id</td>
                 <td>
                     @item.Inmueble?.Direccion
                 </td>
@@ -43,6 +44,8 @@
                 <td>
                     <a href="/Contratos/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
                     <a href="/Contratos/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i></a>
+                    <a href="/Pagos/Index/@item.Id" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Pagos">
+                    <i class="bi bi-currency-dollar"></i></a>
                     @* @if (item.Estado)
                     {
                         <a href="/Contratos/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>

@@ -1,0 +1,33 @@
+@model InmobiliariaVargasHuancaTorrez.Models.Pago 
+@{
+    ViewData["Title"] = "Detalle del Pago";
+} 
+<div class="container">
+    <h2>Detalle del Pago</h2>
+    <table class="table">
+        <tr>
+            <th>Contrato</th>
+            <td>@Model.Id_Contrato</td>
+        </tr>
+        <tr>
+            <th>Número de Pago</th>
+            <td>@Model.NumeroPago</td>
+        </tr>
+        <tr>
+            <th>Fecha de Pago</th>
+            <td>@Model.FechaPago.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+            <th>Detalle</th>
+            <td>@Model.Detalle</td>
+        </tr>
+        <tr>
+            <th>Importe</th>
+            <td>@Model.Importe.ToString("C")</td>
+        </tr>
+        <tr>
+            <th>Estado</th>
+            <td>@(Model.Estado ? "Pagado" : "Pendiente")</td>
+        </tr>
+    </table> <a href="/Pagos/Index/@Model.Id_Contrato" class="btn btn-primary">Volver</a>
+</div>

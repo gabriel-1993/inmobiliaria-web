@@ -1,0 +1,48 @@
+@model IEnumerable<InmobiliariaVargasHuancaTorrez.Models.Pago> 
+
+@{
+    ViewData["Title"] = "Pagos";
+} 
+
+<div class="text-center">
+    <h2 class="mt-4">Pagos del Contrato N°@ViewBag.Contrato.Id</h2>
+    <p class="fs-5">Inquilino: @ViewBag.Contrato.Inquilino.ToString() - Inmueble: @ViewBag.Contrato.Inmueble.ToString()</p>
+    <a href="/Pagos/Crear/@ViewBag.Contrato.Id" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Pago</a>
+</div>
+<table class="table" id="tablaPagos">
+    <thead>
+        <tr>
+            <th>N°</th>
+            <th>Fecha de Pago</th>
+            <th>Detalle</th>
+            <th>Importe</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody> 
+        
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td> @item.NumeroPago </td>
+                <td> @item.FechaPago.ToString("dd/MM/yyyy") </td>
+                <td> @item.Detalle </td>
+                <td> @item.Importe </td>
+                <td>
+                    <a href="/Pagos/Detalle/@item.Id" class="btn btn-sm btn-primary">
+                    <i class="bi bi-info-circle"></i></a>
+                    <a href="/Pagos/Edicion/@item.Id" class="btn btn-sm btn-warning">
+                    <i class="bi bi-pen"></i></a>
+                    @if (item.Estado)
+                    {
+                        <a href="/Pagos/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
+                    }
+                    else
+                    {
+                        <a href="/Pagos/Habilitar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

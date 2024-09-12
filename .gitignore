@@ -1,4 +1,4 @@
-*.generated.sln
+*.sln
 *.swp
 *.*~
 project.lock.json

@@ -1,0 +1,87 @@
+using Microsoft.AspNetCore.Mvc;
+using InmobiliariaVargasHuancaTorrez.Models;
+using Microsoft.AspNetCore.Authorization;
+
+namespace InmobiliariaVargasHuancaTorrez.Controllers;
+
+public class PagosController : Controller
+{
+    private readonly ILogger<PagosController> _logger;
+    private RepositorioPago repo;
+    private RepositorioContrato repoContrato;
+
+    public PagosController(ILogger<PagosController> logger)
+    {
+        _logger = logger;
+        repo = new RepositorioPago();
+        repoContrato = new RepositorioContrato();
+    }
+
+    [Authorize]
+    public IActionResult Index(int id)
+    {
+        // if (id == 0)
+        // {
+
+        // }
+        ViewBag.Contrato = repoContrato.Obtener(id);
+        var lista = repo.ObtenerPorContrato(id);
+        return View(lista);
+    }
+
+    [Authorize]
+    public IActionResult Detalle(int id)
+    {
+        var pago = repo.Obtener(id);
+        if (pago == null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+        return View(pago);
+    }
+
+    [Authorize]
+    public IActionResult Crear(int id)
+    {
+        ViewBag.Contrato = repoContrato.Obtener(id);
+        return View("Crear", new Pago());
+    }
+
+    [Authorize]
+    public IActionResult Edicion(int id)
+    {
+        var pago = repo.Obtener(id);
+        return View(pago);
+    }
+
+    [Authorize]
+    public IActionResult Guardar(int id, Pago pago)
+    {
+        if (id == 0)
+        {
+            repo.Agregar(pago);
+        }
+        else
+        {
+            repo.Modificar(pago);
+        }
+        return RedirectToAction("Index", "Pagos", new { id = pago.Id_Contrato });
+    }
+
+    [Authorize]
+    public IActionResult Eliminar(int id)
+    {
+        int idContrato = (repo.Obtener(id)).Id_Contrato;
+        repo.Desactivar(id);
+        return RedirectToAction("Index", "Pagos", new { id = idContrato });
+    }
+
+    [Authorize]
+    public IActionResult Habilitar(int id)
+    {
+        int idContrato = (repo.Obtener(id)).Id_Contrato;
+        repo.Activar(id);
+        return RedirectToAction("Index", "Pagos", new { id = idContrato });
+    }
+
+}

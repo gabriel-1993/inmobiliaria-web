@@ -46,13 +46,16 @@
                 <td>
                     <a href="/Propietarios/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
                     <a href="/Propietarios/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i></a>
-                    @if (item.Estado)
+                    @if (!User.IsInRole("Empleado"))
                     {
-                        <a href="/Propietarios/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
-                    }
-                    else
-                    {
-                        <a href="/Propietarios/Habilitar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></a>
+                        @if (item.Estado)
+                        {
+                            <a href="/Propietarios/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
+                        }
+                        else
+                        {
+                            <a href="/Propietarios/Habilitar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></a>
+                        }
                     }
                 </td>
             </tr>
