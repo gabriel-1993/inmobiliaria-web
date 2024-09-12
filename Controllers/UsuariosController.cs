@@ -38,11 +38,15 @@ public class UsuariosController : Controller
 
     }
 
+    [Authorize]
+
     public IActionResult Index()
     {
         var lista = repo.ObtenerTodos();
         return View(lista);
     }
+
+    [Authorize]
 
     public IActionResult Edicion(int id)
     {
@@ -57,6 +61,8 @@ public class UsuariosController : Controller
         }
     }
 
+    [Authorize]
+
     public IActionResult Detalle(int id)
     {
         var usuario = repo.Obtener(id);
@@ -66,6 +72,8 @@ public class UsuariosController : Controller
         }
         return View(usuario);
     }
+
+    [Authorize]
 
     public IActionResult Guardar(int id, Usuario usuario)
     {
@@ -137,6 +145,8 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Policy = "Administrador")]
+
     public IActionResult Eliminar(int id)
     {
         var usuario = repo.Obtener(id);
@@ -154,6 +164,7 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Policy = "Administrador")]
     public IActionResult Habilitar(int id)
     {
         repo.Habilitar(id);

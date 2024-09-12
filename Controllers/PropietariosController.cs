@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaVargasHuancaTorrez.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaVargasHuancaTorrez.Controllers;
 
@@ -15,13 +16,14 @@ public class PropietariosController : Controller
         repo = new RepositorioPropietario();
     }
 
+    [Authorize]
     public IActionResult Index()
     {
         var lista = repo.ObtenerTodos();
         return View(lista);
     }
 
-
+    [Authorize]
     public IActionResult Edicion(int? id)
     {
         if (id == null || id == 0)
@@ -37,8 +39,8 @@ public class PropietariosController : Controller
         }
     }
 
+    [Authorize]
     [HttpPost]
-
     public IActionResult Guardar(int id, Propietario propietario)
     {
         if (id == 0)
@@ -52,12 +54,14 @@ public class PropietariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Policy = "Administrador")]
     public IActionResult Eliminar(int id)
     {
         repo.Baja(id);
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Policy = "Administrador")]
 
     public IActionResult Habilitar(int id)
     {
@@ -65,7 +69,7 @@ public class PropietariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-
+    [Authorize]
     public IActionResult Detalle(int id)
     {
         var propietario = repo.Obtener(id);

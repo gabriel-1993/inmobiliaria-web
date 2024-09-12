@@ -14,7 +14,7 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    [Authorize(Policy = "Administrador")]
+    [Authorize]
     public IActionResult Index()
     {
         return View();
@@ -25,10 +25,6 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

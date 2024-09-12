@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaVargasHuancaTorrez.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaVargasHuancaTorrez.Controllers;
 
@@ -26,16 +27,16 @@ public class ContratosController : Controller
         repoInquilino = new RepositorioInquilino();
         // Dentro de cada <Inmueble> tenemos <Propietario> 
         repoInmueble = new RepositorioInmueble();
-
     }
 
+    [Authorize]
     public IActionResult Index()
     {
         var contratos = repoContrato.ObtenerTodos(); // Lista de Contratos
         return View(contratos);
     }
 
-
+    [Authorize]
     public IActionResult Edicion(int? id)
 
     {
@@ -62,32 +63,33 @@ public class ContratosController : Controller
         }
     }
 
-public IActionResult CalcularMulta(DateTime fechaTerminacion, DateTime fechaInicio, DateTime fechaFin, double montoAlquiler)
-{
-    double multa = 0;
-
-    // Calcula la duración del contrato en días
-    double duracionTotalDias = (fechaFin - fechaInicio).TotalDays;
-    double diasHastaTerminacion = (fechaTerminacion - fechaInicio).TotalDays;
-
-    // Verifica si se cumplió menos de la mitad del tiempo original de alquiler
-    if (diasHastaTerminacion < duracionTotalDias / 2)
+   [Authorize]
+    public IActionResult CalcularMulta(DateTime fechaTerminacion, DateTime fechaInicio, DateTime fechaFin, double montoAlquiler)
     {
-        multa = montoAlquiler * 2;
-    }
-    else
-    {
-        multa = montoAlquiler;
-    }
+        double multa = 0;
 
-    // Aquí también podrías verificar si hay meses de alquiler adeudados
+        // Calcula la duración del contrato en días
+        double duracionTotalDias = (fechaFin - fechaInicio).TotalDays;
+        double diasHastaTerminacion = (fechaTerminacion - fechaInicio).TotalDays;
 
-    return Json(new { multa = multa });
-}
+        // Verifica si se cumplió menos de la mitad del tiempo original de alquiler
+        if (diasHastaTerminacion < duracionTotalDias / 2)
+        {
+            multa = montoAlquiler * 2;
+        }
+        else
+        {
+            multa = montoAlquiler;
+        }
+
+        // Aquí también podrías verificar si hay meses de alquiler adeudados
+
+        return Json(new { multa = multa });
+    }
 
 
     [HttpPost]
-
+    [Authorize]
     public IActionResult Guardar(int id, Contrato contrato)
     {
         if (id == 0)
@@ -101,20 +103,21 @@ public IActionResult CalcularMulta(DateTime fechaTerminacion, DateTime fechaInic
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Policy = "Administrador")]
     public IActionResult Eliminar(int id)
     {
         repoContrato.Baja(id);
         return RedirectToAction(nameof(Index));
     }
 
-
+    [Authorize(Policy = "Administrador")]
     public IActionResult Habilitar(int id)
     {
         repoContrato.Habilitar(id);
         return RedirectToAction(nameof(Index));
     }
 
-
+    [Authorize]
     public IActionResult Detalle(int id)
     {
         var contrato = repoContrato.Obtener(id);
@@ -125,10 +128,6 @@ public IActionResult CalcularMulta(DateTime fechaTerminacion, DateTime fechaInic
         return View(contrato);
     }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

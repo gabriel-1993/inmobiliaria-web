@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//Configuracion de las cookies para login
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie(options =>//el sitio web valida con cookie
 	{
@@ -12,6 +13,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 		options.AccessDeniedPath = "/Home/Restringido";
 		//options.ExpireTimeSpan = TimeSpan.FromMinutes(5);//Tiempo de expiración
 	});
+	//Roles
 builder.Services.AddAuthorization(options =>
 {
 	//options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador", "Empleado"));
