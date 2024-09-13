@@ -197,10 +197,9 @@ public class UsuariosController : Controller
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, usuario.Email),
-                new Claim(ClaimTypes.Name, usuario.Nombre),
-                new Claim(ClaimTypes.Surname, usuario.Apellido),
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), // ojo
+                new Claim("Email", usuario.Email+""),
+                new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
+                new Claim("IdUsuario", usuario.Id+""),
                 new Claim(ClaimTypes.Role, usuario.RolNombre)
             };
 
@@ -223,9 +222,10 @@ public class UsuariosController : Controller
         return RedirectToAction("Login", "Usuarios");
     }
 
-    public IActionResult Perfil()
+    public IActionResult Perfil(int id)
     {
-        return View();
+        var usuario = repo.Obtener(id);
+        return View(usuario);
     }
 
 }

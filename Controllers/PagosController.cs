@@ -73,7 +73,7 @@ public class PagosController : Controller
     [Authorize]
     public IActionResult Eliminar(int id)
     {
-        int idContrato = (repo.Obtener(id)).Id_Contrato;
+        int? idContrato = (repo.Obtener(id))?.Id_Contrato;
         repo.Desactivar(id);
         return RedirectToAction("Index", "Pagos", new { id = idContrato });
     }
@@ -81,7 +81,7 @@ public class PagosController : Controller
     [Authorize]
     public IActionResult Habilitar(int id)
     {
-        int idContrato = (repo.Obtener(id)).Id_Contrato;
+        int? idContrato = (repo.Obtener(id))?.Id_Contrato;
         repo.Activar(id);
         return RedirectToAction("Index", "Pagos", new { id = idContrato });
     }

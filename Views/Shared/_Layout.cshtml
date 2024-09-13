@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css">
 </head>
 <body>
-    @if (User.Identity.IsAuthenticated)
+    @if (User?.Identity != null && User.Identity.IsAuthenticated)
     {
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark box-shadow py-3" style="background-color: #031633;">
@@ -63,7 +63,7 @@
         </main>
     </div>
 
-    @if (User.Identity.IsAuthenticated)
+    @if (User?.Identity != null && User.Identity.IsAuthenticated)
     {
     <footer class="text-white py-4" style="background-color: #031633">
         <div class="container">
