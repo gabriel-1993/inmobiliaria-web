@@ -14,7 +14,7 @@
     @if (User.Identity.IsAuthenticated)
     {
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark box-shadow py-3" style="background-color: #031633;">
             <div class="container">
                 @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Vargas - Huanca - Torrez</a> *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -27,31 +27,30 @@
 
                         @if(User.IsInRole("Administrador")){
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                         </li> 
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Propietarios" asp-action="Index">Propietarios</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Propietarios" asp-action="Index">Propietarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inquilinos" asp-action="Index">Inquilinos</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Inquilinos" asp-action="Index">Inquilinos</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" asp-area="" asp-controller="Inmuebles" asp-action="Index">Inmuebles</a>
+                            <a class="nav-link active dropdown-toggle" asp-area="" asp-controller="Inmuebles" asp-action="Index">Inmuebles</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="TipoInmueble" asp-action="Index">Tipos de Inmueble</a></li>
+                                <li><a class="dropdown-item active" asp-area="" asp-controller="TipoInmueble" asp-action="Index">Tipos de Inmueble</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contratos" asp-action="Index">Contratos</a>
-                        </li>    
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Salir">Salir</a>
-                        </li>              
+                            <a class="nav-link active" asp-area="" asp-controller="Contratos" asp-action="Index">Contratos</a>
+                        </li>   
                     </ul>
-
-
+                    <div>
+                        <a class="btn btn-sm btn-outline-light text-white" href="Usuarios/Perfil"><i class="bi bi-person-circle"></i></a>
+                        <a class="btn btn-sm btn-outline-light" asp-area="" asp-controller="Usuarios" asp-action="Salir"><i class="bi bi-box-arrow-right"></i></a>
+                    </div> 
                 </div>
             </div>
         </nav>
@@ -66,7 +65,7 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-    <footer class="border-top footer text-muted">
+    <footer class="text-white py-4" style="background-color: #031633">
         <div class="container">
             &copy; 2024 - InmobiliariaVargasHuancaTorrez
         </div>

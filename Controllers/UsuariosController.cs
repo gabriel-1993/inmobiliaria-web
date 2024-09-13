@@ -197,8 +197,10 @@ public class UsuariosController : Controller
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, usuario.Email),
-                new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
+                new Claim(ClaimTypes.Email, usuario.Email),
+                new Claim(ClaimTypes.Name, usuario.Nombre),
+                new Claim(ClaimTypes.Surname, usuario.Apellido),
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), // ojo
                 new Claim(ClaimTypes.Role, usuario.RolNombre)
             };
 
@@ -219,6 +221,11 @@ public class UsuariosController : Controller
         await HttpContext.SignOutAsync(
             CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login", "Usuarios");
+    }
+
+    public IActionResult Perfil()
+    {
+        return View();
     }
 
 }
