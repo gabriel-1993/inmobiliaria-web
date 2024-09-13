@@ -15,6 +15,7 @@ public class RepositorioPago
                 p.Id,
                 p.Id_Contrato,
                 p.NumeroPago,
+                p.FechaPago,
                 p.Detalle,
                 p.Importe,
                 p.Estado
@@ -33,6 +34,7 @@ public class RepositorioPago
                         Id = reader.GetInt32(nameof(Pago.Id)),
                         Id_Contrato = reader.GetInt32(nameof(Pago.Id_Contrato)),
                         NumeroPago = reader.GetInt32(nameof(Pago.NumeroPago)),
+                        FechaPago = reader.GetDateTime(nameof(Pago.FechaPago)),
                         Detalle = reader.GetString(nameof(Pago.Detalle)),
                         Importe = reader.GetDouble(nameof(Pago.Importe)),
                         Estado = reader.GetBoolean(nameof(Pago.Estado))
@@ -46,7 +48,7 @@ public class RepositorioPago
 
     public Pago? Obtener(int id)
     {
-        Pago? res = null; 
+        Pago? res = null;
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
             var query = $@"SELECT 
@@ -57,22 +59,24 @@ public class RepositorioPago
                 {nameof(Pago.Detalle)}, 
                 {nameof(Pago.Importe)}, 
                 {nameof(Pago.Estado)} 
-            FROM pagos WHERE {nameof(Pago.Id)} = @id"; 
+            FROM pagos WHERE {nameof(Pago.Id)} = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@id", id); 
-                connection.Open(); 
-                var reader = command.ExecuteReader(); 
+                command.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                var reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    res = new Pago { 
-                        Id = reader.GetInt32(nameof(Pago.Id)), 
-                        Id_Contrato = reader.GetInt32(nameof(Pago.Id_Contrato)), 
-                        NumeroPago = reader.GetInt32(nameof(Pago.NumeroPago)), 
-                        FechaPago = reader.GetDateTime(nameof(Pago.FechaPago)), 
-                        Detalle = reader.GetString(nameof(Pago.Detalle)), 
-                        Importe = reader.GetDouble(nameof(Pago.Importe)), 
-                        Estado = reader.GetBoolean(nameof(Pago.Estado)) };
+                    res = new Pago
+                    {
+                        Id = reader.GetInt32(nameof(Pago.Id)),
+                        Id_Contrato = reader.GetInt32(nameof(Pago.Id_Contrato)),
+                        NumeroPago = reader.GetInt32(nameof(Pago.NumeroPago)),
+                        FechaPago = reader.GetDateTime(nameof(Pago.FechaPago)),
+                        Detalle = reader.GetString(nameof(Pago.Detalle)),
+                        Importe = reader.GetDouble(nameof(Pago.Importe)),
+                        Estado = reader.GetBoolean(nameof(Pago.Estado))
+                    };
                 }
                 connection.Close();
             }
@@ -118,8 +122,8 @@ public class RepositorioPago
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@idContrato", pago.Id_Contrato);
-                command.Parameters.AddWithValue("@mumeropago", pago.NumeroPago);
-                command.Parameters.AddWithValue("@etalle", pago.Detalle);
+                command.Parameters.AddWithValue("@numeropago", pago.NumeroPago);
+                command.Parameters.AddWithValue("@detalle", pago.Detalle);
                 command.Parameters.AddWithValue("@importe", pago.Importe);
                 command.Parameters.AddWithValue("@id", pago.Id);
 
@@ -136,7 +140,7 @@ public class RepositorioPago
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = "UPDATE pagos SET Estado = 0 WHERE Id = @id";
+            var query = "UPDATE pagos SET Estado = 0, Detalle = 'Pago Anulado' WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", id);
@@ -153,7 +157,7 @@ public class RepositorioPago
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = "UPDATE pagos SET Estado = 1 WHERE Id = @id";
+            var query = "UPDATE pagos SET Estado = 1, Detalle = '-' WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", id);
@@ -164,5 +168,32 @@ public class RepositorioPago
             return res;
         }
     }
+
+    public int ObtenerNumeroPagoMax(int idContrato)
+    {
+        int maxNumeroPago = 0;
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            string query = @"SELECT IFNULL(MAX(NumeroPago), 0) AS MaxNumeroPago 
+                         FROM Pagos 
+                         WHERE Estado = 1 AND Id_Contrato = @idContrato";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@idContrato", idContrato);
+                connection.Open();
+                var result = command.ExecuteScalar();
+                if (result != DBNull.Value && Convert.ToInt32(result) > 0)
+                {
+                    maxNumeroPago = Convert.ToInt32(result);
+                }
+                connection.Close();
+            }
+        }
+        return maxNumeroPago;
+    }
+
+
+
+
 
 }

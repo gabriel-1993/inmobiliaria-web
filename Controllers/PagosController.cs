@@ -43,6 +43,8 @@ public class PagosController : Controller
     [Authorize]
     public IActionResult Crear(int id)
     {
+        //Guardar numero max de pago con estado 1 en la base, sumar 1 para nuevo pago
+        ViewBag.NumeroPagoMax= repo.ObtenerNumeroPagoMax(id) + 1;
         ViewBag.Contrato = repoContrato.Obtener(id);
         return View("Crear", new Pago());
     }
