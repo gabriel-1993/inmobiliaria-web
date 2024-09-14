@@ -40,6 +40,8 @@ public class PagosController : Controller
         {
             return RedirectToAction(nameof(Index));
         }
+
+        ViewBag.Auditorias =  repoAuditoria.ObtenerPorPago(id);
         return View(pago);
     }
 

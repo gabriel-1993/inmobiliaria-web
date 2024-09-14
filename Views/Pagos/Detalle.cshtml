@@ -1,7 +1,7 @@
-@model InmobiliariaVargasHuancaTorrez.Models.Pago 
+@model InmobiliariaVargasHuancaTorrez.Models.Pago
 @{
     ViewData["Title"] = "Detalle del Pago";
-} 
+}
 <div class="container">
     <h2>Detalle del Pago</h2>
     <table class="table">
@@ -29,5 +29,30 @@
             <th>Estado</th>
             <td>@(Model.Estado ? "Pagado" : "Pendiente")</td>
         </tr>
-    </table> <a href="/Pagos/Index/@Model.Id_Contrato" class="btn btn-primary">Volver</a>
+
+    </table>
+
+    @if (User.IsInRole("Administrador"))
+    {
+        <h2>Auditoria Pago</h2>
+        @foreach (var item in ViewBag.Auditorias)
+        {
+            <table class="table">
+                <tr>
+                    <th>Usuario</th>
+                    <td>@item.Id_Usuario</td>
+                </tr>
+                <tr>
+                    <th>Accion</th>
+                    <td>@item.Accion</td>
+                </tr>
+                <tr>
+                    <th>Fecha</th>
+                    <td> @item.FechaHora.ToString("dd/MM/yyyy")</td>
+                </tr>
+
+            </table>
+        }
+    }
+    <a href="/Pagos/Index/@Model.Id_Contrato" class="btn btn-primary">Volver</a>
 </div>
