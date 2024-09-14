@@ -48,7 +48,7 @@
                         </li>   
                     </ul>
                     <div>
-                        <a class="btn btn-sm btn-outline-light fix-color" href="/Usuarios/Perfil/@User?.Claims.First(x => x.Type == "IdUsuario").Value"><i class="bi bi-person-circle"></i></a>
+                        <a class="btn btn-sm btn-outline-light fix-color" asp-area="" asp-controller="Usuarios" asp-action="Perfil"><i class="bi bi-person-circle"></i></a>
                         <a class="btn btn-sm btn-outline-light" asp-area="" asp-controller="Usuarios" asp-action="Salir"><i class="bi bi-box-arrow-right"></i></a>
                     </div> 
                 </div>

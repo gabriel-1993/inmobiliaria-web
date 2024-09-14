@@ -221,9 +221,9 @@ public class UsuariosController : Controller
     }
 
     [Authorize]
-    public IActionResult Perfil(int id)
+    public IActionResult Perfil()
     {
-        var usuario = repo.Obtener(id);
+        var usuario = repo.ObtenerPorEmail(User.Claims.First(x => x.Type == "Email").Value);
         return View(usuario);
     }
 
@@ -231,7 +231,7 @@ public class UsuariosController : Controller
     public IActionResult PerfilGuardar(Usuario usuario)
     {
         repo.Modificar(usuario);
-        return RedirectToAction("Perfil", new { id = usuario.Id });
+        return RedirectToAction("Perfil");
     }
 
     [Authorize]
@@ -248,7 +248,7 @@ public class UsuariosController : Controller
                 repo.Modificar(usuario);
             }
         }
-        return RedirectToAction("Perfil", new { id = usuario?.Id });
+        return RedirectToAction("Perfil");
     }
 
     [Authorize]
@@ -273,7 +273,7 @@ public class UsuariosController : Controller
             }
         }
         repo.Modificar(usuario);
-        return RedirectToAction("Perfil", new { id = usuario?.Id });
+        return RedirectToAction("Perfil");
     }
 
     [Authorize]
@@ -306,7 +306,7 @@ public class UsuariosController : Controller
                     numBytesRequested: 256 / 8));
                 usuario.Clave = hashed;
                 repo.Modificar(usuario);
-                return RedirectToAction("Perfil", new { id = id });
+                return RedirectToAction("Perfil");
             }
             else 
             {
