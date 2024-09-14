@@ -2,21 +2,105 @@
 
 @{
     ViewData["Title"] = "Detalle del Usuario";
+    var rnd = new Random();
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row d-flex alin-items-center justify-content-center">
+        <div class="col-md-4 px-3">
             <h2 class="text-center">Editar Perfil</h2>
-            <input type="text" name="Avatar" class="form-control">
+            <form asp-action="PerfilGuardar">
+                <input type="hidden" name="Id" value="@Model.Id">
+                <input type="hidden" name="Avatar" value="@Model.Avatar">
+                <input type="hidden" name="Rol" value="@Model.Rol">
+
+                <div class="form-group mb-3">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3 d-grid">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+            </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 border-start border-end px-3">
             <h2 class="text-center">Editar Avatar</h2>
-            <input type="text" name="Avatar" class="form-control">
+            <form asp-action="AvatarGuardar" enctype="multipart/form-data">
+                <input type="hidden" name="Avatar" value=@Model.Avatar>
+                <input type="hidden" name="Id" value="@Model.Id">
+                <input type="hidden" name="Nombre" value="@Model.Nombre">
+                <input type="hidden" name="Apellido" value="@Model.Apellido">
+                <input type="hidden" name="Email" value="@Model.Email">
+                <input type="hidden" name="Avatar" value="@Model.Avatar">
+                <input type="hidden" name="Rol" value="@Model.Rol">
+
+                <div class="d-flex justify-content-center">
+                    @if (!String.IsNullOrEmpty(Model.Avatar))
+                    {
+                        var x = Model.Avatar + "?" + rnd.Next();
+                        <img width="100" src="@x" />
+                    }
+                    else
+                    {
+                        <strong class="mt-4 p-4 border border-dark rounded">Sin foto</strong>
+                    }
+                </div> 
+
+                <div class="form-group mb-4">
+                    <label asp-for="AvatarFile" class="control-label"></label><br>
+                    <input type="file" asp-for="AvatarFile" accept="image/*" />
+                    <span asp-validation-for="AvatarFile" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4 d-grid">
+                    <a class="btn btn-danger" href="/Usuarios/EliminarAvatar/@Model.Id">Eliminar</a>
+                </div>
+
+                <div class="form-group mb-3 d-grid">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+            </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 px-3">
             <h2 class="text-center">Editar Clave</h2>
-            <input type="text" name="Avatar" class="form-control">
+            <form asp-action="CambiarClave">
+                <input type="hidden" name="Id" value="@Model.Id">
+
+                <div class="form-group mb-3">
+                    <label class="control-label">Clave actual</label>
+                    <input name="ClaveActual" class="form-control" type="password"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="control-label">Nueva clave</label>
+                    <input name="ClaveNueva" class="form-control" type="password"/>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="control-label">Repetir clave</label>
+                    <input name="ClaveRepetida" class="form-control" type="password"/>
+                </div>
+
+                <div class="form-group mb-3 d-grid">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+
+                <div asp-validation-summary="ModelOnly" class="text-danger text-center validation-summary"></div>
+            </form>
         </div>
     </div>
 </div>

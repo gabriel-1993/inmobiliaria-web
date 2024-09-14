@@ -141,7 +141,6 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
     [Authorize(Policy = "Administrador")]
     public IActionResult Eliminar(int id)
     {
@@ -160,7 +159,6 @@ public class UsuariosController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
     [Authorize(Policy = "Administrador")]
     public IActionResult Habilitar(int id)
     {
@@ -176,7 +174,7 @@ public class UsuariosController : Controller
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Entrar(Login login)
+    public async Task<IActionResult> Entrar(LoginView login)
     {
         if (ModelState.IsValid)
         {
@@ -222,10 +220,104 @@ public class UsuariosController : Controller
         return RedirectToAction("Login", "Usuarios");
     }
 
+    [Authorize]
     public IActionResult Perfil(int id)
     {
         var usuario = repo.Obtener(id);
         return View(usuario);
+    }
+
+    [Authorize]
+    public IActionResult PerfilGuardar(Usuario usuario)
+    {
+        repo.Modificar(usuario);
+        return RedirectToAction("Perfil", new { id = usuario.Id });
+    }
+
+    [Authorize]
+    public IActionResult EliminarAvatar(int id)
+    {
+        var usuario = repo.Obtener(id);
+        if (usuario?.Avatar != null)
+        {
+            var ruta = Path.Combine(environment.WebRootPath, "img", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
+            if (System.IO.File.Exists(ruta))
+            {
+                System.IO.File.Delete(ruta);
+                usuario.Avatar = null;
+                repo.Modificar(usuario);
+            }
+        }
+        return RedirectToAction("Perfil", new { id = usuario?.Id });
+    }
+
+    [Authorize]
+    public IActionResult AvatarGuardar(Usuario usuario)
+    {
+        if (usuario.AvatarFile != null)
+        {
+            string wwwPath = environment.WebRootPath;
+            string path = Path.Combine(wwwPath, "img");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+            string fileName = "avatar_" + usuario.Id + Path.GetExtension(usuario.AvatarFile.FileName);
+            string pathCompleto = Path.Combine(path, fileName);
+            usuario.Avatar = Path.Combine("/img", fileName);
+            // Esta operación guarda la foto en memoria en la ruta que necesitamos
+            using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+            {
+                usuario.AvatarFile.CopyTo(stream);
+            }
+        }
+        repo.Modificar(usuario);
+        return RedirectToAction("Perfil", new { id = usuario?.Id });
+    }
+
+    [Authorize]
+    public IActionResult CambiarClave(int id, CambioClaveView claves)
+    {
+        var usuario = repo.Obtener(id);
+        if(!ModelState.IsValid)
+        {   
+            ModelState.AddModelError("", "Escribe algo...");
+            return View("Perfil", usuario);
+        }
+
+        string hashedActual = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: claves.ClaveActual,
+                    salt: System.Text.Encoding.ASCII.GetBytes("esperaString"),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 1000,
+                    numBytesRequested: 256 / 8));
+
+        
+        if(usuario != null && usuario.Clave == hashedActual)
+        {
+            if (claves.ClaveNueva == claves.ClaveRepetida)
+            {
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: claves.ClaveNueva,
+                    salt: System.Text.Encoding.ASCII.GetBytes("esperaString"),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 1000,
+                    numBytesRequested: 256 / 8));
+                usuario.Clave = hashed;
+                repo.Modificar(usuario);
+                return RedirectToAction("Perfil", new { id = id });
+            }
+            else 
+            {
+                ModelState.AddModelError("", "Las claves no coinciden");
+            }
+        }
+        else
+        {
+            ModelState.AddModelError("", "La clave actual no es correcta");
+        }
+        return View("Perfil", usuario);
     }
 
 }

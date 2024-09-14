@@ -16,6 +16,7 @@
             <th>Fecha de Pago</th>
             <th>Detalle</th>
             <th>Importe</th>
+            <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -28,18 +29,15 @@
                 <td> @item.FechaPago.ToString("dd/MM/yyyy") </td>
                 <td> @item.Detalle </td>
                 <td> @item.Importe </td>
+                <td class=@(item.Estado ? "" : "text-danger")> @(item.Estado ? "Pagado" : "Anulado") </td>
                 <td>
                     <a href="/Pagos/Detalle/@item.Id" class="btn btn-sm btn-primary">
                     <i class="bi bi-info-circle"></i></a>
                     <a href="/Pagos/Edicion/@item.Id" class="btn btn-sm btn-warning">
                     <i class="bi bi-pen"></i></a>
-                    @if (item.Estado)
+                    @if (!User.IsInRole("Empleado") && item.Estado)
                     {
                         <a href="/Pagos/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
-                    }
-                    else
-                    {
-                        <a href="/Pagos/Habilitar/@item.Id" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></a>
                     }
                 </td>
             </tr>

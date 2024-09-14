@@ -140,7 +140,7 @@ public class RepositorioPago
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = "UPDATE pagos SET Estado = 0, Detalle = 'Pago Anulado' WHERE Id = @id";
+            var query = "UPDATE pagos SET Estado = 0 WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", id);
@@ -157,7 +157,7 @@ public class RepositorioPago
         int res = -1;
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = "UPDATE pagos SET Estado = 1, Detalle = '-' WHERE Id = @id";
+            var query = "UPDATE pagos SET Estado = 1 WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", id);
