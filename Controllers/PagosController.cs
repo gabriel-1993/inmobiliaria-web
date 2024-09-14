@@ -10,11 +10,14 @@ public class PagosController : Controller
     private RepositorioPago repo;
     private RepositorioContrato repoContrato;
 
+    private RepositorioAuditoria repoAuditoria;
+
     public PagosController(ILogger<PagosController> logger)
     {
         _logger = logger;
         repo = new RepositorioPago();
         repoContrato = new RepositorioContrato();
+        repoAuditoria = new RepositorioAuditoria();
     }
 
     [Authorize]
@@ -44,7 +47,7 @@ public class PagosController : Controller
     public IActionResult Crear(int id)
     {
         //Guardar numero max de pago con estado 1 en la base, sumar 1 para nuevo pago
-        ViewBag.NumeroPagoMax= repo.ObtenerNumeroPagoMax(id) + 1;
+        ViewBag.NumeroPagoMax = repo.ObtenerNumeroPagoMax(id) + 1;
         ViewBag.Contrato = repoContrato.Obtener(id);
         return View("Crear", new Pago());
     }
@@ -61,7 +64,11 @@ public class PagosController : Controller
     {
         if (id == 0)
         {
-            repo.Agregar(pago);
+            int Id_Pago = repo.Agregar(pago);
+
+            //AGREGAR AUDITORIA POR NUEVO PAGO
+            int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
+            repoAuditoria.Agregar(Id_Usuario, null, Id_Pago, "Crear pago", DateTime.Now);
         }
         else
         {
@@ -75,6 +82,11 @@ public class PagosController : Controller
     {
         int? idContrato = (repo.Obtener(id))?.Id_Contrato;
         repo.Desactivar(id);
+
+        //AGREGAR AUDITORIA POR ELIMINAR PAGO
+        int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
+        repoAuditoria.Agregar(Id_Usuario, null, id, "Pago Anulado", DateTime.Now);
+
         return RedirectToAction("Index", "Pagos", new { id = idContrato });
     }
 

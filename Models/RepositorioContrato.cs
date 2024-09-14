@@ -93,7 +93,6 @@ public class RepositorioContrato
         return listaContratos;
     }
 
-
     public Contrato? Obtener(int id)
     {
         Contrato? contrato = null;
@@ -187,8 +186,6 @@ public class RepositorioContrato
         return contrato;
     }
 
-
-
     public int Alta(Contrato contrato)
     {
         int res = -1;
@@ -217,8 +214,6 @@ public class RepositorioContrato
         }
         return res;
     }
-
-
 
     public int Modificar(Contrato contrato)
     {

@@ -15,6 +15,8 @@ public class ContratosController : Controller
 
     private RepositorioInmueble repoInmueble;
 
+    private RepositorioAuditoria repoAuditoria;
+
     //  REPOSITORIOS PARA MOSTRAR DATOS ESPECIFICOS DEL CONTRATO: DUEÑO,INQUILINO,PROPIEDAD(sino solo tenemos el id)
     //Se recuperan datos en Views--Contratos--Index--linea 3
 
@@ -27,6 +29,7 @@ public class ContratosController : Controller
         repoInquilino = new RepositorioInquilino();
         // Dentro de cada <Inmueble> tenemos <Propietario> 
         repoInmueble = new RepositorioInmueble();
+        repoAuditoria = new RepositorioAuditoria();
     }
 
     [Authorize]
@@ -63,7 +66,7 @@ public class ContratosController : Controller
         }
     }
 
-   [Authorize]
+    [Authorize]
     public IActionResult CalcularMulta(DateTime fechaTerminacion, DateTime fechaInicio, DateTime fechaFin, double montoAlquiler)
     {
         double multa = 0;
@@ -92,12 +95,24 @@ public class ContratosController : Controller
     [Authorize]
     public IActionResult Guardar(int id, Contrato contrato)
     {
+        
         if (id == 0)
         {
-            repoContrato.Alta(contrato);
+            int Id_Contrato = repoContrato.Alta(contrato);
+
+            //AGREGAR AUDITORIA POR CREAR CONTRATO
+            int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
+            repoAuditoria.Agregar(Id_Usuario, Id_Contrato, null, "Crear Contrato", DateTime.Now);
         }
         else
         {
+            if (contrato.FechaTerminacion != null)
+            {
+                //AGREGAR AUDITORIA POR FINALIZAR CONTRATO
+                int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
+                repoAuditoria.Agregar(Id_Usuario, id, null, "Contrato Finalizado", DateTime.Now);
+            }
+
             repoContrato.Modificar(contrato);
         }
         return RedirectToAction(nameof(Index));
