@@ -8,6 +8,24 @@
     <h2 class="mt-4">Listado de Contratos</h2>
     <a href="/Contratos/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Contrato</a>
 </div>
+
+<!-- Formulario de filtro -->
+<div id="filterForm" class="mb-3 di d-flex flex-column justify-content-center align-items-center mt-2">
+    <div class="row">
+        <div class="col">
+            <label for="filtroDesde">Desde:</label>
+            <input type="date" id="filtroDesde" class="form-control" />
+        </div>
+        <div class="col">
+            <label for="filtroHasta">Hasta:</label>
+            <input type="date" id="filtroHasta" class="form-control" />
+        </div>
+        <div class="col">
+            <button type="button" id="filterButton" class="btn btn-primary mt-4">Filtrar</button>
+        </div>
+    </div>
+</div>
+
 <table class="table" id="tablaContratos">
     <thead>
         <tr>
@@ -21,26 +39,15 @@
         </tr>
     </thead>
     <tbody>
-
         @foreach (var item in Model)
         {
-            <tr>
+            <tr data-fecha-fin="@item.FechaFin.ToString("yyyy-MM-dd")">
                 <td>@item.Id</td>
-                <td>
-                    @item.Inmueble?.Direccion
-                </td>
-                <td>
-                    @($"{item.Inquilino?.Nombre} {item.Inquilino?.Apellido} {item.Inquilino?.Dni}")
-                </td>
-                <td>
-                    @($"{item.Inmueble?.Propietario?.Nombre} {item.Inmueble?.Propietario?.Apellido} {item.Inmueble?.Propietario?.Dni}")
-                </td>
-                <td>
-                    @item.FechaFin.ToString("dd/MM/yyyy")
-                </td>
-                <td>
-                    @(item.FechaTerminacion.HasValue ? "Terminado" : "En curso")
-                </td>
+                <td>@item.Inmueble?.Direccion</td>
+                <td>@($"{item.Inquilino?.Nombre} {item.Inquilino?.Apellido} {item.Inquilino?.Dni}")</td>
+                <td>@($"{item.Inmueble?.Propietario?.Nombre} {item.Inmueble?.Propietario?.Apellido} {item.Inmueble?.Propietario?.Dni}")</td>
+                <td>@item.FechaFin.ToString("dd/MM/yyyy")</td>
+                <td>@(item.FechaTerminacion.HasValue ? "Terminado" : "En curso")</td>
                 <td>
                     <a href="/Contratos/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
                     <a href="/Contratos/Edicion/@item.Id" class="btn btn-sm btn-warning @(item.FechaTerminacion.HasValue ? "disabled" : "")"><i class="bi bi-pen"></i></a>
@@ -59,3 +66,33 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterButton = document.getElementById('filterButton');
+            const tableRows = document.querySelectorAll('#tablaContratos tbody tr');
+
+            filterButton.addEventListener('click', () => {
+                const filtroDesde = document.getElementById('filtroDesde').value;
+                const filtroHasta = document.getElementById('filtroHasta').value;
+
+                tableRows.forEach(row => {
+                    const fechaFin = row.getAttribute('data-fecha-fin');
+
+                    if (fechaFin) {
+                        const fecha = new Date(fechaFin);
+                        const desde = filtroDesde ? new Date(filtroDesde) : null;
+                        const hasta = filtroHasta ? new Date(filtroHasta) : null;
+
+                        if ((desde && fecha < desde) || (hasta && fecha > hasta)) {
+                            row.style.display = 'none';
+                        } else {
+                            row.style.display = '';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
