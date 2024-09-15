@@ -8,11 +8,12 @@ public class InmueblesController : Controller
 {
   private readonly ILogger<InmueblesController> _logger;
   private RepositorioInmueble repo;
-
+  private RepositorioContrato repoC;
   public InmueblesController(ILogger<InmueblesController> logger)
   {
     _logger = logger;
     repo = new RepositorioInmueble();
+    repoC = new RepositorioContrato();
   }
 
     [Authorize]
@@ -30,6 +31,7 @@ public class InmueblesController : Controller
     {
       return RedirectToAction(nameof(Index));
     }
+    ViewBag.Contratos = repoC.ObtenerPorInmueble(id);
     return View(inmueble);
   }
 

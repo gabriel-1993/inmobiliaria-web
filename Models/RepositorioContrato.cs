@@ -93,6 +93,94 @@ public class RepositorioContrato
         return listaContratos;
     }
 
+    public List<Contrato> ObtenerPorInmueble(int id)
+    {
+        List<Contrato> listaContratos = new List<Contrato>();
+
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            var query = $@"
+                        SELECT 
+                                c.Id AS ContratoId,
+                                c.Id_Inquilino AS ContratoId_Inquilino, 
+                                c.Id_Inmueble AS ContratoId_Inmueble, 
+                                c.FechaInicio, 
+                                c.FechaFin, 
+                                c.FechaTerminacion,  
+                                c.Estado AS ContratoEstado,
+                                i.Id AS InmuebleId,
+                                i.Id_propietario AS InmuebleId_propietario,
+                                i.Id_tipo AS InmuebleId_tipo,
+                                i.Direccion AS InmuebleDireccion,
+                                i.Uso AS InmuebleUso,
+                                i.CantidadAmbientes AS InmuebleCantidadAmbientes,
+                                i.Coordenadas AS InmuebleCoordenadas,
+                                i.Precio AS InmueblePrecio,
+                                i.Estado AS InmuebleEstado,
+                                p.Id AS PropietarioId,
+                                p.Nombre AS PropietarioNombre,
+                                p.Apellido AS PropietarioApellido,
+                                p.Telefono AS PropietarioTelefono,
+                                inq.Id AS InquilinoId,
+                                inq.Nombre AS InquilinoNombre,
+                                inq.Apellido AS InquilinoApellido,
+                                inq.Telefono AS InquilinoTelefono
+                            FROM contratos c
+                            JOIN inmuebles i ON c.Id_Inmueble = i.Id
+                            JOIN propietarios p ON i.Id_propietario = p.Id
+                            JOIN inquilinos inq ON c.Id_Inquilino = inq.Id
+                            WHERE c.Id_Inmueble = @id";
+                            
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var contrato = new Contrato
+                    {
+                        Id = reader.GetInt32("ContratoId"),
+                        Id_Inquilino = reader.GetInt32("ContratoId_Inquilino"),
+                        Id_Inmueble = reader.GetInt32("ContratoId_Inmueble"),
+                        FechaInicio = reader.GetDateTime("FechaInicio"),
+                        FechaFin = reader.GetDateTime("FechaFin"),
+                        FechaTerminacion = reader.IsDBNull(reader.GetOrdinal("FechaTerminacion")) ? (DateTime?)null : reader.GetDateTime("FechaTerminacion"),
+                        Estado = reader.GetBoolean("ContratoEstado"),
+                        Inquilino = new Inquilino
+                        {
+                            Id = reader.GetInt32("InquilinoId"),
+                            Nombre = reader.GetString("InquilinoNombre"),
+                            Apellido = reader.GetString("InquilinoApellido"),
+                            Telefono = reader.GetString("InquilinoTelefono"),
+                        },
+                        Inmueble = new Inmueble
+                        {
+                            Id = reader.GetInt32("InmuebleId"),
+                            Id_Propietario = reader.GetInt32("InmuebleId_propietario"),
+                            Id_Tipo = reader.GetInt32("InmuebleId_tipo"),
+                            Direccion = reader.GetString("InmuebleDireccion"),
+                            Uso = reader.GetString("InmuebleUso"),
+                            CantidadAmbientes = reader.GetInt32("InmuebleCantidadAmbientes"),
+                            Coordenadas = reader.GetString("InmuebleCoordenadas"),
+                            Precio = reader.GetDouble("InmueblePrecio"),
+                            Estado = reader.GetBoolean("InmuebleEstado"),
+                            Propietario = new Propietario
+                            {
+                                Id = reader.GetInt32("PropietarioId"),
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido"),
+                                Telefono = reader.GetString("PropietarioTelefono"),
+                            }
+                        }
+                    };
+                    listaContratos.Add(contrato);
+                }
+                connection.Close();
+            }
+        }
+        return listaContratos;
+    }
     public Contrato? Obtener(int id)
     {
         Contrato? contrato = null;
