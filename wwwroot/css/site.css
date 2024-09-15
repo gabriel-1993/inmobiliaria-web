@@ -45,3 +45,7 @@ body {
 .fix-color:hover {
     color: #000000 !important;
 }
+
+.fix-table th, .fix-table td {
+    width: 100px;
+}

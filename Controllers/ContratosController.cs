@@ -51,8 +51,6 @@ public class ContratosController : Controller
         ViewBag.Inquilinos = listaInquilinos;
         ViewBag.Inmuebles = listaInmuebles;
 
-        ViewBag.FechaActual = DateTime.Now.ToString("yyyy-MM-dd");
-
         if (id == null || id == 0)
         {
             // Crear un nuevo contrato
@@ -74,6 +72,11 @@ public class ContratosController : Controller
         // Calcula la duración del contrato en días
         double duracionTotalDias = (fechaFin - fechaInicio).TotalDays;
         double diasHastaTerminacion = (fechaTerminacion - fechaInicio).TotalDays;
+
+        if (fechaFin == fechaTerminacion)
+        {
+            return Json(new { multa = 0 });
+        }
 
         // Verifica si se cumplió menos de la mitad del tiempo original de alquiler
         if (diasHastaTerminacion < duracionTotalDias / 2)
@@ -140,6 +143,8 @@ public class ContratosController : Controller
         {
             return NotFound();
         }
+
+        ViewBag.Auditorias =  repoAuditoria.ObtenerPorContrato(id);
         return View(contrato);
     }
 

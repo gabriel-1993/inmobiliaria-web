@@ -41,8 +41,19 @@ public class RepositorioAuditoria
 
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = $@"SELECT * FROM auditoria
-                        WHERE Id_Pago = @id";
+            var query = $@"SELECT
+                a.Id,
+                a.Id_Usuario,
+                a.Id_Contrato,
+                a.Id_Pago,
+                a.Accion,
+                a.FechaHora,
+                u.Nombre,
+                u.Apellido,
+                u.Email
+            FROM auditoria a
+            JOIN usuarios u ON a.Id_Usuario = u.Id
+            WHERE Id_Pago = @id;";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", Id_Pago);
@@ -58,7 +69,13 @@ public class RepositorioAuditoria
                         Id_Contrato = reader.IsDBNull(reader.GetOrdinal("Id_Contrato")) ? (int?)null : reader.GetInt32("Id_Contrato"),
                         Id_Pago = reader.GetInt32("Id_Pago"),
                         Accion = reader.GetString("Accion"),
-                        FechaHora = reader.GetDateTime("FechaHora")
+                        FechaHora = reader.GetDateTime("FechaHora"),
+                        Usuario = new Usuario
+                        {
+                            Nombre = reader.GetString("Nombre"),
+                            Apellido = reader.GetString("Apellido"),
+                            Email = reader.GetString("Email")
+                        }
                     };
                     auditorias.Add(auditoria);
                 }
@@ -80,8 +97,19 @@ public class RepositorioAuditoria
 
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = $@"SELECT * FROM auditoria
-                        WHERE Id_Contrato = @id";
+            var query = $@"SELECT
+                a.Id,
+                a.Id_Usuario,
+                a.Id_Contrato,
+                a.Id_Pago,
+                a.Accion,
+                a.FechaHora,
+                u.Nombre,
+                u.Apellido,
+                u.Email
+            FROM auditoria a
+            JOIN usuarios u ON a.Id_Usuario = u.Id
+            WHERE Id_Contrato = @id;";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@id", Id_Contrato);
@@ -97,7 +125,13 @@ public class RepositorioAuditoria
                         Id_Contrato = reader.GetInt32("Id_Contrato"),
                         Id_Pago = reader.IsDBNull(reader.GetOrdinal("Id_Pago")) ? (int?)null : reader.GetInt32("Id_Pago"),
                         Accion = reader.GetString("Accion"),
-                        FechaHora = reader.GetDateTime("FechaHora")
+                        FechaHora = reader.GetDateTime("FechaHora"),
+                        Usuario = new Usuario
+                        {
+                            Nombre = reader.GetString("Nombre"),
+                            Apellido = reader.GetString("Apellido"),
+                            Email = reader.GetString("Email")
+                        }
                     };
                     auditorias.Add(auditoria);
                 }

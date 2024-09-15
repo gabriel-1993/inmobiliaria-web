@@ -4,20 +4,20 @@
     ViewData["Title"] = "Detalle del Contrato";
 }
 
-<div class="container">
+<div class="container my-4">
     <h2>Detalle del Contrato</h2>
-    <table class="table">
+    <table class="table mb-4 table-striped fix-table">
         <tr>
             <th>Inmueble</th>
             <td>@Model.Inmueble?.Direccion</td>
         </tr>
         <tr>
             <th>Inquilino</th>
-            <td>@($"{Model.Inquilino?.Nombre} {Model.Inquilino?.Apellido} {Model.Inquilino?.Dni}")</td>
+            <td>@Model.Inquilino?.ToString()</td>
         </tr>
         <tr>
             <th>Propietario</th>
-            <td>@($"{Model.Inmueble?.Propietario?.Nombre} {Model.Inmueble?.Propietario?.Apellido} {Model.Inmueble?.Propietario?.Dni}")</td>
+            <td>@Model.Inmueble?.Propietario?.ToString()</td>
 
         </tr>
       
@@ -56,21 +56,33 @@
         </tr> 
         <tr>
             <th>Multa</th>
-            <td>
-                @if (Model.Multa.HasValue)
-                {
-                    @Model.Multa
-                }
-                else
-                {
-                    <span>0</span>
-                }
-            </td>
+            <td>@(Model.Multa.HasValue ? Model.Multa : 0)</td>
         </tr>
         <tr>
             <th>Estado</th>
             <td>@(Model.FechaTerminacion.HasValue ? "Terminado" : "En curso")</td>
         </tr>
     </table>
+        @if (User.IsInRole("Administrador") && ViewBag.Auditorias.Count > 0)
+    {
+        <h2>Auditoria del Contrato</h2>
+        @foreach (var item in ViewBag.Auditorias)
+        {
+            <table class="table table-striped mb-4 fix-table">
+                <tr>
+                    <th>Usuario</th>
+                    <td>@item.Usuario.Nombre @item.Usuario.Apellido</td>
+                </tr>
+                <tr>
+                    <th>Accion</th>
+                    <td>@item.Accion</td>
+                </tr>
+                <tr>
+                    <th>Fecha</th>
+                    <td> @item.FechaHora.ToString("dd/MM/yyyy - HH:mm")</td>
+                </tr>
+            </table>
+        }
+    }
     <a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a>
 </div>

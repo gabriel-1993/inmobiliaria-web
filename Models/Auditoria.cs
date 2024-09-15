@@ -2,6 +2,7 @@ namespace InmobiliariaVargasHuancaTorrez.Models;
 
 public class Auditoria
 {
+public Usuario? Usuario {get; set;}
 public int Id { get; set; }
 public int Id_Usuario { get; set; }
 public int? Id_Contrato { get; set; }

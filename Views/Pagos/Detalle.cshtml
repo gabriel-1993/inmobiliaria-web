@@ -2,9 +2,9 @@
 @{
     ViewData["Title"] = "Detalle del Pago";
 }
-<div class="container">
+<div class="container my-4">
     <h2>Detalle del Pago</h2>
-    <table class="table">
+    <table class="table mb-4 table-striped fix-table">
         <tr>
             <th>Contrato</th>
             <td>@Model.Id_Contrato</td>
@@ -27,20 +27,20 @@
         </tr>
         <tr>
             <th>Estado</th>
-            <td>@(Model.Estado ? "Pagado" : "Pendiente")</td>
+            <td>@(Model.Estado ? "Pagado" : "Anulado")</td>
         </tr>
 
     </table>
 
-    @if (User.IsInRole("Administrador"))
+    @if (User.IsInRole("Administrador") && ViewBag.Auditorias.Count > 0)
     {
-        <h2>Auditoria Pago</h2>
+        <h2>Auditoria del Pago</h2>
         @foreach (var item in ViewBag.Auditorias)
         {
-            <table class="table">
+            <table class="table table-striped mb-4 fix-table">
                 <tr>
                     <th>Usuario</th>
-                    <td>@item.Id_Usuario</td>
+                    <td>@item.Usuario.Nombre @item.Usuario.Apellido</td>
                 </tr>
                 <tr>
                     <th>Accion</th>
@@ -48,9 +48,8 @@
                 </tr>
                 <tr>
                     <th>Fecha</th>
-                    <td> @item.FechaHora.ToString("dd/MM/yyyy")</td>
+                    <td> @item.FechaHora.ToString("dd/MM/yyyy - HH:mm")</td>
                 </tr>
-
             </table>
         }
     }

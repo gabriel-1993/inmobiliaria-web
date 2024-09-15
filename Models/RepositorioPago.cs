@@ -35,7 +35,9 @@ public class RepositorioPago
                         Id_Contrato = reader.GetInt32(nameof(Pago.Id_Contrato)),
                         NumeroPago = reader.GetInt32(nameof(Pago.NumeroPago)),
                         FechaPago = reader.GetDateTime(nameof(Pago.FechaPago)),
-                        Detalle = !reader.IsDBNull(reader.GetOrdinal(nameof(Pago.Detalle))) ? reader.GetString(nameof(Pago.Detalle)) : string.Empty,
+                        Detalle = !reader.IsDBNull(reader.GetOrdinal(nameof(Pago.Detalle))) ? 
+                            reader.GetString(nameof(Pago.Detalle)) : 
+                            string.Empty,
                         Importe = reader.GetDouble(nameof(Pago.Importe)),
                         Estado = reader.GetBoolean(nameof(Pago.Estado))
                     });
@@ -73,7 +75,9 @@ public class RepositorioPago
                         Id_Contrato = reader.GetInt32(nameof(Pago.Id_Contrato)),
                         NumeroPago = reader.GetInt32(nameof(Pago.NumeroPago)),
                         FechaPago = reader.GetDateTime(nameof(Pago.FechaPago)),
-                        Detalle = reader.GetString(nameof(Pago.Detalle)),
+                        Detalle = !reader.IsDBNull(reader.GetOrdinal(nameof(Pago.Detalle))) ? 
+                            reader.GetString(nameof(Pago.Detalle)) : 
+                            string.Empty,
                         Importe = reader.GetDouble(nameof(Pago.Importe)),
                         Estado = reader.GetBoolean(nameof(Pago.Estado))
                     };

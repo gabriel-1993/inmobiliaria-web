@@ -45,7 +45,7 @@
                     {
                         @foreach (var item in listaInmuebles)
                         {
-                            @:<option @(item.Id == Model.Id_Inmueble ? "selected" : "") value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario">@(item.ToString())</option>
+                            @:<option @(item.Id == Model.Id_Inmueble ? "selected" : "") value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario" data-precio="@item.Precio">@(item.ToString())</option>
                         }
                     }
                     else
@@ -66,6 +66,7 @@
                 function handleInmuebleChange() {
                     var inmuebleSelect = document.getElementById('selectInmueble');
                     var propietarioSelect = document.getElementById('selectPropietario');
+                    var montoAlquiler = document.querySelector('#inputMontoAlquiler');
 
                     // Limpia el dropdown de propietarios
                     propietarioSelect.innerHTML = "";
@@ -86,6 +87,7 @@
 
                         // Selecciona automáticamente el propietario
                         propietarioSelect.value = propietarioId;
+                        montoAlquiler.value = selectedOption.getAttribute('data-precio');
                     } else {
                         // Si no hay propietarios asociados, muestra una opción vacía
                         var option = document.createElement('option');
@@ -105,7 +107,7 @@
                 <label asp-for="FechaInicio" class="control-label"></label>
                 @if (@Model.Id == 0)
                 {
-                    <input asp-for="FechaInicio" type="date" class="form-control" value="@ViewBag.FechaActual"/>
+                    <input asp-for="FechaInicio" type="date" class="form-control" value=@DateTime.Now.ToString("yyyy-MM-dd") />
                 }
                 else
                 {
@@ -118,7 +120,7 @@
                 <label asp-for="FechaFin" class="control-label"></label>
                 @if (@Model.Id == 0)
                 {
-                    <input asp-for="FechaFin" type="date" class="form-control" value="@ViewBag.FechaActual"/>
+                    <input asp-for="FechaFin" type="date" class="form-control" value=@DateTime.Now.ToString("yyyy-MM-dd")/>
                 }
                 else
                 {
@@ -131,13 +133,13 @@
             {
                 <div class="form-group mb-3">
                     <label asp-for="MontoAlquiler" class="control-label"></label>
-                    <input asp-for="MontoAlquiler" class="form-control" disabled />
+                    <input asp-for="MontoAlquiler" class="form-control" id="inputMontoAlquiler" readonly />
                     <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
                     <label asp-for="FechaTerminacion" class="control-label"></label>
-                    <input asp-for="FechaTerminacion" type="date" class="form-control" id="inputFechaTerminacion" />
+                    <input asp-for="FechaTerminacion" type="date" class="form-control" id="inputFechaTerminacion" min=@Model.FechaInicio.ToString("yyyy-MM-dd") max=@Model.FechaFin.ToString("yyyy-MM-dd") />
                     <span asp-validation-for="FechaTerminacion" class="text-danger"></span>
                 </div>
 
@@ -151,7 +153,7 @@
             {
                 <div class="form-group mb-4">
                     <label asp-for="MontoAlquiler" class="control-label"></label>
-                    <input asp-for="MontoAlquiler" class="form-control" />
+                    <input asp-for="MontoAlquiler" class="form-control" id="inputMontoAlquiler" />
                     <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
                 </div>
             }
