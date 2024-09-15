@@ -9,7 +9,6 @@
     <a href="/Contratos/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Contrato</a>
 </div>
 
-<!-- Formulario de filtro -->
 <div id="filterForm" class="mb-3 di d-flex flex-column justify-content-center align-items-center mt-2">
     <div class="row">
         <div class="col">
@@ -41,7 +40,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr data-fecha-fin="@item.FechaFin.ToString("yyyy-MM-dd")">
+            <tr data-fecha-fin="@item.FechaFin.ToString("yyyy-MM-dd")" data-estado="@(item.FechaTerminacion.HasValue ? "Terminado" : "En curso")">
                 <td>@item.Id</td>
                 <td>@item.Inmueble?.Direccion</td>
                 <td>@($"{item.Inquilino?.Nombre} {item.Inquilino?.Apellido} {item.Inquilino?.Dni}")</td>
@@ -79,17 +78,23 @@
 
                 tableRows.forEach(row => {
                     const fechaFin = row.getAttribute('data-fecha-fin');
+                    const estado = row.getAttribute('data-estado');
 
                     if (fechaFin) {
                         const fecha = new Date(fechaFin);
                         const desde = filtroDesde ? new Date(filtroDesde) : null;
                         const hasta = filtroHasta ? new Date(filtroHasta) : null;
 
-                        if ((desde && fecha < desde) || (hasta && fecha > hasta)) {
-                            row.style.display = 'none';
-                        } else {
-                            row.style.display = '';
+                        // Filtrar por fechas y estado "En curso"
+                        let mostrar = (estado === "En curso");
+
+                        if (mostrar) {
+                            if ((desde && fecha < desde) || (hasta && fecha > hasta)) {
+                                mostrar = false;
+                            }
                         }
+
+                        row.style.display = mostrar ? '' : 'none';
                     }
                 });
             });
