@@ -129,11 +129,11 @@
                 <span asp-validation-for="FechaFin" class="text-danger"></span>
             </div>
 
-            @if (Model != null && Model.Id > 0)
+            @if (Model.Id > 0)
             {
                 <div class="form-group mb-3">
                     <label asp-for="MontoAlquiler" class="control-label"></label>
-                    <input asp-for="MontoAlquiler" class="form-control" id="inputMontoAlquiler" readonly />
+                    <input asp-for="MontoAlquiler" class="form-control" readonly />
                     <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
                 </div>
 
@@ -145,7 +145,7 @@
 
                 <div class="form-group mb-4">
                     <label asp-for="Multa" class="control-label"></label>
-                    <input asp-for="Multa" class="form-control" id="inputMulta" disabled />
+                    <input asp-for="Multa" class="form-control" id="inputMulta" readonly />
                     <span asp-validation-for="Multa" class="text-danger"></span>
                 </div>
             }
@@ -157,10 +157,13 @@
                     <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
                 </div>
             }
-
+            <div class="form-group mb-3 d-grid">
+                <input type="submit" value="Pagar Multa" class="btn btn-danger" id="btnCobrarMulta" style="display: none;" />
+            </div>
             <div class="form-group mb-3 d-grid">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
@@ -186,6 +189,11 @@
                 success: function (result) {
                     // Muestra la multa calculada
                     document.getElementById("inputMulta").value = result.multa;
+                    //Mostrar boton Cobrar multa segun valor input MULTA                    
+                    if(  document.getElementById("inputMulta").value > 0){ 
+                    btnCobrarMulta.style.display = "block"; 
+                    }else{btnCobrarMulta.style.display = "none";  
+                    }
                 }
             });
         }

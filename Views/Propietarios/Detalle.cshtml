@@ -4,9 +4,9 @@
     ViewData["Title"] = "Detalle del Propietario";
 }
 
-<div class="container">
+<div class="container my-4">
     <h2>Detalle del Propietario</h2>
-    <table class="table">
+    <table class="table mb-4 table-striped fix-table">
         <tr>
             <th>DNI</th>
             <td>@Model.Dni</td>
@@ -32,5 +32,35 @@
             <td>@Model.Direccion</td>
         </tr>
     </table>
+
+
+    @if (ViewBag.Inmuebles.Count > 0)
+    {
+    <h2>Inmuebles del Propietario</h2>
+    <table class="table mb-4 table-striped">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Dirección</th>
+                <th>Uso</th>
+                <th>Ambientes</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+                @foreach (var item in ViewBag.Inmuebles)
+                {
+                    <tr>
+                        <td>@item.Tipo.Descripcion</td>
+                        <td>@item.Direccion</td>
+                        <td>@item.Uso</td>
+                        <td>@item.CantidadAmbientes</td>
+                        <td>@item.Precio</td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+    }
+    
     <a href="@Url.Action("Index", "Propietarios")" class="btn btn-primary">Volver</a>
 </div>

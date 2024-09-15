@@ -9,11 +9,13 @@ public class PropietariosController : Controller
 {
     private readonly ILogger<PropietariosController> _logger;
     private RepositorioPropietario repo;
+    private RepositorioInmueble repoInmueble;
 
     public PropietariosController(ILogger<PropietariosController> logger)
     {
         _logger = logger;
         repo = new RepositorioPropietario();
+        repoInmueble = new RepositorioInmueble();
     }
 
     [Authorize]
@@ -77,6 +79,8 @@ public class PropietariosController : Controller
         {
             return NotFound();
         }
+
+        ViewBag.Inmuebles = repoInmueble.ObtenerPorPropietario(id);
         return View(propietario);
     }
     

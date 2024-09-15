@@ -43,7 +43,7 @@
                 </td>
                 <td>
                     <a href="/Contratos/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
-                    <a href="/Contratos/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i></a>
+                    <a href="/Contratos/Edicion/@item.Id" class="btn btn-sm btn-warning @(item.FechaTerminacion.HasValue ? "disabled" : "")"><i class="bi bi-pen"></i></a>
                     <a href="/Pagos/Index/@item.Id" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Pagos">
                     <i class="bi bi-currency-dollar"></i></a>
                     @* @if (item.Estado)

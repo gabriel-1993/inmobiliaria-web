@@ -222,4 +222,57 @@ public class RepositorioInmueble
         return res;
     }
 
+    public List<Inmueble> ObtenerPorPropietario(int id)
+    {
+        List<Inmueble> inmuebles = new List<Inmueble>();
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            var query = $@"SELECT
+                i.Id,
+                i.Id_Propietario,
+                i.Id_Tipo,
+                i.Direccion,
+                i.Uso,
+                i.CantidadAmbientes,
+                i.Coordenadas,
+                i.Precio,
+                i.Estado,
+                t.Descripcion
+            FROM
+                inmuebles i
+            INNER JOIN propietarios p ON
+                i.Id_Propietario = p.Id
+            INNER JOIN tipos_inmueble t ON
+                i.Id_Tipo = t.Id
+            WHERE i.Id_Propietario = @id;";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                connection.Open();
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    inmuebles.Add(new Inmueble
+                    {
+                        Id = reader.GetInt32(nameof(Inmueble.Id)),
+                        Id_Propietario = reader.GetInt32(nameof(Inmueble.Id_Propietario)),
+                        Id_Tipo = reader.GetInt32(nameof(Inmueble.Id_Tipo)),
+                        Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                        Uso = reader.GetString(nameof(Inmueble.Uso)),
+                        CantidadAmbientes = reader.GetInt32(nameof(Inmueble.CantidadAmbientes)),
+                        Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
+                        Precio = reader.GetInt32(nameof(Inmueble.Precio)),
+                        Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
+                        Tipo = new TipoInmueble
+                        {
+                            Descripcion = reader.GetString(nameof(TipoInmueble.Descripcion))
+                        }
+                    });
+                }
+                connection.Close();
+            }
+            return inmuebles;
+        }
+    }
+
 }
