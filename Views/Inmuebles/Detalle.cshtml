@@ -4,9 +4,9 @@
     ViewData["Title"] = "Detalle Inmueble";
 }
 
-<div class="container">
+<div class="container my-4">
     <h2>Detalle inmueble</h2>
-    <table class="table">
+    <table class="table mb-4 table-striped fix-table">
         <tr>
             <th>Propietario</th>
             <td>@Model.Propietario?.ToString()</td>
@@ -40,5 +40,32 @@
             <td>@(Model.Estado ? "Activo" : "Inactivo")</td>
         </tr>
     </table>
+     @if (ViewBag.Contratos.Count > 0)
+    {
+    <h2>Contratos de un Inmueble</h2>
+    <table class="table mb-4 table-striped ">
+        <thead>
+            <tr>
+                <th>Inmueble</th>
+                <th>Inquilino</th>
+                <th>Propietario</th>
+                <th>Hasta</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+                @foreach (var item in ViewBag.Contratos)
+                {
+                    <tr>
+                        <td>@item.Inmueble.Direccion</td>
+                        <td>@item.Inquilino.Nombre @item.Inquilino.Apellido</td>
+                        <td>@item.Inmueble.Propietario.Nombre @item.Inmueble.Propietario.Apellido</td>
+                        <td>@item.FechaFin.ToString("dd/MM/yyyy")</td>
+                        <td>@(item.FechaTerminacion!=null ? "Terminado" : "En curso")</td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+    }
     <a href="@Url.Action("Index", "Inmuebles")" class="btn btn-primary">Volver</a>
 </div>
