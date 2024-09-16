@@ -49,3 +49,8 @@ body {
 .fix-table th, .fix-table td {
     width: 100px;
 }
+
+/* boton filtrar inmuebles */
+.width130px{
+    width: 130px;
+  }

@@ -50,7 +50,7 @@ public class RepositorioInmueble
                         Precio = reader.GetInt32(nameof(Inmueble.Precio)),
                         Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
                         Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
-                        Propietario = new Propietario 
+                        Propietario = new Propietario
                         {
                             Nombre = reader.GetString(nameof(Propietario.Nombre)),
                             Apellido = reader.GetString(nameof(Propietario.Apellido)),
@@ -314,5 +314,81 @@ public class RepositorioInmueble
         }
         return res;
     }
+
+
+
+
+
+    public List<Inmueble> inmueblesDisponiblesPorFechas(DateTime fechaDesde, DateTime fechaHasta)
+    {
+        List<Inmueble> inmuebles = new List<Inmueble>();
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            var query = $@"
+
+
+            SELECT i.*, ti.Descripcion
+            FROM inmuebles i
+            LEFT JOIN contratos c
+                ON i.Id = c.Id_Inmueble
+                AND (
+                    (c.FechaTerminacion IS NULL AND (
+                        (c.FechaInicio BETWEEN @FechaDesde AND @FechaHasta)
+                        OR (c.FechaFin BETWEEN @FechaDesde AND @FechaHasta)
+                        OR (@FechaDesde BETWEEN c.FechaInicio AND c.FechaFin)
+                    ))
+                    OR (c.FechaTerminacion IS NOT NULL AND (
+                        (c.FechaInicio BETWEEN @FechaDesde AND @FechaHasta)
+                        OR (c.FechaTerminacion BETWEEN @FechaDesde AND @FechaHasta)
+                        OR (@FechaDesde BETWEEN c.FechaInicio AND c.FechaTerminacion)
+                    ))
+                )
+            LEFT JOIN tipos_inmueble ti
+                ON i.Id_Tipo = ti.Id
+            WHERE c.Id IS NULL
+            AND i.Estado = 1;  -- Solo inmuebles con estado disponible
+
+
+";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@FechaDesde", fechaDesde);
+                command.Parameters.AddWithValue("@FechaHasta", fechaHasta);
+
+                connection.Open();
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    inmuebles.Add(new Inmueble
+                    {
+                        Id = reader.GetInt32(nameof(Inmueble.Id)),
+                        Id_Propietario = reader.GetInt32(nameof(Inmueble.Id_Propietario)),
+                        Id_Tipo = reader.GetInt32(nameof(Inmueble.Id_Tipo)),
+                        Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                        Uso = reader.GetString(nameof(Inmueble.Uso)),
+                        CantidadAmbientes = reader.GetInt32(nameof(Inmueble.CantidadAmbientes)),
+                        Coordenadas = reader.GetString(nameof(Inmueble.Coordenadas)),
+                        Precio = reader.GetInt32(nameof(Inmueble.Precio)),
+                        Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                        Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
+                        Tipo = new TipoInmueble
+                        {
+                            Descripcion = reader.GetString(nameof(TipoInmueble.Descripcion))
+                        }
+                    });
+                }
+                connection.Close();
+            }
+            return inmuebles;
+        }
+    }
+
+
+
+
+
+
+
+
 
 }

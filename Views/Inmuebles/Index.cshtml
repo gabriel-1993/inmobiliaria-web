@@ -8,24 +8,28 @@
     <a href="/Inmuebles/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Inmueble</a>
 </div>
 
-<div id="filterForm" class="mb-3 di d-flex flex-column justify-content-center align-items-center mt-2">
+<form id="filterForm" asp-action="FiltrarContratosFechas"
+    class="my-3 di d-flex flex-column justify-content-center align-items-center">
     <div class="row">
         <div class="col">
             <label for="filtroDesde">Desde:</label>
-            <input type="date" id="filtroDesde" class="form-control" />
+            <input name="fechaDesde" type="date" id="filtroDesde" class="form-control form-control-sm" />
         </div>
         <div class="col">
             <label for="filtroHasta">Hasta:</label>
-            <input type="date" id="filtroHasta" class="form-control" />
+            <input name="fechaHasta" type="date" id="filtroHasta" class="form-control form-control-sm" />
         </div>
         <div class="col">
-            <button type="button" id="filterButton" class="btn btn-primary mt-4">Filtrar</button>
+            <button type="submit" id="filterButton" class="btn btn-sm btn-primary mt-4 width130px">Filtrar
+                disponibles</button>
         </div>
         <div class="col">
-            <button type="button" id="clearButton" class="btn btn-secondary mt-4">Limpiar</button>
+            <a href="/Inmuebles/Index" type="button" id="clearButton"
+                class="btn btn-sm btn-secondary mt-4">Limpiar</a>
         </div>
     </div>
-</div>
+</form>
+
 
 <table class="table table-hover" id="tablaInmuebles">
     <thead>
@@ -50,7 +54,8 @@
                 <td>@(item.Disponible ? "Si" : "No")</td>
                 <td>@(item.Estado ? "Activo" : "Inactivo")</td>
                 <td>
-                    <a href="/Inmuebles/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>
+                    <a href="/Inmuebles/Detalle/@item.Id" class="btn btn-sm btn-primary"><i
+                            class="bi bi-info-circle"></i></a>
                     <a href="/Inmuebles/Edicion/@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pen"></i></a>
                     @if (!User.IsInRole("Empleado"))
                     {

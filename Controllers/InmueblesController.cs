@@ -31,6 +31,16 @@ public class InmueblesController : Controller
     return View(lista);
   }
 
+
+  [Authorize]
+  public IActionResult FiltrarBusqueda()
+  {
+    if (TempData.ContainsKey("Mensaje"))
+      ViewBag.Mensaje = TempData["Mensaje"];
+    var lista = repo.ObtenerTodos();
+    return View(lista);
+  }
+
   [Authorize]
   public IActionResult Detalle(int id)
   {
@@ -99,6 +109,15 @@ public class InmueblesController : Controller
   {
     repo.Activar(id);
     return RedirectToAction(nameof(Index));
+  }
+
+  [Authorize]
+  public IActionResult FiltrarContratosFechas(FiltrarFechaView filtrarFechaView)
+  {
+
+    var lista = repo.inmueblesDisponiblesPorFechas(filtrarFechaView.fechaDesde, filtrarFechaView.fechaHasta);
+    return View("Index", lista);
+
   }
 
 }
