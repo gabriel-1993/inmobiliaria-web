@@ -4,14 +4,14 @@
     ViewData["Title"] = "Detalle del Usuario";
 }
 
-<div class="container">
+<div class="container my-4">
     <h2>Detalle del Usuario</h2>
-    <table class="table">
+    <table class="table mb-4 table-striped fix-table">
         <tr>
             <th>Avatar</th>
             @if(Model.Avatar!=null) 
 				{
-					<td><img src=@Model.Avatar alt="Avatar del usuario" width="100" /></td>
+					<td><img class="rounded-circle" src=@Model.Avatar alt="Avatar del usuario" width="100" /></td>
 				}
 				else 
 				{

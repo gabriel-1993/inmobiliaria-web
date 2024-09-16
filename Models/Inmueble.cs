@@ -12,6 +12,7 @@ public class Inmueble
     public int CantidadAmbientes { get; set; }
     public string? Coordenadas { get; set; }
     public double Precio { get; set; }
+    public bool Disponible { get; set; }
     public bool Estado { get; set; }
 
     public override string ToString()

@@ -4,9 +4,9 @@
     ViewData["Title"] = "Detalle Inquilino";
 }
 
-<div class="container">
+<div class="container my-4">
     <h2>Detalle inquilino</h2>
-    <table class="table">
+    <table class="table mb-4 table-striped fix-table">
         <tr>
             <th>Dni</th>
             <td>@Model.Dni</td>
@@ -33,3 +33,4 @@
         </tr>
     </table>
     <a href="@Url.Action("Index", "Inquilinos")" class="btn btn-primary">Volver</a>
+</div>

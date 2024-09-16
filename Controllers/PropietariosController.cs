@@ -21,6 +21,8 @@ public class PropietariosController : Controller
     [Authorize]
     public IActionResult Index()
     {
+        if (TempData.ContainsKey("Mensaje"))
+            ViewBag.Mensaje = TempData["Mensaje"];
         var lista = repo.ObtenerTodos();
         return View(lista);
     }
@@ -48,10 +50,12 @@ public class PropietariosController : Controller
         if (id == 0)
         {
             repo.Alta(propietario);
+            TempData["Mensaje"] = "Propietario agregado correctamente.";
         }
         else
         {
             repo.Modificar(propietario);
+            TempData["Mensaje"] = "Propietario editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
     }

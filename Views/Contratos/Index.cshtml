@@ -22,10 +22,13 @@
         <div class="col">
             <button type="button" id="filterButton" class="btn btn-primary mt-4">Filtrar</button>
         </div>
+        <div class="col">
+            <button type="button" id="clearButton" class="btn btn-secondary mt-4">Limpiar</button>
+        </div>
     </div>
 </div>
 
-<table class="table" id="tablaContratos">
+<table class="table table-hover" id="tablaContratos">
     <thead>
         <tr>
             <th>#</th>
@@ -97,6 +100,13 @@
                         row.style.display = mostrar ? '' : 'none';
                     }
                 });
+            });
+        });
+
+        document.getElementById('clearButton').addEventListener('click', () => {
+            const tableRows = document.querySelectorAll('#tablaContratos tbody tr');
+            tableRows.forEach(row => {
+                row.style.display = '';
             });
         });
     </script>

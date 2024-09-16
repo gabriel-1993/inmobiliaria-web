@@ -1,21 +1,13 @@
 @model InmobiliariaVargasHuancaTorrez.Models.Contrato
 @{
     ViewData["Title"] = "Contratos";
-    var listaInquilinos = ViewBag.Inquilinos as IList<InmobiliariaVargasHuancaTorrez.Models.Inquilino>;
-    var listaInmuebles = ViewBag.Inmuebles as IList<InmobiliariaVargasHuancaTorrez.Models.Inmueble>;
-    var listaPropietarios = ViewBag.Propietarios as IList<InmobiliariaVargasHuancaTorrez.Models.Propietario>;
 }
-<div class="row mt-4 d-flex justify-content-center">
+
+<div class="row my-4 d-flex justify-content-center">
     <div class="col-md-5">
-        @if (@Model.Id == 0)
-        {
-            <h2 class="text-center">Crear Contrato</h2>
-        }
-        else
-        {
-            <h2 class="text-center">Editar Contrato</h2>
-        }
+        <h2 class="text-center">@(Model.Id == 0 ? "Crear Contrato" : "Editar Contrato")</h2>
         <hr />
+
         <form asp-action="Guardar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="Id" value="@Model.Id" />
@@ -23,16 +15,16 @@
             <div class="form-group mb-3">
                 <label class="control-label">Inquilino</label>
                 <select class="form-select" name="Id_Inquilino">
-                    @if (listaInquilinos != null)
+                    @foreach (var item in ViewBag.Inquilinos)
                     {
-                        @foreach (var item in listaInquilinos)
+                        @if (item.Id == Model.Id_Inquilino)
                         {
-                            @:<option @(item.Id == Model.Id_Inquilino ? "selected" : "") value="@item.Id">@(item.ToString())</option>
+                            <option value="@item.Id" selected>@(item.ToString())</option>
                         }
-                    }
-                    else
-                    {
-                        <option value="">No hay inquilinos disponibles</option>
+                        @if (item.Estado && item.Id != Model.Id_Inquilino)
+                        {
+                            <option value="@item.Id">@(item.ToString())</option>
+                        }
                     }
                 </select>
                 <span asp-validation-for="Id_Inquilino" class="text-danger"></span>
@@ -41,16 +33,16 @@
             <div class="form-group mb-3">
                 <label class="control-label">Inmueble</label>
                 <select class="form-select" id="selectInmueble" name="Id_Inmueble" onchange="handleInmuebleChange()">
-                    @if (listaInmuebles != null)
+                    @foreach (var item in ViewBag.Inmuebles)
                     {
-                        @foreach (var item in listaInmuebles)
+                        @if (item.Id == Model.Id_Inmueble)
                         {
-                            @:<option @(item.Id == Model.Id_Inmueble ? "selected" : "") value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario" data-precio="@item.Precio">@(item.ToString())</option>
+                            <option value="@item.Id" value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario" data-precio="@item.Precio" selected>@(item.ToString())</option>
                         }
-                    }
-                    else
-                    {
-                        <option value="">No hay inmuebles disponibles</option>
+                        @if (item.Disponible && item.Estado && item.Id != Model.Id_Inmueble)
+                        {
+                            <option value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario" data-precio="@item.Precio">@(item.ToString())</option>
+                        }
                     }
                 </select>
                 <span asp-validation-for="Id_Inmueble" class="text-danger"></span>
@@ -61,47 +53,6 @@
                 <select class="form-control" id="selectPropietario" name="Id_Propietario" disabled>
                 </select>
             </div>
-
-            <script>
-                function handleInmuebleChange() {
-                    var inmuebleSelect = document.getElementById('selectInmueble');
-                    var propietarioSelect = document.getElementById('selectPropietario');
-                    var montoAlquiler = document.querySelector('#inputMontoAlquiler');
-
-                    // Limpia el dropdown de propietarios
-                    propietarioSelect.innerHTML = "";
-
-                    // Obtén el inmueble seleccionado
-                    var selectedOption = inmuebleSelect.options[inmuebleSelect.selectedIndex];
-
-                    // Obtén el ID y nombre del propietario desde los atributos data
-                    var propietarioId = selectedOption.getAttribute('data-propietario-id');
-                    var propietario = selectedOption.getAttribute('data-propietario');
-
-                    if (propietarioId && propietario) {
-                        // Agrega la opción del propietario
-                        var option = document.createElement('option');
-                        option.value = propietarioId;
-                        option.text = propietario;
-                        propietarioSelect.appendChild(option);
-
-                        // Selecciona automáticamente el propietario
-                        propietarioSelect.value = propietarioId;
-                        montoAlquiler.value = selectedOption.getAttribute('data-precio');
-                    } else {
-                        // Si no hay propietarios asociados, muestra una opción vacía
-                        var option = document.createElement('option');
-                        option.value = "";
-                        option.text = "No hay propietarios disponibles";
-                        propietarioSelect.appendChild(option);
-                    }
-                }
-
-                // Ejecuta la función al cargar la página si hay un inmueble seleccionado por defecto
-                document.addEventListener('DOMContentLoaded', function () {
-                    handleInmuebleChange();
-                });
-            </script>
 
             <div class="form-group mb-3">
                 <label asp-for="FechaInicio" class="control-label"></label>
@@ -157,6 +108,7 @@
                     <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
                 </div>
             }
+
             <div class="form-group mb-3 d-grid">
                 <input type="submit" value="Pagar Multa" class="btn btn-danger" id="btnCobrarMulta" style="display: none;" />
             </div>
@@ -166,9 +118,50 @@
 
         </form>
     </div>
+<div><a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a></div>
 </div>
-<a href="@Url.Action("Index", "Contratos")" class="btn btn-primary">Volver</a>
+
+@section Scripts {
 <script>
+    function handleInmuebleChange() {
+        var inmuebleSelect = document.getElementById('selectInmueble');
+        var propietarioSelect = document.getElementById('selectPropietario');
+        var montoAlquiler = document.querySelector('#inputMontoAlquiler');
+
+        // Limpia el dropdown de propietarios
+        propietarioSelect.innerHTML = "";
+
+        // Obtén el inmueble seleccionado
+        var selectedOption = inmuebleSelect.options[inmuebleSelect.selectedIndex];
+
+        // Obtén el ID y nombre del propietario desde los atributos data
+        var propietarioId = selectedOption.getAttribute('data-propietario-id');
+        var propietario = selectedOption.getAttribute('data-propietario');
+
+        if (propietarioId && propietario) {
+            // Agrega la opción del propietario
+            var option = document.createElement('option');
+            option.value = propietarioId;
+            option.text = propietario;
+            propietarioSelect.appendChild(option);
+
+            // Selecciona automáticamente el propietario
+            propietarioSelect.value = propietarioId;
+            montoAlquiler.value = selectedOption.getAttribute('data-precio');
+        } else {
+            // Si no hay propietarios asociados, muestra una opción vacía
+            var option = document.createElement('option');
+            option.value = "";
+            option.text = "No hay propietarios disponibles";
+            propietarioSelect.appendChild(option);
+        }
+    }
+
+    // Ejecuta la función al cargar la página si hay un inmueble seleccionado por defecto
+    document.addEventListener('DOMContentLoaded', function () {
+        handleInmuebleChange();
+    });
+
     document.getElementById("inputFechaTerminacion").addEventListener("change", function () {
         var fechaTerminacion = this.value;
         var fechaInicio = '@Model?.FechaInicio.ToString("yyyy-MM-dd")';
@@ -199,3 +192,4 @@
         }
     });
 </script>
+}

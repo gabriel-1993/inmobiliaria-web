@@ -49,7 +49,7 @@
                 @if(!String.IsNullOrEmpty(Model.Avatar)) 
 				{
 					var x = Model.Avatar + "?" + rnd.Next();
-					<img width="32" src="@x" />
+					<img class="rounded-circle" width="32" src="@x" />
 				}
 				else 
 				{

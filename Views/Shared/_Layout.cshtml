@@ -58,6 +58,13 @@
 
     <div class="container">
         <main role="main" class="">
+            @if (ViewBag.Mensaje != null)
+			{//cartel general
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <strong>Información:</strong> @ViewBag.Mensaje
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+			}
             @RenderBody()
         </main>
     </div>

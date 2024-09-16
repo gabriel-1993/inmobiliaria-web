@@ -35,6 +35,8 @@ public class ContratosController : Controller
     [Authorize]
     public IActionResult Index()
     {
+        if (TempData.ContainsKey("Mensaje"))
+            ViewBag.Mensaje = TempData["Mensaje"];
         var contratos = repoContrato.ObtenerTodos(); // Lista de Contratos
         return View(contratos);
     }
@@ -43,13 +45,8 @@ public class ContratosController : Controller
     public IActionResult Edicion(int? id)
 
     {
-        // Obtener listas de inquilinos, inmuebles y propietarios
-        var listaInquilinos = repoInquilino.ObtenerTodos();
-        var listaInmuebles = repoInmueble.ObtenerTodos();
-
-        // Pasar listas a la vista a través de ViewBag
-        ViewBag.Inquilinos = listaInquilinos;
-        ViewBag.Inmuebles = listaInmuebles;
+        ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+        ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
 
         if (id == null || id == 0)
         {
@@ -102,6 +99,8 @@ public class ContratosController : Controller
         if (id == 0)
         {
             int Id_Contrato = repoContrato.Alta(contrato);
+            repoInmueble.NoDisponible(contrato.Id_Inmueble);
+            TempData["Mensaje"] = "Contrato agregado correctamente.";
 
             //AGREGAR AUDITORIA POR CREAR CONTRATO
             int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
@@ -111,12 +110,15 @@ public class ContratosController : Controller
         {
             if (contrato.FechaTerminacion != null)
             {
+                repoInmueble.SiDisponible(contrato.Id_Inmueble);
+
                 //AGREGAR AUDITORIA POR FINALIZAR CONTRATO
                 int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
                 repoAuditoria.Agregar(Id_Usuario, id, null, "Contrato Finalizado", DateTime.Now);
             }
 
             repoContrato.Modificar(contrato);
+            TempData["Mensaje"] = "Contrato editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
     }

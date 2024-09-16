@@ -8,15 +8,33 @@
     <a href="/Inmuebles/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Inmueble</a>
 </div>
 
-<table class="table" id="tablaInmuebles">
+<div id="filterForm" class="mb-3 di d-flex flex-column justify-content-center align-items-center mt-2">
+    <div class="row">
+        <div class="col">
+            <label for="filtroDesde">Desde:</label>
+            <input type="date" id="filtroDesde" class="form-control" />
+        </div>
+        <div class="col">
+            <label for="filtroHasta">Hasta:</label>
+            <input type="date" id="filtroHasta" class="form-control" />
+        </div>
+        <div class="col">
+            <button type="button" id="filterButton" class="btn btn-primary mt-4">Filtrar</button>
+        </div>
+        <div class="col">
+            <button type="button" id="clearButton" class="btn btn-secondary mt-4">Limpiar</button>
+        </div>
+    </div>
+</div>
+
+<table class="table table-hover" id="tablaInmuebles">
     <thead>
         <tr>
             <th>Tipo</th>
             <th>Direccion</th>
-            <th>Uso</th>
             <th>Ambientes</th>
-            <th>Coordenadas</th>
             <th>Precio</th>
+            <th>Disponible</th>
             <th>Estado</th>
             <th>Acciones</th>
         </tr>
@@ -27,10 +45,9 @@
             <tr>
                 <td>@item.Tipo?.Descripcion</td>
                 <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
-                <td>@Html.DisplayFor(modelItem => item.Uso)</td>
                 <td>@Html.DisplayFor(modelItem => item.CantidadAmbientes)</td>
-                <td>@Html.DisplayFor(modelItem => item.Coordenadas)</td>
                 <td>@Html.DisplayFor(modelItem => item.Precio)</td>
+                <td>@(item.Disponible ? "Si" : "No")</td>
                 <td>@(item.Estado ? "Activo" : "Inactivo")</td>
                 <td>
                     <a href="/Inmuebles/Detalle/@item.Id" class="btn btn-sm btn-primary"><i class="bi bi-info-circle"></i></a>

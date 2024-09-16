@@ -45,6 +45,7 @@
                 <th>Uso</th>
                 <th>Ambientes</th>
                 <th>Precio</th>
+                <th>Disponible</th>
             </tr>
         </thead>
         <tbody>
@@ -56,6 +57,7 @@
                         <td>@item.Uso</td>
                         <td>@item.CantidadAmbientes</td>
                         <td>@item.Precio</td>
+                        <td>@(item.Disponible ? "Si" : "No")</td>
                     </tr>
                 }
         </tbody>

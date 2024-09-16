@@ -23,10 +23,8 @@ public class PagosController : Controller
     [Authorize]
     public IActionResult Index(int id)
     {
-        // if (id == 0)
-        // {
-
-        // }
+        if (TempData.ContainsKey("Mensaje"))
+            ViewBag.Mensaje = TempData["Mensaje"];
         ViewBag.Contrato = repoContrato.Obtener(id);
         var lista = repo.ObtenerPorContrato(id);
         return View(lista);
@@ -67,6 +65,7 @@ public class PagosController : Controller
         if (id == 0)
         {
             int Id_Pago = repo.Agregar(pago);
+            TempData["Mensaje"] = "Pago agregado correctamente.";
 
             //AGREGAR AUDITORIA POR NUEVO PAGO
             int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
@@ -75,6 +74,7 @@ public class PagosController : Controller
         else
         {
             repo.Modificar(pago);
+            TempData["Mensaje"] = "Pago editado correctamente.";
         }
         return RedirectToAction("Index", "Pagos", new { id = pago.Id_Contrato });
     }

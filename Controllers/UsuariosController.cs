@@ -40,6 +40,8 @@ public class UsuariosController : Controller
     [Authorize(Policy = "Administrador")]
     public IActionResult Index()
     {
+        if (TempData.ContainsKey("Mensaje"))
+            ViewBag.Mensaje = TempData["Mensaje"];
         var lista = repo.ObtenerTodos();
         return View(lista);
     }
@@ -111,15 +113,18 @@ public class UsuariosController : Controller
                 usuario.Id = idNuevo;
                 repo.Modificar(usuario);
             }
+            TempData["Mensaje"] = "Usuario agregado correctamente.";
         }
         else
         {
-            // if (System.IO.File.Exists(usuario.Avatar))
-            // {
-            //     System.IO.File.Delete(usuario.Avatar);
-            // }
+            
             if (usuario.AvatarFile != null)
             {
+                var ruta = Path.Combine(environment.WebRootPath, "img", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
+                if (System.IO.File.Exists(ruta))
+                {
+                    System.IO.File.Delete(ruta);
+                }
                 string wwwPath = environment.WebRootPath;
                 string path = Path.Combine(wwwPath, "img");
                 if (!Directory.Exists(path))
@@ -137,6 +142,7 @@ public class UsuariosController : Controller
                 }
             }
             repo.Modificar(usuario);
+            TempData["Mensaje"] = "Usuario editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
     }
@@ -223,6 +229,8 @@ public class UsuariosController : Controller
     [Authorize]
     public IActionResult Perfil()
     {
+        if (TempData.ContainsKey("Mensaje"))
+            ViewBag.Mensaje = TempData["Mensaje"];
         var usuario = repo.ObtenerPorEmail(User.Claims.First(x => x.Type == "Email").Value);
         return View(usuario);
     }
@@ -231,6 +239,7 @@ public class UsuariosController : Controller
     public IActionResult PerfilGuardar(Usuario usuario)
     {
         repo.Modificar(usuario);
+        TempData["Mensaje"] = "Datos guardados correctamente.";
         return RedirectToAction("Perfil");
     }
 
@@ -246,6 +255,7 @@ public class UsuariosController : Controller
                 System.IO.File.Delete(ruta);
                 usuario.Avatar = null;
                 repo.Modificar(usuario);
+                TempData["Mensaje"] = "Avatar eliminado correctamente.";
             }
         }
         return RedirectToAction("Perfil");
@@ -256,6 +266,11 @@ public class UsuariosController : Controller
     {
         if (usuario.AvatarFile != null)
         {
+            var ruta = Path.Combine(environment.WebRootPath, "img", $"avatar_{usuario.Id}" + Path.GetExtension(usuario.Avatar));
+            if (System.IO.File.Exists(ruta))
+            {
+                System.IO.File.Delete(ruta);
+            }
             string wwwPath = environment.WebRootPath;
             string path = Path.Combine(wwwPath, "img");
             if (!Directory.Exists(path))
@@ -273,6 +288,7 @@ public class UsuariosController : Controller
             }
         }
         repo.Modificar(usuario);
+        TempData["Mensaje"] = "Avatar modificado correctamente.";
         return RedirectToAction("Perfil");
     }
 
@@ -306,6 +322,7 @@ public class UsuariosController : Controller
                     numBytesRequested: 256 / 8));
                 usuario.Clave = hashed;
                 repo.Modificar(usuario);
+                TempData["Mensaje"] = "Clave cambiada correctamente.";
                 return RedirectToAction("Perfil");
             }
             else 

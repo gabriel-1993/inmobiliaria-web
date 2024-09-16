@@ -19,6 +19,8 @@ public class TipoInmuebleController : Controller
 
     public IActionResult Index()
     {
+        if (TempData.ContainsKey("Mensaje"))
+            ViewBag.Mensaje = TempData["Mensaje"];
         var lista = repo.ObtenerTodos();
         return View(lista);
     }
@@ -64,10 +66,12 @@ public class TipoInmuebleController : Controller
         if (id == 0)
         {
             repo.Agregar(tipoInmueble);
+            TempData["Mensaje"] = "Tipo de inmueble agregado correctamente.";
         }
         else
         {
             repo.Modificar(tipoInmueble);
+            TempData["Mensaje"] = "Tipo de inmueble editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
     }

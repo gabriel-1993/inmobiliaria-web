@@ -9,7 +9,7 @@
     <a href="/Usuarios/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Usuario</a>
 </div>
 
-<table class="table" id="tablaUsuarios">
+<table class="table table-hover" id="tablaUsuarios">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.Nombre)</th>
@@ -32,7 +32,7 @@
 				@if(!String.IsNullOrEmpty(item.Avatar)) 
 				{
 					var x = item.Avatar + "?" + rnd.Next();
-					<img width="32" src="@x" />
+					<img class="rounded-circle" width="32" src="@x" />
 				}
 				else 
 				{
