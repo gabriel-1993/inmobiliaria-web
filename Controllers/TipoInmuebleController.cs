@@ -63,6 +63,11 @@ public class TipoInmuebleController : Controller
     [HttpPost]
     public IActionResult Guardar(int id, TipoInmueble tipoInmueble)
     {
+
+        if (!ModelState.IsValid) // Verifica si el modelo no es valido
+        {
+            return View("Edicion", tipoInmueble); // Retorna la vista con los errores de validacion
+        }
         if (id == 0)
         {
             repo.Agregar(tipoInmueble);

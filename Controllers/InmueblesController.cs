@@ -9,23 +9,29 @@ public class InmueblesController : Controller
   private readonly ILogger<InmueblesController> _logger;
   private RepositorioInmueble repo;
   private RepositorioContrato repoC;
+  private RepositorioPropietario repoPropietario;
+  private RepositorioTipoInmueble repoTipoInmueble;
+
+
   public InmueblesController(ILogger<InmueblesController> logger)
   {
     _logger = logger;
     repo = new RepositorioInmueble();
     repoC = new RepositorioContrato();
+    repoPropietario = new RepositorioPropietario();
+    repoTipoInmueble = new RepositorioTipoInmueble();
   }
 
-    [Authorize]
+  [Authorize]
   public IActionResult Index()
   {
     if (TempData.ContainsKey("Mensaje"))
-        ViewBag.Mensaje = TempData["Mensaje"];
+      ViewBag.Mensaje = TempData["Mensaje"];
     var lista = repo.ObtenerTodos();
     return View(lista);
   }
 
-    [Authorize]
+  [Authorize]
   public IActionResult Detalle(int id)
   {
     var inmueble = repo.Obtener(id);
@@ -37,13 +43,11 @@ public class InmueblesController : Controller
     return View(inmueble);
   }
 
-    [Authorize]
+  [Authorize]
   public IActionResult Edicion(int id)
   {
-    var repoPropietario = new RepositorioPropietario(); // Asegúrate de tener un repositorio para los propietarios
-    ViewBag.Propietario = repoPropietario.ObtenerTodos(); // Asigna la lista de propietarios al ViewBag
+    ViewBag.Propietarios = repoPropietario.ObtenerTodos(); // Asigna la lista de propietarios al ViewBag
 
-    var repoTipoInmueble = new RepositorioTipoInmueble();
     ViewBag.TipoInmueble = repoTipoInmueble.ObtenerTodos();
 
     if (id == 0)
@@ -57,10 +61,18 @@ public class InmueblesController : Controller
     }
   }
 
-    [Authorize]
+  [Authorize]
   [HttpPost]
   public IActionResult Guardar(int id, Inmueble inmueble)
   {
+    //VALIDAR CAMPOS
+    if (!ModelState.IsValid) // Verifica si el modelo no es valido
+    {
+      ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+      ViewBag.TipoInmueble = repoTipoInmueble.ObtenerTodos();
+      return View("Edicion", inmueble); // Retorna la vista con los errores de validacion
+    }
+
     if (id == 0)
     {
       repo.Agregar(inmueble);
@@ -75,14 +87,14 @@ public class InmueblesController : Controller
   }
 
 
-    [Authorize(Policy = "Administrador")]
+  [Authorize(Policy = "Administrador")]
   public IActionResult Eliminar(int id)
   {
     repo.Desactivar(id);
     return RedirectToAction(nameof(Index));
   }
 
-    [Authorize(Policy = "Administrador")]
+  [Authorize(Policy = "Administrador")]
   public IActionResult Activar(int id)
   {
     repo.Activar(id);

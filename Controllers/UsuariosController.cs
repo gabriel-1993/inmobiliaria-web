@@ -76,6 +76,11 @@ public class UsuariosController : Controller
     public IActionResult Guardar(int id, Usuario usuario)
     {
 
+        if (!ModelState.IsValid) // Verifica si el modelo no es valido
+        {
+            return View("Edicion", usuario); // Retorna la vista con los errores de validacion
+        }
+
         if (!string.IsNullOrEmpty(usuario.Clave)) // Solo hashear si la clave no es nula ni vacía
         {
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -117,7 +122,7 @@ public class UsuariosController : Controller
         }
         else
         {
-            
+
             if (usuario.AvatarFile != null)
             {
                 var ruta = Path.Combine(environment.WebRootPath, "img", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
@@ -296,8 +301,8 @@ public class UsuariosController : Controller
     public IActionResult CambiarClave(int id, CambioClaveView claves)
     {
         var usuario = repo.Obtener(id);
-        if(!ModelState.IsValid)
-        {   
+        if (!ModelState.IsValid)
+        {
             ModelState.AddModelError("", "Escribe algo...");
             return View("Perfil", usuario);
         }
@@ -309,8 +314,8 @@ public class UsuariosController : Controller
                     iterationCount: 1000,
                     numBytesRequested: 256 / 8));
 
-        
-        if(usuario != null && usuario.Clave == hashedActual)
+
+        if (usuario != null && usuario.Clave == hashedActual)
         {
             if (claves.ClaveNueva == claves.ClaveRepetida)
             {
@@ -325,7 +330,7 @@ public class UsuariosController : Controller
                 TempData["Mensaje"] = "Clave cambiada correctamente.";
                 return RedirectToAction("Perfil");
             }
-            else 
+            else
             {
                 ModelState.AddModelError("", "Las claves no coinciden");
             }

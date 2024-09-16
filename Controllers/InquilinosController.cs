@@ -15,14 +15,16 @@ public class InquilinosController : Controller
     repo = new RepositorioInquilino();
   }
 
-    [Authorize]
+  [Authorize]
   public IActionResult Index()
   {
+    if (TempData.ContainsKey("Mensaje"))
+        ViewBag.Mensaje = TempData["Mensaje"];
     var lista = repo.ObtenerTodos();
     return View(lista);
   }
 
-    [Authorize]
+  [Authorize]
   public IActionResult Detalle(int id)
   {
     var inquilino = repo.Obtener(id);
@@ -32,12 +34,12 @@ public class InquilinosController : Controller
     }
     return View(inquilino);
   }
-    
-    [Authorize]
+
+  [Authorize]
 
   public IActionResult Editar(int id)
   {
-    if(id == 0) 
+    if (id == 0)
     {
       return View(new Inquilino());
     }
@@ -48,29 +50,48 @@ public class InquilinosController : Controller
     }
   }
 
-    [Authorize]
+  [Authorize]
   [HttpPost]
+
   public IActionResult Guardar(int id, Inquilino inquilino)
   {
-    if(id == 0) 
+    if (!ModelState.IsValid) // Verifica si el modelo no es valido
+    {
+      return View("Editar", inquilino); // Retorna la vista con los errores de validacion
+    }
+
+    // Verificar si el DNI ya existe
+    // var existeDni = repo.ObtenerTodos().Any(i => i.Dni == inquilino.Dni && i.Id != id);
+    // if (existeDni)
+    // {
+    //   ModelState.AddModelError("Dni", "El DNI ingresado ya está registrado.");
+    //   return View("Editar", inquilino); // Retorna con el mensaje de error
+    // }
+
+    if (id == 0)
     {
       repo.Agregar(inquilino);
+      TempData["Mensaje"] = "Inquilino agregado correctamente.";
+
     }
     else
     {
       repo.Modificar(inquilino);
+      TempData["Mensaje"] = "Inquilino editado correctamente.";
+
     }
+
     return RedirectToAction(nameof(Index));
   }
 
-    [Authorize(Policy = "Administrador")]
+  [Authorize(Policy = "Administrador")]
   public IActionResult Eliminar(int id)
   {
     repo.Desactivar(id);
     return RedirectToAction(nameof(Index));
   }
 
-    [Authorize(Policy = "Administrador")]
+  [Authorize(Policy = "Administrador")]
   public IActionResult Activar(int id)
   {
     repo.Activar(id);

@@ -1,10 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
 public class Contrato
 {
-    public Inmueble? Inmueble {get; set;}
+    public Inmueble? Inmueble { get; set; }
 
-    public Inquilino? Inquilino {get; set;}
+    public Inquilino? Inquilino { get; set; }
 
     public int Id { get; set; }
 
@@ -14,9 +17,10 @@ public class Contrato
 
     public DateTime FechaInicio { get; set; }
 
-    //permitir null para cuando aun no llege este dato mostrar el item igual
     public DateTime FechaFin { get; set; }
 
+    [Required(ErrorMessage = "El precio es obligatorio")]
+    [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
     public double MontoAlquiler { get; set; }
 
     public DateTime? FechaTerminacion { get; set; }
@@ -24,7 +28,6 @@ public class Contrato
     public double? Multa { get; set; }
 
     public bool Estado { get; set; }
-
 
 
 }

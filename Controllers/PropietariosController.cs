@@ -47,6 +47,10 @@ public class PropietariosController : Controller
     [HttpPost]
     public IActionResult Guardar(int id, Propietario propietario)
     {
+        if (!ModelState.IsValid) // Verifica si el modelo no es valido
+        {
+            return View("Edicion", propietario); // Retorna la vista con los errores de validacion
+        }
         if (id == 0)
         {
             repo.Alta(propietario);
@@ -87,7 +91,7 @@ public class PropietariosController : Controller
         ViewBag.Inmuebles = repoInmueble.ObtenerPorPropietario(id);
         return View(propietario);
     }
-    
+
     public IActionResult Privacy()
     {
         return View();

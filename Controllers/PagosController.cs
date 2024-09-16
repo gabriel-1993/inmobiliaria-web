@@ -39,7 +39,7 @@ public class PagosController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        ViewBag.Auditorias =  repoAuditoria.ObtenerPorPago(id);
+        ViewBag.Auditorias = repoAuditoria.ObtenerPorPago(id);
         return View(pago);
     }
 
@@ -62,6 +62,12 @@ public class PagosController : Controller
     [Authorize]
     public IActionResult Guardar(int id, Pago pago)
     {
+
+        if (!ModelState.IsValid) // Verifica si el modelo no es valido
+        {
+            return View("Edicion", pago); // Retorna la vista con los errores de validacion
+        }
+
         if (id == 0)
         {
             int Id_Pago = repo.Agregar(pago);

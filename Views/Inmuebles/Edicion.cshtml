@@ -1,8 +1,6 @@
 ﻿@model InmobiliariaVargasHuancaTorrez.Models.Inmueble
 @{
     ViewData["Title"] = "Edición de Inmueble";
-    var listProp = (IList<Propietario>)ViewBag.Propietario;
-    var listTipo = (IList<TipoInmueble>)ViewBag.TipoInmueble;
 }
 
 
@@ -25,7 +23,7 @@
             <div class="form-group mb-3">
                 <label asp-for="Id_Propietario" class="control-label">Propietario</label>
                 <select class="form-select" name="Id_Propietario">
-                    @foreach (var item in listProp){
+                    @foreach (var item in ViewBag.Propietarios){
                         @:<option @(item.Id == Model.Id_Propietario ? "selected" : "") value="@item.Id">@(item.ToString())</option>
                     }
                 </select>
@@ -34,7 +32,7 @@
                 <label asp-for="Id_Tipo" class="control-label">Tipo de Inmueble</label>
                 <div class="d-flex">
                     <select class="form-select me-1" name="Id_Tipo">
-                        @foreach (var item in listTipo)
+                        @foreach (var item in ViewBag.TipoInmueble)
                         {
                             @if (item.Estado)
                             {
@@ -56,7 +54,6 @@
                 <option value="Comercial">Comercial</option>
                 <option value="Residencial">Residencial</option>
                 </select>
-                <span asp-validation-for="Uso" class="text-danger"></span>
             </div>
             
             <div class="form-group mb-3">
@@ -73,7 +70,7 @@
             
             <div class="form-group mb-4">
                 <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
+                <input type="number" asp-for="Precio" class="form-control" />
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             

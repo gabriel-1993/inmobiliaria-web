@@ -95,7 +95,12 @@ public class ContratosController : Controller
     [Authorize]
     public IActionResult Guardar(int id, Contrato contrato)
     {
-        
+        if (!ModelState.IsValid) // Verifica si el modelo no es valido
+        {
+            ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+            ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+            return View("Edicion", contrato); // Retorna la vista con los errores de validacion
+        }
         if (id == 0)
         {
             int Id_Contrato = repoContrato.Alta(contrato);
@@ -146,7 +151,7 @@ public class ContratosController : Controller
             return NotFound();
         }
 
-        ViewBag.Auditorias =  repoAuditoria.ObtenerPorContrato(id);
+        ViewBag.Auditorias = repoAuditoria.ObtenerPorContrato(id);
         return View(contrato);
     }
 
