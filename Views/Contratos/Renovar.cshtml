@@ -5,26 +5,19 @@
 
 <div class="row my-4 d-flex justify-content-center">
     <div class="col-md-5">
-        <h2 class="text-center">@(Model.Id == 0 ? "Crear Contrato" : "Editar Contrato")</h2>
+        <h2 class="text-center">Renovar Contrato</h2>
         <hr />
 
-        <form asp-action="Guardar">
+        <form asp-action="CrearRenovacion">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="Id" value="@Model.Id" />
 
             <div class="form-group mb-3">
                 <label class="control-label">Inquilino</label>
-                <select class="form-select" name="Id_Inquilino">
+                <select class="form-select" name="Id_Inquilino" readonly>
                     @foreach (var item in ViewBag.Inquilinos)
                     {
-                        @if (item.Id == Model.Id_Inquilino)
-                        {
-                            <option value="@item.Id" selected>@(item.ToString())</option>
-                        }
-                        @if (item.Estado && item.Id != Model.Id_Inquilino)
-                        {
-                            <option value="@item.Id">@(item.ToString())</option>
-                        }
+                        @:<option @(item.Id==Model.Id_Inquilino ? "selected" : "") value="@item.Id">@(item.ToString())</option>
                     }
                 </select>
                 <span asp-validation-for="Id_Inquilino" class="text-danger"></span>
@@ -32,17 +25,10 @@
 
             <div class="form-group mb-3">
                 <label class="control-label">Inmueble</label>
-                <select class="form-select" id="selectInmueble" name="Id_Inmueble" onchange="handleInmuebleChange()">
+                <select class="form-select" id="selectInmueble" name="Id_Inmueble" onchange="handleInmuebleChange()" readonly>
                     @foreach (var item in ViewBag.Inmuebles)
                     {
-                        @if (item.Id == Model.Id_Inmueble)
-                        {
-                            <option value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario" data-precio="@item.Precio" selected>@(item.ToString())</option>
-                        }
-                        @if (item.Disponible && item.Estado && item.Id != Model.Id_Inmueble)
-                        {
-                            <option value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario" data-precio="@item.Precio">@(item.ToString())</option>
-                        }
+                        @:<option @(item.Id==Model.Id_Inmueble ? "selected" : "") value="@item.Id" data-propietario-id="@item.Id_Propietario" data-propietario="@item.Propietario" data-precio="@item.Precio" >@(item.ToString())</option>
                     }
                 </select>
                 <span asp-validation-for="Id_Inmueble" class="text-danger"></span>
@@ -50,7 +36,7 @@
 
             <div class="form-group mb-3">
                 <label class="control-label">Propietario</label>
-                <select class="form-control" id="selectPropietario" name="Id_Propietario" disabled>
+                <select class="form-control" id="selectPropietario" name="Id_Propietario" readonly>
                 </select>
             </div>
 
@@ -80,35 +66,11 @@
                 <span asp-validation-for="FechaFin" class="text-danger"></span>
             </div>
 
-            @if (Model.Id > 0)
-            {
-                <div class="form-group mb-3">
-                    <label asp-for="MontoAlquiler" class="control-label"></label>
-                    <input asp-for="MontoAlquiler" class="form-control" readonly />
-                    <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="FechaTerminacion" class="control-label"></label>
-                    <input asp-for="FechaTerminacion" type="date" class="form-control" id="inputFechaTerminacion" min=@Model.FechaInicio.ToString("yyyy-MM-dd") max=@Model.FechaFin.ToString("yyyy-MM-dd") />
-                    <span asp-validation-for="FechaTerminacion" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-4">
-                    <label asp-for="Multa" class="control-label"></label>
-                    <input asp-for="Multa" class="form-control" id="inputMulta" readonly />
-                    <br>
-                    <span id="pagarMulta" class="d-none"><strong> Por favor cobrar multa</strong>, al guardar se genera automáticamente el pago</span>
-                </div>
-            }
-            else
-            {
                 <div class="form-group mb-4">
                     <label asp-for="MontoAlquiler" class="control-label"></label>
                     <input asp-for="MontoAlquiler" class="form-control" id="inputMontoAlquiler" />
                     <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
                 </div>
-            }
 
             <div class="form-group mb-3 d-grid">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
@@ -120,8 +82,8 @@
 </div>
 
 @section Scripts {
-<script>
-    function handleInmuebleChange() {
+    <script>
+function handleInmuebleChange() {
         var inmuebleSelect = document.getElementById('selectInmueble');
         var propietarioSelect = document.getElementById('selectPropietario');
         var montoAlquiler = document.querySelector('#inputMontoAlquiler');
@@ -154,43 +116,8 @@
             propietarioSelect.appendChild(option);
         }
     }
-
-    // Ejecuta la función al cargar la página si hay un inmueble seleccionado por defecto
     document.addEventListener('DOMContentLoaded', function () {
         handleInmuebleChange();
     });
-
-    document.getElementById("inputFechaTerminacion").addEventListener("change", function () {
-        var fechaTerminacion = this.value;
-        var fechaInicio = '@Model?.FechaInicio.ToString("yyyy-MM-dd")';
-        var fechaFin = '@Model?.FechaFin.ToString("yyyy-MM-dd")';
-        var montoAlquiler = @Model?.MontoAlquiler;
-
-        if (fechaTerminacion) {
-            // Llama a la acción de cálculo de multa
-            $.ajax({
-                url: '@Url.Action("CalcularMulta", "Contratos")',
-                type: 'POST',
-                data: {
-                    fechaTerminacion: fechaTerminacion,
-                    fechaInicio: fechaInicio,
-                    fechaFin: fechaFin,
-                    montoAlquiler: montoAlquiler
-                },
-                success: function (result) {
-                    // Muestra la multa calculada
-                    document.getElementById("inputMulta").value = result.multa;
-                    var a = document.getElementById("pagarMulta");
-                    //Mostrar boton Cobrar multa segun valor input MULTA                    
-                    if(result.multa > 0){ 
-                    a.classList.remove("d-none"); 
-                    }else{
-                    a.classList.add("d-none");  
-                    }
-                }
-            });
-        }
-    });
-</script>
+    </script>
 }
-

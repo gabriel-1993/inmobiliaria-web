@@ -118,16 +118,19 @@ public class ContratosController : Controller
         {
             if (contrato.FechaTerminacion != null)
             {
-                if(contrato.Multa>0){
+                if (contrato.Multa > 0)
+                {
 
-                    int num = repoPago.ObtenerNumeroPagoMax(contrato.Id)+1 ;
-                    repoPago.Agregar(new Pago{Id=0,
-                    Id_Contrato =contrato.Id,
-                    NumeroPago = num,
-                    FechaPago = DateTime.Now,
-                    Detalle = "Multa Pagada",
-                    Importe = contrato.Multa,
-                    Estado = true
+                    int num = repoPago.ObtenerNumeroPagoMax(contrato.Id) + 1;
+                    repoPago.Agregar(new Pago
+                    {
+                        Id = 0,
+                        Id_Contrato = contrato.Id,
+                        NumeroPago = num,
+                        FechaPago = DateTime.Now,
+                        Detalle = "Multa Pagada",
+                        Importe = contrato.Multa,
+                        Estado = true
                     });
                 }
                 repoInmueble.SiDisponible(contrato.Id_Inmueble);
@@ -175,5 +178,28 @@ public class ContratosController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+    public IActionResult Renovar(int id)
+    {
+        ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+        ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+        var contrato = repoContrato.Obtener(id);
+        if (contrato == null)
+        {
+            return NotFound();
+        }
+
+        return View("Renovar", contrato);
+    }
+    public IActionResult CrearRenovacion(Contrato contrato)
+    {
+        int Id_Contrato = repoContrato.Alta(contrato);
+        repoInmueble.NoDisponible(contrato.Id_Inmueble);
+        TempData["Mensaje"] = "Contrato Renovado correctamente.";
+
+        //AGREGAR AUDITORIA POR CREAR CONTRATO
+        int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
+        repoAuditoria.Agregar(Id_Usuario, Id_Contrato, null, "Renovar Contrato", DateTime.Now);
+        return RedirectToAction(nameof(Index));
     }
 }

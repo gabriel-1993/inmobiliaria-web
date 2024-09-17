@@ -55,6 +55,9 @@
                     <a href="/Contratos/Edicion/@item.Id" class="btn btn-sm btn-warning @(item.FechaTerminacion.HasValue ? "disabled" : "")"><i class="bi bi-pen"></i></a>
                     <a href="/Pagos/Index/@item.Id" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Pagos">
                     <i class="bi bi-currency-dollar"></i></a>
+                    @if(item.FechaTerminacion != null){
+                    <a href="/Contratos/Renovar/@item.Id" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Renovar"><i class="bi bi-arrow-clockwise"></i></a>
+                    }
                     @* @if (item.Estado)
                     {
                         <a href="/Contratos/Eliminar/@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></a>
