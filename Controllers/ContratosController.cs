@@ -17,6 +17,8 @@ public class ContratosController : Controller
 
     private RepositorioAuditoria repoAuditoria;
 
+    private RepositorioPago repoPago;
+
     //  REPOSITORIOS PARA MOSTRAR DATOS ESPECIFICOS DEL CONTRATO: DUEÑO,INQUILINO,PROPIEDAD(sino solo tenemos el id)
     //Se recuperan datos en Views--Contratos--Index--linea 3
 
@@ -30,6 +32,7 @@ public class ContratosController : Controller
         // Dentro de cada <Inmueble> tenemos <Propietario> 
         repoInmueble = new RepositorioInmueble();
         repoAuditoria = new RepositorioAuditoria();
+        repoPago = new RepositorioPago();
     }
 
     [Authorize]
@@ -115,6 +118,18 @@ public class ContratosController : Controller
         {
             if (contrato.FechaTerminacion != null)
             {
+                if(contrato.Multa>0){
+
+                    int num = repoPago.ObtenerNumeroPagoMax(contrato.Id)+1 ;
+                    repoPago.Agregar(new Pago{Id=0,
+                    Id_Contrato =contrato.Id,
+                    NumeroPago = num,
+                    FechaPago = DateTime.Now,
+                    Detalle = "Multa Pagada",
+                    Importe = contrato.Multa,
+                    Estado = true
+                    });
+                }
                 repoInmueble.SiDisponible(contrato.Id_Inmueble);
 
                 //AGREGAR AUDITORIA POR FINALIZAR CONTRATO

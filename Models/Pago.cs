@@ -13,6 +13,8 @@ public class Pago
     [Required(ErrorMessage = "El detalle es obligatorio")]
     [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "El detalle solo puede contener letras y espacios")]
     public string? Detalle { get; set; }
-    public double Importe { get; set; }
+    public double? Importe { get; set; }
     public bool Estado { get; set; }
+
+    
 }

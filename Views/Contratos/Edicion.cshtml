@@ -97,7 +97,8 @@
                 <div class="form-group mb-4">
                     <label asp-for="Multa" class="control-label"></label>
                     <input asp-for="Multa" class="form-control" id="inputMulta" readonly />
-                    <span asp-validation-for="Multa" class="text-danger"></span>
+                    <br>
+                    <span id="pagarMulta" class="d-none"><strong> Por favor cobrar multa</strong>, al guardar se genera automáticamente el pago</span>
                 </div>
             }
             else
@@ -109,9 +110,6 @@
                 </div>
             }
 
-            <div class="form-group mb-3 d-grid">
-                <input type="submit" value="Pagar Multa" class="btn btn-danger" id="btnCobrarMulta" style="display: none;" />
-            </div>
             <div class="form-group mb-3 d-grid">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
@@ -182,10 +180,12 @@
                 success: function (result) {
                     // Muestra la multa calculada
                     document.getElementById("inputMulta").value = result.multa;
+                    var a = document.getElementById("pagarMulta");
                     //Mostrar boton Cobrar multa segun valor input MULTA                    
-                    if(  document.getElementById("inputMulta").value > 0){ 
-                    btnCobrarMulta.style.display = "block"; 
-                    }else{btnCobrarMulta.style.display = "none";  
+                    if(result.multa > 0){ 
+                    a.classList.remove("d-none"); 
+                    }else{
+                    a.classList.add("d-none");  
                     }
                 }
             });
