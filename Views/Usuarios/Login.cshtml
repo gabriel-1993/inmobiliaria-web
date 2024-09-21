@@ -1,3 +1,7 @@
+@{
+    ViewData["Title"] = "Acceso";
+}
+
 @if(User?.Identity != null && !User.Identity.IsAuthenticated)
 {
     <div class="d-flex align-items-center justify-content-center vh-100">
@@ -6,7 +10,7 @@
                 <div class="col-md-5">
                     <div class="card">
                         <div class="card-body mx-2">
-                            <h5 class="card-title text-center mt-2 mb-3">Iniciar Sesion</h5>
+                            <h5 class="card-title text-center mt-2 mb-3">Iniciar Sesión</h5>
                             <form asp-controller="Usuarios" asp-action="Entrar">
                                 
                                 <div class="form-floating mb-3">

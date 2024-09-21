@@ -1,11 +1,12 @@
 @model IEnumerable<InmobiliariaVargasHuancaTorrez.Models.Usuario>
 @{
-    ViewData["Title"] = "Listado de Usuarios";
+    ViewData["Title"] = "Usuarios";
     var rnd = new Random();
 }
 
+<div class="my-4">
 <div class="text-center">
-    <h2 class="mt-4">Listado de Usuarios </h2>
+    <h2>Listado de Usuarios </h2>
     <a href="/Usuarios/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Usuario</a>
 </div>
 
@@ -58,3 +59,4 @@
         }
     </tbody>
 </table>
+</div>

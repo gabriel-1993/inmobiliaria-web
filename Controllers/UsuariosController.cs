@@ -206,6 +206,7 @@ public class UsuariosController : Controller
 
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.Name, usuario.Nombre+""),
                 new Claim("Email", usuario.Email+""),
                 new Claim("FullName", usuario.Nombre + " " + usuario.Apellido),
                 new Claim("IdUsuario", usuario.Id+""),

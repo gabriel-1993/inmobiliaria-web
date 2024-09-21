@@ -1,11 +1,12 @@
 @model IEnumerable<InmobiliariaVargasHuancaTorrez.Models.Contrato>
 
 @{
-    ViewData["Title"] = "Listado de Contratos";
+    ViewData["Title"] = "Contratos";
 }
 
+<div class="my-4">
 <div class="text-center">
-    <h2 class="mt-4">Listado de Contratos</h2>
+    <h2>Listado de Contratos</h2>
     <a href="/Contratos/Edicion" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Crear Contrato</a>
 </div>
 
@@ -71,6 +72,7 @@
         }
     </tbody>
 </table>
+</div>
 
 @section Scripts {
     <script>
