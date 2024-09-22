@@ -13,7 +13,7 @@ public class Inmueble
     public int Id_Tipo { get; set; }
 
     [Required(ErrorMessage = "La direccion es obligatoria")]
-    [StringLength(255, MinimumLength = 5, ErrorMessage = "El nombre debe tener entre 5 y 255 caracteres.")]
+    [StringLength(255, MinimumLength = 5, ErrorMessage = "La direccion debe tener entre 5 y 255 caracteres.")]
     public string? Direccion { get; set; }
 
     public string? Uso { get; set; }

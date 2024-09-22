@@ -325,31 +325,16 @@ public class RepositorioInmueble
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
             var query = $@"
-
-
-            SELECT i.*, ti.Descripcion
+            SELECT i.*, t.Descripcion
             FROM inmuebles i
-            LEFT JOIN contratos c
-                ON i.Id = c.Id_Inmueble
-                AND (
-                    (c.FechaTerminacion IS NULL AND (
-                        (c.FechaInicio BETWEEN @FechaDesde AND @FechaHasta)
-                        OR (c.FechaFin BETWEEN @FechaDesde AND @FechaHasta)
-                        OR (@FechaDesde BETWEEN c.FechaInicio AND c.FechaFin)
-                    ))
-                    OR (c.FechaTerminacion IS NOT NULL AND (
-                        (c.FechaInicio BETWEEN @FechaDesde AND @FechaHasta)
-                        OR (c.FechaTerminacion BETWEEN @FechaDesde AND @FechaHasta)
-                        OR (@FechaDesde BETWEEN c.FechaInicio AND c.FechaTerminacion)
-                    ))
-                )
-            LEFT JOIN tipos_inmueble ti
-                ON i.Id_Tipo = ti.Id
-            WHERE c.Id IS NULL
-            AND i.Estado = 1;  -- Solo inmuebles con estado disponible
-
-
-";
+            LEFT JOIN contratos c ON i.id = c.Id_Inmueble
+            LEFT JOIN tipos_inmueble t ON i.Id_Tipo = t.Id
+            WHERE i.Estado = 1 -- Inmuebles con Estado = 1
+            AND (c.Id_Inmueble IS NULL 
+                OR (c.FechaFin < @FechaDesde 
+                OR c.FechaInicio > @FechaHasta
+                OR (c.FechaTerminacion <= @FechaHasta AND c.FechaFin <= @FechaHasta)));
+            ";
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@FechaDesde", fechaDesde);
