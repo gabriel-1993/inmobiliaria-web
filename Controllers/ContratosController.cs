@@ -179,6 +179,8 @@ public class ContratosController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    [Authorize]
     public IActionResult Renovar(int id)
     {
         ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
@@ -191,6 +193,8 @@ public class ContratosController : Controller
 
         return View("Renovar", contrato);
     }
+
+    [Authorize]
     public IActionResult CrearRenovacion(Contrato contrato)
     {
         int Id_Contrato = repoContrato.Alta(contrato);
@@ -202,4 +206,5 @@ public class ContratosController : Controller
         repoAuditoria.Agregar(Id_Usuario, Id_Contrato, null, "Renovar Contrato", DateTime.Now);
         return RedirectToAction(nameof(Index));
     }
+    
 }
