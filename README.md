@@ -2,7 +2,7 @@
 El sistema trata de la informatización de la gestión de alquileres de propiedades inmuebles que realiza una agencia inmobiliaria.
 
 ## Tecnologías utilizadas
-- .NET Framework 8
+- .NET 8
 - Bootstrap 5
 
 ## Acceso a la aplicación:
