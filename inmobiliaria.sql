@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-09-2024 a las 17:35:08
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 22-09-2024 a las 06:56:47
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,12 +30,27 @@ SET time_zone = "+00:00";
 CREATE TABLE `auditoria` (
   `Id` int(11) NOT NULL,
   `Id_Usuario` int(11) NOT NULL,
-  `Id_Contrato` int(11) NOT NULL,
-  `Id_Pago` int(11) NOT NULL,
+  `Id_Contrato` int(11) DEFAULT NULL,
+  `Id_Pago` int(11) DEFAULT NULL,
   `Accion` varchar(255) NOT NULL,
-  `FechaHora` datetime NOT NULL,
-  `Detalle` varchar(255) DEFAULT NULL
+  `FechaHora` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `auditoria`
+--
+
+INSERT INTO `auditoria` (`Id`, `Id_Usuario`, `Id_Contrato`, `Id_Pago`, `Accion`, `FechaHora`) VALUES
+(3, 6, 34, NULL, 'Crear Contrato', '2024-09-22 01:42:50'),
+(4, 6, NULL, 1, 'Crear pago', '2024-09-22 01:43:08'),
+(5, 6, NULL, 2, 'Crear pago', '2024-09-22 01:43:18'),
+(6, 6, NULL, 3, 'Crear pago', '2024-09-22 01:43:25'),
+(7, 6, NULL, 4, 'Crear pago', '2024-09-22 01:43:31'),
+(8, 6, 34, NULL, 'Contrato Finalizado', '2024-09-22 01:43:57'),
+(9, 6, 35, NULL, 'Crear Contrato', '2024-09-22 01:46:13'),
+(10, 6, 36, NULL, 'Crear Contrato', '2024-09-22 01:47:56'),
+(11, 7, NULL, 5, 'Crear pago', '2024-09-22 01:55:00'),
+(12, 7, 35, NULL, 'Contrato Finalizado', '2024-09-22 01:55:38');
 
 -- --------------------------------------------------------
 
@@ -60,8 +75,9 @@ CREATE TABLE `contratos` (
 --
 
 INSERT INTO `contratos` (`Id`, `Id_Inquilino`, `Id_Inmueble`, `FechaInicio`, `FechaFin`, `MontoAlquiler`, `FechaTerminacion`, `Multa`, `Estado`) VALUES
-(6, 8, 4, '2024-09-02', '2025-09-02', 13000.00, '2024-09-19', NULL, 1),
-(7, 1, 1, '2024-09-02', '2025-09-02', 23000.00, NULL, NULL, 1);
+(34, 2, 7, '2024-09-22', '2024-12-22', '90900.00', '2024-12-22', '0.00', 1),
+(35, 1, 1, '2025-01-01', '2025-02-01', '155000.00', '2025-02-01', '0.00', 1),
+(36, 8, 9, '2025-04-04', '2025-05-04', '111000.00', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -78,6 +94,7 @@ CREATE TABLE `inmuebles` (
   `CantidadAmbientes` int(11) NOT NULL,
   `Coordenadas` varchar(100) NOT NULL,
   `Precio` decimal(10,2) NOT NULL,
+  `Disponible` tinyint(1) NOT NULL,
   `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -85,11 +102,15 @@ CREATE TABLE `inmuebles` (
 -- Volcado de datos para la tabla `inmuebles`
 --
 
-INSERT INTO `inmuebles` (`Id`, `Id_Propietario`, `Id_Tipo`, `Direccion`, `Uso`, `CantidadAmbientes`, `Coordenadas`, `Precio`, `Estado`) VALUES
-(1, 2, 1, 'Rivadavia 103', 'Residencial', 3, '100324', 15000000.00, 1),
-(2, 3, 2, 'San Martin 997', 'Residencial', 1, '400,20', 18000000.00, 1),
-(4, 4, 3, 'Ayacucho 123', 'Comercial', 2, '3124132', 21222000.00, 1),
-(5, 5, 1, 'Maipu 765', 'Residencial', 6, '23423', 28900000.00, 0);
+INSERT INTO `inmuebles` (`Id`, `Id_Propietario`, `Id_Tipo`, `Direccion`, `Uso`, `CantidadAmbientes`, `Coordenadas`, `Precio`, `Disponible`, `Estado`) VALUES
+(1, 2, 2, 'Rivadavia 103', 'Residencial', 3, '98,12', '150000.00', 1, 1),
+(2, 3, 2, 'San Martin 997', 'Residencial', 1, '400, 20', '180000.00', 1, 1),
+(4, 4, 3, 'Ayacucho 123', 'Comercial', 2, '31, 12', '310000.00', 1, 1),
+(5, 5, 1, 'Maipu 765', 'Residencial', 6, '23, 23', '289000.00', 1, 1),
+(6, 6, 1, 'LaFinur 432', 'Comercial', 3, '89, -12.23', '120900.00', 1, 0),
+(7, 5, 5, 'Junin 897', 'Residencial', 7, '-64.45, 34.566', '90900.00', 1, 1),
+(8, 3, 1, 'Sarmiento 122', 'Comercial', 2, '76, 45', '220800.00', 1, 1),
+(9, 4, 1, 'Las Heras 533', 'Residencial', 4, '12, -43.34', '110700.00', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -134,6 +155,17 @@ CREATE TABLE `pagos` (
   `Estado` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `pagos`
+--
+
+INSERT INTO `pagos` (`Id`, `Id_Contrato`, `NumeroPago`, `FechaPago`, `Detalle`, `Importe`, `Estado`) VALUES
+(1, 34, 1, '2024-09-22', 'Septiembre', '90900.00', 1),
+(2, 34, 2, '2024-09-22', 'Octubre', '90900.00', 1),
+(3, 34, 3, '2024-09-22', 'Noviembre', '90900.00', 1),
+(4, 34, 4, '2024-09-22', 'Diciembre', '90900.00', 1),
+(5, 35, 1, '2024-09-22', 'Enero', '155000.00', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -155,11 +187,10 @@ CREATE TABLE `propietarios` (
 --
 
 INSERT INTO `propietarios` (`Id`, `Dni`, `Apellido`, `Nombre`, `Telefono`, `Direccion`, `Estado`) VALUES
-(1, '43213246', 'Perez', 'Juan', '+35 (405) 332-0245', 'SL capital, Calle 3 N123', 1),
-(2, '12345678', 'Sosa', 'Maria', '2665323212', 'SL capital, calle 4 n1234', 1),
+(2, '12345678', 'Sosa', 'Mercedes', '2665323212', 'SL capital, calle 4 n1234', 1),
 (3, '12578432', 'Ancelloti', 'Carlo', '+442045770077', 'San Luis, La Punta. m3 c19', 1),
-(4, '10191832', 'Mourinho', 'José', '+87957867680', 'san luis capital m5 c6', 1),
-(5, '89877878', 'Conte', 'Antonio', '+7504157879', 'Maipu 4432', 0),
+(4, '10191832', 'Mourinho', 'José', '+35 (405) 332-0245', 'san luis capital m5 c6', 1),
+(5, '89877878', 'Conte', 'Antonio', '+7504157879', 'Maipu 4432', 1),
 (6, '12034187', 'Makelele', 'Claude', '+50598434111', 'San Martin 221', 0);
 
 -- --------------------------------------------------------
@@ -183,7 +214,9 @@ INSERT INTO `tipos_inmueble` (`Id`, `Descripcion`, `Estado`) VALUES
 (2, 'Depósito', 1),
 (3, 'Casa', 1),
 (4, 'Departamento', 0),
-(5, 'Industrial', 1);
+(5, 'Industrial', 1),
+(15, 'Finca', 1),
+(16, 'Oficina', 1);
 
 -- --------------------------------------------------------
 
@@ -207,9 +240,11 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`Id`, `Nombre`, `Apellido`, `Email`, `Clave`, `Avatar`, `Rol`, `Estado`) VALUES
-(5, 'Nahuel', 'Vargas', 'nv@gmail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1, 1),
-(6, 'Kevin ', 'Huanca', 'kh@gmail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1, 1),
-(7, 'Gabriel', 'Torrez', 'gt@gmail.com', '3A0G2+zJ3luLnlC44+Xe5HGw/9RWJNoyF2XZACvev20=', NULL, 1, 1);
+(6, 'Kevin', 'Huanca', 'kh@gmail.com', 'jm4zDtM42lOFo88ARAy9VDQB8wxhLWlxTGLavwHbOWQ=', '/img\\avatar_6.jpeg', 1, 1),
+(7, 'Nahuel', 'Vargas', 'nv@gmail.com', 'jm4zDtM42lOFo88ARAy9VDQB8wxhLWlxTGLavwHbOWQ=', '/img\\avatar_7.jpeg', 1, 1),
+(8, 'Gabriel', 'Torrez', 'gt@gmail.com', 'jm4zDtM42lOFo88ARAy9VDQB8wxhLWlxTGLavwHbOWQ=', '/img\\avatar_8.jpeg', 1, 1),
+(9, 'Mariano', 'Luzza', 'ml@gmail.com', 'jm4zDtM42lOFo88ARAy9VDQB8wxhLWlxTGLavwHbOWQ=', '/img\\avatar_9.png', 1, 1),
+(10, 'Anders', 'Hejlsberg', 'ah@gmail.com', 'jm4zDtM42lOFo88ARAy9VDQB8wxhLWlxTGLavwHbOWQ=', '/img\\avatar_10.jpeg', 2, 1);
 
 --
 -- Índices para tablas volcadas
@@ -276,19 +311,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `auditoria`
 --
 ALTER TABLE `auditoria`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `contratos`
 --
 ALTER TABLE `contratos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `inmuebles`
 --
 ALTER TABLE `inmuebles`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilinos`
@@ -300,25 +335,25 @@ ALTER TABLE `inquilinos`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `propietarios`
 --
 ALTER TABLE `propietarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_inmueble`
 --
 ALTER TABLE `tipos_inmueble`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas
