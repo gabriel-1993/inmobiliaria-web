@@ -96,6 +96,11 @@ public class UsuariosController : Controller
 
         if (id == 0)
         {
+            if (string.IsNullOrEmpty(usuario.Clave))
+            {
+                ModelState.AddModelError("Clave", "La clave es obligatoria");
+                return View("Edicion", usuario);
+            }
 
             int idNuevo = repo.Agregar(usuario);
             if (usuario.AvatarFile != null)
@@ -237,13 +242,15 @@ public class UsuariosController : Controller
     {
         if (TempData.ContainsKey("Mensaje"))
             ViewBag.Mensaje = TempData["Mensaje"];
-        var usuario = repo.ObtenerPorEmail(User.Claims.First(x => x.Type == "Email").Value);
+        var usuario = repo.Obtener(int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value));
         return View(usuario);
     }
 
     [Authorize]
     public IActionResult PerfilGuardar(Usuario usuario)
     {
+        if (!ModelState.IsValid)
+            return View("Perfil", usuario);
         repo.Modificar(usuario);
         TempData["Mensaje"] = "Datos guardados correctamente.";
         return RedirectToAction("Perfil");
