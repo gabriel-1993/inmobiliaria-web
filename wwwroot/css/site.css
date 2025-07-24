@@ -54,3 +54,11 @@ body {
 .width130px{
     width: 130px;
   }
+
+.primary-color {
+  background-color: #031633;
+}
+
+.border-radius {
+  border-radius: 15px;
+}

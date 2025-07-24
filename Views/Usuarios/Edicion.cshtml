@@ -4,7 +4,7 @@
     var rnd = new Random();
 }
 
-<div class="row mt-4 d-flex justify-content-center">
+<div class="row my-4 d-flex justify-content-center">
     <div class="col-md-5">
         @if (@Model.Id == 0)
         {
@@ -59,7 +59,7 @@
                 <span asp-validation-for="AvatarFile" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
+            <div class="form-group mb-4">
                 <label asp-for="Rol" class="control-label">Rol</label>
                 <select class="form-select" name="Rol">
                     <option value="1" selected="@(Model.Rol==1)">Administrador</option>
@@ -68,13 +68,11 @@
 
             </div>
 
-            <div class="form-group mb-3 d-grid">
+            <div class="form-group mb-3 d-grid gap-3">
                 <input type="submit" value="Guardar" class="btn btn-primary">
+                <a asp-action="Index" class="btn btn-outline-primary">Volver</a>
             </div>
         </form>
 
     </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-primary">Volver</a>
 </div>

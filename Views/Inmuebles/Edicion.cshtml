@@ -4,7 +4,7 @@
 }
 
 
-<div class="row mt-4 d-flex justify-content-center">
+<div class="row my-4 d-flex justify-content-center">
     <div class="col-md-5">
         @if (@Model.Id == 0)
         {
@@ -74,14 +74,12 @@
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             
-            <div class="form-group mb-3 d-grid">
+            <div class="form-group mb-3 d-grid gap-3">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-outline-primary">Volver</a>
             </div>
         </form>
     </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-primary">Volver</a>
 </div>
 
 <form class="modal" tabindex="-1" action="/TipoInmueble/Agregar" method="post" id="modal_guardar_tipo">
