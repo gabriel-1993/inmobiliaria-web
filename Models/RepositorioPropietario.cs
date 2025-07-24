@@ -162,6 +162,22 @@ public class RepositorioPropietario
             }
         }
         return res;
+    }  
+    
+    public int Cantidad()
+    {
+        int res = -1;
+        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        {
+            var query = $@"SELECT COUNT(*) FROM propietarios;";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                connection.Open();
+                res = Convert.ToInt32(command.ExecuteScalar());
+                connection.Close();
+            }
+        }
+        return res;
     }
 
 }

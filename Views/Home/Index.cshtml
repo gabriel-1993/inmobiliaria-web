@@ -1,7 +1,53 @@
 ﻿@{
-    ViewData["Title"] = "Inicio";
+  ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">¡Bienvenido, @User?.Identity?.Name!</h1>
+<div class="text-center mb-5">
+  <h1 class="display-4">¡Bienvenido, @User?.Identity?.Name!</h1>
+</div>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="row">
+
+        <div class="col-md-6 mb-3">
+          <a href="@Url.Action("Index", "Propietarios")" class="text-decoration-none">
+            <div class="p-5 text-white border-radius primary-color">
+              <h2 class="mb-1 fs-1">@ViewBag.Propietarios</h2>
+              <p class="mb-0 fs-2">Propietarios</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <a href="@Url.Action("Index", "Inmuebles")" class="text-decoration-none">
+            <div class="p-5 text-white border-radius primary-color">
+              <h2 class="mb-1 fs-1">@ViewBag.Inmuebles</h2>
+              <p class="mb-0 fs-2">Inmuebles</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <a href="@Url.Action("Index", "Inquilinos")" class="text-decoration-none">
+          <div class="p-5 text-white border-radius primary-color">
+            <h2 class="mb-1 fs-1">@ViewBag.Inquilinos</h2>
+            <p class="mb-0 fs-2">Inquilinos</p>
+          </div>
+          </a>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <a href="@Url.Action("Index", "Contratos")" class="text-decoration-none">
+            <div class="p-5 text-white border-radius primary-color">
+              <h2 class="mb-1 fs-1">@ViewBag.Contratos</h2>
+              <p class="mb-0 fs-2">Contratos</p>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>

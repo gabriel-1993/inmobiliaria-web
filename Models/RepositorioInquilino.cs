@@ -25,8 +25,8 @@ public class RepositorioInquilino
             Apellido = reader.GetString(nameof(Inquilino.Apellido)),
             Nombre = reader.GetString(nameof(Inquilino.Nombre)),
             Telefono = reader.GetString(nameof(Inquilino.Telefono)),
-            TelefonoSecundario = reader.IsDBNull(reader.GetOrdinal(nameof(Inquilino.TelefonoSecundario))) 
-                        ? null 
+            TelefonoSecundario = reader.IsDBNull(reader.GetOrdinal(nameof(Inquilino.TelefonoSecundario)))
+                        ? null
                         : reader.GetString(reader.GetOrdinal(nameof(Inquilino.TelefonoSecundario))),
             Estado = reader.GetBoolean(nameof(Inquilino.Estado))
           });
@@ -149,6 +149,22 @@ public class RepositorioInquilino
         command.Parameters.AddWithValue("@id", id);
         connection.Open();
         res = command.ExecuteNonQuery();
+        connection.Close();
+      }
+    }
+    return res;
+  }
+
+  public int Cantidad()
+  {
+    int res = -1;
+    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    {
+      var query = $@"SELECT COUNT(*) FROM inquilinos;";
+      using (MySqlCommand command = new MySqlCommand(query, connection))
+      {
+        connection.Open();
+        res = Convert.ToInt32(command.ExecuteScalar());
         connection.Close();
       }
     }
