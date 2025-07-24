@@ -2,14 +2,16 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioInmueble
+public class RepositorioInmueble : RepositorioBase
 {
-  string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
+  public RepositorioInmueble(IConfiguration configuration) : base(configuration)
+  {
+  }
 
   public List<Inmueble> ObtenerTodos()
   {
     List<Inmueble> inmuebles = new List<Inmueble>();
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"SELECT
                 i.Id,
@@ -71,7 +73,7 @@ public class RepositorioInmueble
   public Inmueble? Obtener(int id)
   {
     Inmueble? inmueble = null;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"SELECT
                 i.Id,
@@ -136,7 +138,7 @@ public class RepositorioInmueble
   public int Agregar(Inmueble inmueble)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"INSERT INTO inmuebles 
             (Id_Propietario, Id_Tipo, Direccion, Uso, CantidadAmbientes, Coordenadas, Precio, Disponible, Estado) 
@@ -162,7 +164,7 @@ public class RepositorioInmueble
   public int Modificar(Inmueble inmueble)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"UPDATE inmuebles SET
                 Id_Propietario = @id_propietario,
@@ -195,7 +197,7 @@ public class RepositorioInmueble
   public int Desactivar(int id)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = "UPDATE inmuebles SET Estado = 0 WHERE Id = @id";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -212,7 +214,7 @@ public class RepositorioInmueble
   public int Activar(int id)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = "UPDATE inmuebles SET Estado = 1 WHERE Id = @id";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -229,7 +231,7 @@ public class RepositorioInmueble
   public List<Inmueble> ObtenerPorPropietario(int id)
   {
     List<Inmueble> inmuebles = new List<Inmueble>();
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"SELECT
                 i.Id,
@@ -284,7 +286,7 @@ public class RepositorioInmueble
   public int NoDisponible(int id)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = "UPDATE inmuebles SET Disponible = 0 WHERE Id = @id";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -301,7 +303,7 @@ public class RepositorioInmueble
   public int SiDisponible(int id)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = "UPDATE inmuebles SET Disponible = 1 WHERE Id = @id";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -322,7 +324,7 @@ public class RepositorioInmueble
   public List<Inmueble> inmueblesDisponiblesPorFechas(DateTime fechaDesde, DateTime fechaHasta)
   {
     List<Inmueble> inmuebles = new List<Inmueble>();
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"
             SELECT i.*, t.Descripcion
@@ -371,7 +373,7 @@ public class RepositorioInmueble
   public int Cantidad()
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"SELECT COUNT(*) FROM inmuebles;";
       using (MySqlCommand command = new MySqlCommand(query, connection))

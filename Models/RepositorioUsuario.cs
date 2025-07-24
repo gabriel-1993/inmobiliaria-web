@@ -2,14 +2,16 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioUsuario
+public class RepositorioUsuario : RepositorioBase
 {
-    string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
+    public RepositorioUsuario(IConfiguration configuration) : base(configuration)
+    {
+    }
 
     public List<Usuario> ObtenerTodos()
     {
         List<Usuario> usuarios = new List<Usuario>();
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT {nameof(Usuario.Id)}, {nameof(Usuario.Nombre)}, {nameof(Usuario.Apellido)}, {nameof(Usuario.Email)}, {nameof(Usuario.Clave)}, {nameof(Usuario.Avatar)}, {nameof(Usuario.Rol)}, {nameof(Usuario.Estado)} FROM usuarios";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -43,7 +45,7 @@ public class RepositorioUsuario
     public Usuario? Obtener(int id)
     {
         Usuario? usuario = null;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = "SELECT * FROM usuarios WHERE id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -76,7 +78,7 @@ public class RepositorioUsuario
     public int Agregar(Usuario usuario)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"INSERT INTO usuarios (nombre, apellido, email, clave, avatar, rol, estado) VALUES (@nombre, @apellido, @email, @clave, @avatar, @rol, 1);
             SELECT LAST_INSERT_ID();";
@@ -103,7 +105,7 @@ public class RepositorioUsuario
     public int Modificar(Usuario usuario)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             // Construir la consulta condicionalmente
             var query = $@"UPDATE usuarios 
@@ -137,7 +139,7 @@ public class RepositorioUsuario
     public int Baja(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE usuarios SET
                         {nameof(Usuario.Estado)} = @estado
@@ -157,7 +159,7 @@ public class RepositorioUsuario
     public int Habilitar(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE usuarios SET
                         {nameof(Usuario.Estado)} = @estado
@@ -177,7 +179,7 @@ public class RepositorioUsuario
     public Usuario? ObtenerPorEmail(string email)
     {
         Usuario? usuario = null;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var sql = $@"SELECT
 					Id, Nombre, Apellido, Email, Clave, Avatar, Rol, Estado FROM usuarios

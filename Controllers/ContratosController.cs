@@ -8,31 +8,24 @@ namespace InmobiliariaVargasHuancaTorrez.Controllers;
 public class ContratosController : Controller
 {
     private readonly ILogger<ContratosController> _logger;
+    private RepositorioContrato repositorioContrato;
+    private RepositorioInquilino repositorioInquilino;
+    private RepositorioInmueble repositorioInmueble;
+    private RepositorioAuditoria repositorioAuditoria;
+    private RepositorioPago repositorioPago;
 
-    private RepositorioContrato repoContrato;
+  //  REPOSITORIOS PARA MOSTRAR DATOS ESPECIFICOS DEL CONTRATO: DUEÑO,INQUILINO,PROPIEDAD(sino solo tenemos el id)
+  //Se recuperan datos en Views--Contratos--Index--linea 3
 
-    private RepositorioInquilino repoInquilino;
-
-    private RepositorioInmueble repoInmueble;
-
-    private RepositorioAuditoria repoAuditoria;
-
-    private RepositorioPago repoPago;
-
-    //  REPOSITORIOS PARA MOSTRAR DATOS ESPECIFICOS DEL CONTRATO: DUEÑO,INQUILINO,PROPIEDAD(sino solo tenemos el id)
-    //Se recuperan datos en Views--Contratos--Index--linea 3
-
-
-
-    public ContratosController(ILogger<ContratosController> logger)
+    public ContratosController(ILogger<ContratosController> logger, RepositorioContrato repositorioContrato, RepositorioInquilino repositorioInquilino, RepositorioInmueble repositorioInmueble, RepositorioAuditoria repositorioAuditoria, RepositorioPago repositorioPago)
     {
         _logger = logger;
-        repoContrato = new RepositorioContrato();
-        repoInquilino = new RepositorioInquilino();
+        this.repositorioContrato = repositorioContrato;
+        this.repositorioInquilino = repositorioInquilino;
         // Dentro de cada <Inmueble> tenemos <Propietario> 
-        repoInmueble = new RepositorioInmueble();
-        repoAuditoria = new RepositorioAuditoria();
-        repoPago = new RepositorioPago();
+        this.repositorioInmueble = repositorioInmueble;
+        this.repositorioAuditoria = repositorioAuditoria;
+        this.repositorioPago = repositorioPago;
     }
 
     [Authorize]
@@ -40,7 +33,7 @@ public class ContratosController : Controller
     {
         if (TempData.ContainsKey("Mensaje"))
             ViewBag.Mensaje = TempData["Mensaje"];
-        var contratos = repoContrato.ObtenerTodos(); // Lista de Contratos
+        var contratos = repositorioContrato.ObtenerTodos(); // Lista de Contratos
         return View(contratos);
     }
 
@@ -48,8 +41,8 @@ public class ContratosController : Controller
     public IActionResult Edicion(int? id)
 
     {
-        ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
-        ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+        ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+        ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
 
         if (id == null || id == 0)
         {
@@ -59,7 +52,7 @@ public class ContratosController : Controller
         else
         {
             // Obtener el contrato con el id proporcionado
-            var contrato = repoContrato.Obtener(id.Value); // Usa id.Value para obtener el valor int
+            var contrato = repositorioContrato.Obtener(id.Value); // Usa id.Value para obtener el valor int
             return View(contrato);
         }
     }
@@ -100,19 +93,19 @@ public class ContratosController : Controller
     {
         if (!ModelState.IsValid) // Verifica si el modelo no es valido
         {
-            ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
-            ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+            ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+            ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
             return View("Edicion", contrato); // Retorna la vista con los errores de validacion
         }
         if (id == 0)
         {
-            int Id_Contrato = repoContrato.Alta(contrato);
-            repoInmueble.NoDisponible(contrato.Id_Inmueble);
+            int Id_Contrato = repositorioContrato.Alta(contrato);
+            repositorioInmueble.NoDisponible(contrato.Id_Inmueble);
             TempData["Mensaje"] = "Contrato agregado correctamente.";
 
             //AGREGAR AUDITORIA POR CREAR CONTRATO
             int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
-            repoAuditoria.Agregar(Id_Usuario, Id_Contrato, null, "Crear Contrato", DateTime.Now);
+            repositorioAuditoria.Agregar(Id_Usuario, Id_Contrato, null, "Crear Contrato", DateTime.Now);
         }
         else
         {
@@ -121,8 +114,8 @@ public class ContratosController : Controller
                 if (contrato.Multa > 0)
                 {
 
-                    int num = repoPago.ObtenerNumeroPagoMax(contrato.Id) + 1;
-                    repoPago.Agregar(new Pago
+                    int num = repositorioPago.ObtenerNumeroPagoMax(contrato.Id) + 1;
+                    repositorioPago.Agregar(new Pago
                     {
                         Id = 0,
                         Id_Contrato = contrato.Id,
@@ -133,14 +126,14 @@ public class ContratosController : Controller
                         Estado = true
                     });
                 }
-                repoInmueble.SiDisponible(contrato.Id_Inmueble);
+                repositorioInmueble.SiDisponible(contrato.Id_Inmueble);
 
                 //AGREGAR AUDITORIA POR FINALIZAR CONTRATO
                 int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
-                repoAuditoria.Agregar(Id_Usuario, id, null, "Contrato Finalizado", DateTime.Now);
+                repositorioAuditoria.Agregar(Id_Usuario, id, null, "Contrato Finalizado", DateTime.Now);
             }
 
-            repoContrato.Modificar(contrato);
+            repositorioContrato.Modificar(contrato);
             TempData["Mensaje"] = "Contrato editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
@@ -149,27 +142,27 @@ public class ContratosController : Controller
     [Authorize(Policy = "Administrador")]
     public IActionResult Eliminar(int id)
     {
-        repoContrato.Baja(id);
+        repositorioContrato.Baja(id);
         return RedirectToAction(nameof(Index));
     }
 
     [Authorize(Policy = "Administrador")]
     public IActionResult Habilitar(int id)
     {
-        repoContrato.Habilitar(id);
+        repositorioContrato.Habilitar(id);
         return RedirectToAction(nameof(Index));
     }
 
     [Authorize]
     public IActionResult Detalle(int id)
     {
-        var contrato = repoContrato.Obtener(id);
+        var contrato = repositorioContrato.Obtener(id);
         if (contrato == null)
         {
             return NotFound();
         }
 
-        ViewBag.Auditorias = repoAuditoria.ObtenerPorContrato(id);
+        ViewBag.Auditorias = repositorioAuditoria.ObtenerPorContrato(id);
         return View(contrato);
     }
 
@@ -183,9 +176,9 @@ public class ContratosController : Controller
     [Authorize]
     public IActionResult Renovar(int id)
     {
-        ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
-        ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
-        var contrato = repoContrato.Obtener(id);
+        ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+        ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+        var contrato = repositorioContrato.Obtener(id);
         if (contrato == null)
         {
             return NotFound();
@@ -197,13 +190,13 @@ public class ContratosController : Controller
     [Authorize]
     public IActionResult CrearRenovacion(Contrato contrato)
     {
-        int Id_Contrato = repoContrato.Alta(contrato);
-        repoInmueble.NoDisponible(contrato.Id_Inmueble);
+        int Id_Contrato = repositorioContrato.Alta(contrato);
+        repositorioInmueble.NoDisponible(contrato.Id_Inmueble);
         TempData["Mensaje"] = "Contrato Renovado correctamente.";
 
         //AGREGAR AUDITORIA POR CREAR CONTRATO
         int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
-        repoAuditoria.Agregar(Id_Usuario, Id_Contrato, null, "Renovar Contrato", DateTime.Now);
+        repositorioAuditoria.Agregar(Id_Usuario, Id_Contrato, null, "Renovar Contrato", DateTime.Now);
         return RedirectToAction(nameof(Index));
     }
     

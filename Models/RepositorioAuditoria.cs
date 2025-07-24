@@ -2,16 +2,16 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioAuditoria
+public class RepositorioAuditoria : RepositorioBase
 {
-    string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
-
+    public RepositorioAuditoria(IConfiguration configuration) : base(configuration)
+    {
+    }
 
     public int Agregar(int id_Usuario, int? id_Contrato, int? id_Pago, string accion, DateTime fechaHora)
     {
-
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"INSERT INTO auditoria (Id_Usuario, Id_Contrato, Id_Pago, Accion, FechaHora
 ) 
@@ -36,10 +36,9 @@ public class RepositorioAuditoria
 
     public List<Auditoria> ObtenerPorPago(int Id_Pago)
     {
-
         List<Auditoria> auditorias = new List<Auditoria>();
 
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT
                 a.Id,
@@ -85,17 +84,12 @@ public class RepositorioAuditoria
         return auditorias;
     }
 
-
-
-
-
-
     public List<Auditoria> ObtenerPorContrato(int Id_Contrato)
     {
 
         List<Auditoria> auditorias = new List<Auditoria>();
 
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT
                 a.Id,
@@ -140,8 +134,5 @@ public class RepositorioAuditoria
         }
         return auditorias;
     }
-
-
-
 
 }

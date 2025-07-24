@@ -2,16 +2,17 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioContrato
+public class RepositorioContrato : RepositorioBase
 {
-    string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
+  public RepositorioContrato(IConfiguration configuration) : base(configuration)
+  {
+  }
 
-
-    public List<Contrato> ObtenerTodos()
+  public List<Contrato> ObtenerTodos()
     {
         List<Contrato> listaContratos = new List<Contrato>();
 
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"
                         SELECT 
@@ -97,7 +98,7 @@ public class RepositorioContrato
     {
         List<Contrato> listaContratos = new List<Contrato>();
 
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"
                         SELECT 
@@ -185,7 +186,7 @@ public class RepositorioContrato
     {
         Contrato? contrato = null;
 
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"
             SELECT 
@@ -277,7 +278,7 @@ public class RepositorioContrato
     public int Alta(Contrato contrato)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"INSERT INTO contratos 
             ({nameof(Contrato.Id_Inquilino)}, {nameof(Contrato.Id_Inmueble)}, {nameof(Contrato.FechaInicio)},  {nameof(Contrato.FechaFin)},  {nameof(Contrato.MontoAlquiler)}, {nameof(Contrato.FechaTerminacion)}, {nameof(Contrato.Multa)}, {nameof(Contrato.Estado)} )
@@ -306,7 +307,7 @@ public class RepositorioContrato
     public int Modificar(Contrato contrato)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE contratos SET
                     {nameof(Contrato.Id_Inquilino)} = @Id_Inquilino,
@@ -341,7 +342,7 @@ public class RepositorioContrato
     public int Baja(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE contratos SET
                         {nameof(Contrato.Estado)} = @estado
@@ -361,7 +362,7 @@ public class RepositorioContrato
     public int Habilitar(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE contratos SET
                         {nameof(Contrato.Estado)} = @estado
@@ -381,7 +382,7 @@ public class RepositorioContrato
     public int Cantidad()
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT COUNT(*) FROM contratos;";
             using (MySqlCommand command = new MySqlCommand(query, connection))

@@ -2,14 +2,16 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioTipoInmueble
+public class RepositorioTipoInmueble : RepositorioBase
 {
-    string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
+  public RepositorioTipoInmueble(IConfiguration configuration) : base(configuration)
+  {
+  }
 
-    public List<TipoInmueble> ObtenerTodos()
+  public List<TipoInmueble> ObtenerTodos()
     {
         List<TipoInmueble> tipos = new List<TipoInmueble>();
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT {nameof(TipoInmueble.Id)}, {nameof(TipoInmueble.Descripcion)}, {nameof(TipoInmueble.Estado)} FROM tipos_inmueble";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -34,7 +36,7 @@ public class RepositorioTipoInmueble
     public TipoInmueble? Obtener(int id)
     {
         TipoInmueble? tipo = null;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT {nameof(TipoInmueble.Id)}, {nameof(TipoInmueble.Descripcion)}, {nameof(TipoInmueble.Estado)} FROM tipos_inmueble WHERE {nameof(TipoInmueble.Id)} = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -60,7 +62,7 @@ public class RepositorioTipoInmueble
     public int Agregar(TipoInmueble tipo)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"INSERT INTO tipos_inmueble 
             (Descripcion, Estado)
@@ -80,7 +82,7 @@ public class RepositorioTipoInmueble
     public int Modificar(TipoInmueble tipo)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE tipos_inmueble SET
             {nameof(TipoInmueble.Descripcion)} = @descripcion
@@ -100,7 +102,7 @@ public class RepositorioTipoInmueble
     public int Desactivar(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE tipos_inmueble SET Estado = 0 WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -117,7 +119,7 @@ public class RepositorioTipoInmueble
     public int Activar(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE tipos_inmueble SET Estado = 1 WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))

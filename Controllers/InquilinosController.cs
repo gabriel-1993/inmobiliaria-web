@@ -7,12 +7,12 @@ namespace InmobiliariaVargasHuancaTorrez.Controllers;
 public class InquilinosController : Controller
 {
   private readonly ILogger<InquilinosController> _logger;
-  private RepositorioInquilino repo;
+  private RepositorioInquilino repositorioInquilino;
 
-  public InquilinosController(ILogger<InquilinosController> logger)
+  public InquilinosController(ILogger<InquilinosController> logger, RepositorioInquilino repositorioInquilino)
   {
     _logger = logger;
-    repo = new RepositorioInquilino();
+    this.repositorioInquilino = repositorioInquilino;
   }
 
   [Authorize]
@@ -20,14 +20,14 @@ public class InquilinosController : Controller
   {
     if (TempData.ContainsKey("Mensaje"))
         ViewBag.Mensaje = TempData["Mensaje"];
-    var lista = repo.ObtenerTodos();
+    var lista = repositorioInquilino.ObtenerTodos();
     return View(lista);
   }
 
   [Authorize]
   public IActionResult Detalle(int id)
   {
-    var inquilino = repo.Obtener(id);
+    var inquilino = repositorioInquilino.Obtener(id);
     if (inquilino == null)
     {
       return RedirectToAction(nameof(Index));
@@ -45,7 +45,7 @@ public class InquilinosController : Controller
     }
     else
     {
-      var inquilino = repo.Obtener(id);
+      var inquilino = repositorioInquilino.Obtener(id);
       return View(inquilino);
     }
   }
@@ -70,13 +70,13 @@ public class InquilinosController : Controller
 
     if (id == 0)
     {
-      repo.Agregar(inquilino);
+      repositorioInquilino.Agregar(inquilino);
       TempData["Mensaje"] = "Inquilino agregado correctamente.";
 
     }
     else
     {
-      repo.Modificar(inquilino);
+      repositorioInquilino.Modificar(inquilino);
       TempData["Mensaje"] = "Inquilino editado correctamente.";
 
     }
@@ -87,14 +87,14 @@ public class InquilinosController : Controller
   [Authorize(Policy = "Administrador")]
   public IActionResult Eliminar(int id)
   {
-    repo.Desactivar(id);
+    repositorioInquilino.Desactivar(id);
     return RedirectToAction(nameof(Index));
   }
 
   [Authorize(Policy = "Administrador")]
   public IActionResult Activar(int id)
   {
-    repo.Activar(id);
+    repositorioInquilino.Activar(id);
     return RedirectToAction(nameof(Index));
   }
 

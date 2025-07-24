@@ -7,17 +7,17 @@ namespace InmobiliariaVargasHuancaTorrez.Controllers;
 public class PagosController : Controller
 {
     private readonly ILogger<PagosController> _logger;
-    private RepositorioPago repo;
-    private RepositorioContrato repoContrato;
+    private RepositorioPago repositorioPago;
+    private RepositorioContrato repositorioContrato;
 
-    private RepositorioAuditoria repoAuditoria;
+    private RepositorioAuditoria repositorioAuditoria;
 
-    public PagosController(ILogger<PagosController> logger)
+  public PagosController(ILogger<PagosController> logger, RepositorioPago repositorioPago, RepositorioContrato repositorioContrato, RepositorioAuditoria repositorioAuditoria)
     {
         _logger = logger;
-        repo = new RepositorioPago();
-        repoContrato = new RepositorioContrato();
-        repoAuditoria = new RepositorioAuditoria();
+        this.repositorioPago = repositorioPago;
+        this.repositorioContrato = repositorioContrato;
+        this.repositorioAuditoria = repositorioAuditoria;
     }
 
     [Authorize]
@@ -25,21 +25,21 @@ public class PagosController : Controller
     {
         if (TempData.ContainsKey("Mensaje"))
             ViewBag.Mensaje = TempData["Mensaje"];
-        ViewBag.Contrato = repoContrato.Obtener(id);
-        var lista = repo.ObtenerPorContrato(id);
+        ViewBag.Contrato = repositorioContrato.Obtener(id);
+        var lista = repositorioPago.ObtenerPorContrato(id);
         return View(lista);
     }
 
     [Authorize]
     public IActionResult Detalle(int id)
     {
-        var pago = repo.Obtener(id);
+        var pago = repositorioPago.Obtener(id);
         if (pago == null)
         {
             return RedirectToAction(nameof(Index));
         }
 
-        ViewBag.Auditorias = repoAuditoria.ObtenerPorPago(id);
+        ViewBag.Auditorias = repositorioAuditoria.ObtenerPorPago(id);
         return View(pago);
     }
 
@@ -47,15 +47,15 @@ public class PagosController : Controller
     public IActionResult Crear(int id)
     {
         //Guardar numero max de pago con estado 1 en la base, sumar 1 para nuevo pago
-        ViewBag.NumeroPagoMax = repo.ObtenerNumeroPagoMax(id) + 1;
-        ViewBag.Contrato = repoContrato.Obtener(id);
+        ViewBag.NumeroPagoMax = repositorioPago.ObtenerNumeroPagoMax(id) + 1;
+        ViewBag.Contrato = repositorioContrato.Obtener(id);
         return View("Crear", new Pago());
     }
 
     [Authorize]
     public IActionResult Edicion(int id)
     {
-        var pago = repo.Obtener(id);
+        var pago = repositorioPago.Obtener(id);
         return View(pago);
     }
 
@@ -70,16 +70,16 @@ public class PagosController : Controller
 
         if (id == 0)
         {
-            int Id_Pago = repo.Agregar(pago);
+            int Id_Pago = repositorioPago.Agregar(pago);
             TempData["Mensaje"] = "Pago agregado correctamente.";
 
             //AGREGAR AUDITORIA POR NUEVO PAGO
             int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
-            repoAuditoria.Agregar(Id_Usuario, null, Id_Pago, "Crear pago", DateTime.Now);
+            repositorioAuditoria.Agregar(Id_Usuario, null, Id_Pago, "Crear pago", DateTime.Now);
         }
         else
         {
-            repo.Modificar(pago);
+            repositorioPago.Modificar(pago);
             TempData["Mensaje"] = "Pago editado correctamente.";
         }
         return RedirectToAction("Index", "Pagos", new { id = pago.Id_Contrato });
@@ -88,12 +88,12 @@ public class PagosController : Controller
     [Authorize]
     public IActionResult Eliminar(int id)
     {
-        int? idContrato = (repo.Obtener(id))?.Id_Contrato;
-        repo.Desactivar(id);
+        int? idContrato = (repositorioPago.Obtener(id))?.Id_Contrato;
+        repositorioPago.Desactivar(id);
 
         //AGREGAR AUDITORIA POR ELIMINAR PAGO
         int Id_Usuario = int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value);
-        repoAuditoria.Agregar(Id_Usuario, null, id, "Pago Anulado", DateTime.Now);
+        repositorioAuditoria.Agregar(Id_Usuario, null, id, "Pago Anulado", DateTime.Now);
 
         return RedirectToAction("Index", "Pagos", new { id = idContrato });
     }
@@ -101,8 +101,8 @@ public class PagosController : Controller
     [Authorize]
     public IActionResult Habilitar(int id)
     {
-        int? idContrato = (repo.Obtener(id))?.Id_Contrato;
-        repo.Activar(id);
+        int? idContrato = (repositorioPago.Obtener(id))?.Id_Contrato;
+        repositorioPago.Activar(id);
         return RedirectToAction("Index", "Pagos", new { id = idContrato });
     }
 

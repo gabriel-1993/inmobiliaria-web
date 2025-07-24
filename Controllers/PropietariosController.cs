@@ -8,14 +8,14 @@ namespace InmobiliariaVargasHuancaTorrez.Controllers;
 public class PropietariosController : Controller
 {
     private readonly ILogger<PropietariosController> _logger;
-    private RepositorioPropietario repo;
-    private RepositorioInmueble repoInmueble;
+    private RepositorioPropietario repositorioPropietario;
+    private RepositorioInmueble repositorioInmueble;
 
-    public PropietariosController(ILogger<PropietariosController> logger)
+    public PropietariosController(ILogger<PropietariosController> logger, RepositorioPropietario repositorioPropietario, RepositorioInmueble repositorioInmueble)
     {
         _logger = logger;
-        repo = new RepositorioPropietario();
-        repoInmueble = new RepositorioInmueble();
+        this.repositorioPropietario = repositorioPropietario;
+        this.repositorioInmueble = repositorioInmueble;
     }
 
     [Authorize]
@@ -23,7 +23,7 @@ public class PropietariosController : Controller
     {
         if (TempData.ContainsKey("Mensaje"))
             ViewBag.Mensaje = TempData["Mensaje"];
-        var lista = repo.ObtenerTodos();
+        var lista = repositorioPropietario.ObtenerTodos();
         return View(lista);
     }
 
@@ -38,7 +38,7 @@ public class PropietariosController : Controller
         else
         {
             // Obtener el propietario con el id proporcionado
-            var propietario = repo.Obtener(id.Value); // Usa id.Value para obtener el valor int
+            var propietario = repositorioPropietario.Obtener(id.Value); // Usa id.Value para obtener el valor int
             return View(propietario);
         }
     }
@@ -53,12 +53,12 @@ public class PropietariosController : Controller
         }
         if (id == 0)
         {
-            repo.Alta(propietario);
+            repositorioPropietario.Alta(propietario);
             TempData["Mensaje"] = "Propietario agregado correctamente.";
         }
         else
         {
-            repo.Modificar(propietario);
+            repositorioPropietario.Modificar(propietario);
             TempData["Mensaje"] = "Propietario editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
@@ -67,7 +67,7 @@ public class PropietariosController : Controller
     [Authorize(Policy = "Administrador")]
     public IActionResult Eliminar(int id)
     {
-        repo.Baja(id);
+        repositorioPropietario.Baja(id);
         return RedirectToAction(nameof(Index));
     }
 
@@ -75,20 +75,20 @@ public class PropietariosController : Controller
 
     public IActionResult Habilitar(int id)
     {
-        repo.Habilitar(id);
+        repositorioPropietario.Habilitar(id);
         return RedirectToAction(nameof(Index));
     }
 
     [Authorize]
     public IActionResult Detalle(int id)
     {
-        var propietario = repo.Obtener(id);
+        var propietario = repositorioPropietario.Obtener(id);
         if (propietario == null)
         {
             return NotFound();
         }
 
-        ViewBag.Inmuebles = repoInmueble.ObtenerPorPropietario(id);
+        ViewBag.Inmuebles = repositorioInmueble.ObtenerPorPropietario(id);
         return View(propietario);
     }
 

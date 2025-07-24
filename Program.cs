@@ -1,3 +1,4 @@
+using InmobiliariaVargasHuancaTorrez.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,15 @@ builder.Services.AddAuthorization(options =>
 	options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
     options.AddPolicy("Empleado", policy => policy.RequireRole("Empleado"));
 });
+
+builder.Services.AddScoped<RepositorioUsuario>();
+builder.Services.AddScoped<RepositorioPropietario>();
+builder.Services.AddScoped<RepositorioInquilino>();
+builder.Services.AddScoped<RepositorioInmueble>();
+builder.Services.AddScoped<RepositorioTipoInmueble>();
+builder.Services.AddScoped<RepositorioContrato>();
+builder.Services.AddScoped<RepositorioPago>();
+builder.Services.AddScoped<RepositorioAuditoria>();
 
 var app = builder.Build();
 

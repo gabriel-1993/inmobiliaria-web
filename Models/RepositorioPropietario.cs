@@ -2,14 +2,16 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioPropietario
+public class RepositorioPropietario: RepositorioBase
 {
-    string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
+    public RepositorioPropietario(IConfiguration configuration) : base(configuration)
+    {
+    }
 
     public List<Propietario> ObtenerTodos()
     {
         List<Propietario> propietarios = new List<Propietario>();
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT {nameof(Propietario.Id)}, {nameof(Propietario.Dni)}, {nameof(Propietario.Apellido)}, {nameof(Propietario.Nombre)},  {nameof(Propietario.Telefono)},  {nameof(Propietario.Direccion)},  {nameof(Propietario.Estado)} 
 				FROM propietarios";
@@ -40,7 +42,7 @@ public class RepositorioPropietario
     public Propietario? Obtener(int id)
     {
         Propietario? res = null;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT {nameof(Propietario.Id)}, {nameof(Propietario.Dni)}, {nameof(Propietario.Apellido)}, {nameof(Propietario.Nombre)},  {nameof(Propietario.Telefono)},  {nameof(Propietario.Direccion)},  {nameof(Propietario.Estado)} 
 				FROM propietarios
@@ -72,7 +74,7 @@ public class RepositorioPropietario
     public int Alta(Propietario propietario)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"INSERT INTO propietarios 
 				({nameof(Propietario.Dni)}, {nameof(Propietario.Apellido)}, {nameof(Propietario.Nombre)},  {nameof(Propietario.Telefono)},  {nameof(Propietario.Direccion)} )
@@ -99,7 +101,7 @@ public class RepositorioPropietario
     public int Modificar(Propietario propietario)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE propietarios SET
                     {nameof(Propietario.Dni)} = @dni,
@@ -127,7 +129,7 @@ public class RepositorioPropietario
     public int Baja(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE propietarios SET
                         {nameof(Propietario.Estado)} = @estado
@@ -147,7 +149,7 @@ public class RepositorioPropietario
     public int Habilitar(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE propietarios SET
                         {nameof(Propietario.Estado)} = @estado
@@ -167,7 +169,7 @@ public class RepositorioPropietario
     public int Cantidad()
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT COUNT(*) FROM propietarios;";
             using (MySqlCommand command = new MySqlCommand(query, connection))

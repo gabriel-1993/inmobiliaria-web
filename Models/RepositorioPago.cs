@@ -2,14 +2,16 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioPago
+public class RepositorioPago : RepositorioBase
 {
-    string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
+    public RepositorioPago(IConfiguration configuration) : base(configuration)
+    {
+    }
 
     public List<Pago> ObtenerPorContrato(int idContrato)
     {
         List<Pago> pagos = new List<Pago>();
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT
                 p.Id,
@@ -51,7 +53,7 @@ public class RepositorioPago
     public Pago? Obtener(int id)
     {
         Pago? res = null;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"SELECT 
                 {nameof(Pago.Id)}, 
@@ -91,7 +93,7 @@ public class RepositorioPago
     public int Agregar(Pago pago)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"INSERT INTO pagos (Id_Contrato, NumeroPago, FechaPago, Detalle, Importe, Estado) 
                 VALUES (@idContrato, @numeropago, @fechapago, @detalle, @importe, 1);
@@ -115,7 +117,7 @@ public class RepositorioPago
     public int Modificar(Pago pago)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = $@"UPDATE pagos SET 
                 Id_Contrato = @idContrato, 
@@ -142,7 +144,7 @@ public class RepositorioPago
     public int Desactivar(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = "UPDATE pagos SET Estado = 0 WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -159,7 +161,7 @@ public class RepositorioPago
     public int Activar(int id)
     {
         int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             var query = "UPDATE pagos SET Estado = 1 WHERE Id = @id";
             using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -176,7 +178,7 @@ public class RepositorioPago
     public int ObtenerNumeroPagoMax(int idContrato)
     {
         int maxNumeroPago = 0;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
         {
             string query = @"SELECT IFNULL(MAX(NumeroPago), 0) AS MaxNumeroPago 
                          FROM Pagos 

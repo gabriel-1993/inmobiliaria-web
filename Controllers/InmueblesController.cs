@@ -7,19 +7,19 @@ namespace InmobiliariaVargasHuancaTorrez.Controllers;
 public class InmueblesController : Controller
 {
   private readonly ILogger<InmueblesController> _logger;
-  private RepositorioInmueble repo;
-  private RepositorioContrato repoC;
-  private RepositorioPropietario repoPropietario;
-  private RepositorioTipoInmueble repoTipoInmueble;
+  private RepositorioInmueble repositorioInmueble;
+  private RepositorioContrato repositorioContrato;
+  private RepositorioPropietario repositorioPropietario;
+  private RepositorioTipoInmueble repositorioTipoInmueble;
 
 
-  public InmueblesController(ILogger<InmueblesController> logger)
+  public InmueblesController(ILogger<InmueblesController> logger, RepositorioInmueble repositorioInmueble, RepositorioContrato repositorioContrato, RepositorioPropietario repositorioPropietario, RepositorioTipoInmueble repositorioTipoInmueble)
   {
     _logger = logger;
-    repo = new RepositorioInmueble();
-    repoC = new RepositorioContrato();
-    repoPropietario = new RepositorioPropietario();
-    repoTipoInmueble = new RepositorioTipoInmueble();
+    this.repositorioInmueble = repositorioInmueble;
+    this.repositorioContrato = repositorioContrato;
+    this.repositorioPropietario = repositorioPropietario;
+    this.repositorioTipoInmueble = repositorioTipoInmueble;
   }
 
   [Authorize]
@@ -27,7 +27,7 @@ public class InmueblesController : Controller
   {
     if (TempData.ContainsKey("Mensaje"))
       ViewBag.Mensaje = TempData["Mensaje"];
-    var lista = repo.ObtenerTodos();
+    var lista = repositorioInmueble.ObtenerTodos();
     return View(lista);
   }
 
@@ -37,28 +37,28 @@ public class InmueblesController : Controller
   {
     if (TempData.ContainsKey("Mensaje"))
       ViewBag.Mensaje = TempData["Mensaje"];
-    var lista = repo.ObtenerTodos();
+    var lista = repositorioInmueble.ObtenerTodos();
     return View(lista);
   }
 
   [Authorize]
   public IActionResult Detalle(int id)
   {
-    var inmueble = repo.Obtener(id);
+    var inmueble = repositorioInmueble.Obtener(id);
     if (inmueble == null)
     {
       return RedirectToAction(nameof(Index));
     }
-    ViewBag.Contratos = repoC.ObtenerPorInmueble(id);
+    ViewBag.Contratos = repositorioContrato.ObtenerPorInmueble(id);
     return View(inmueble);
   }
 
   [Authorize]
   public IActionResult Edicion(int id)
   {
-    ViewBag.Propietarios = repoPropietario.ObtenerTodos(); // Asigna la lista de propietarios al ViewBag
+    ViewBag.Propietarios = repositorioPropietario.ObtenerTodos(); // Asigna la lista de propietarios al ViewBag
 
-    ViewBag.TipoInmueble = repoTipoInmueble.ObtenerTodos();
+    ViewBag.TipoInmueble = repositorioTipoInmueble.ObtenerTodos();
 
     if (id == 0)
     {
@@ -66,7 +66,7 @@ public class InmueblesController : Controller
     }
     else
     {
-      var inmueble = repo.Obtener(id);
+      var inmueble = repositorioInmueble.Obtener(id);
       return View(inmueble);
     }
   }
@@ -78,19 +78,19 @@ public class InmueblesController : Controller
     //VALIDAR CAMPOS
     if (!ModelState.IsValid) // Verifica si el modelo no es valido
     {
-      ViewBag.Propietarios = repoPropietario.ObtenerTodos();
-      ViewBag.TipoInmueble = repoTipoInmueble.ObtenerTodos();
+      ViewBag.Propietarios = repositorioPropietario.ObtenerTodos();
+      ViewBag.TipoInmueble = repositorioTipoInmueble.ObtenerTodos();
       return View("Edicion", inmueble); // Retorna la vista con los errores de validacion
     }
 
     if (id == 0)
     {
-      repo.Agregar(inmueble);
+      repositorioInmueble.Agregar(inmueble);
       TempData["Mensaje"] = "Inmueble agregado correctamente.";
     }
     else
     {
-      repo.Modificar(inmueble);
+      repositorioInmueble.Modificar(inmueble);
       TempData["Mensaje"] = "Inmueble editado correctamente.";
     }
     return RedirectToAction(nameof(Index));
@@ -100,14 +100,14 @@ public class InmueblesController : Controller
   [Authorize(Policy = "Administrador")]
   public IActionResult Eliminar(int id)
   {
-    repo.Desactivar(id);
+    repositorioInmueble.Desactivar(id);
     return RedirectToAction(nameof(Index));
   }
 
   [Authorize(Policy = "Administrador")]
   public IActionResult Activar(int id)
   {
-    repo.Activar(id);
+    repositorioInmueble.Activar(id);
     return RedirectToAction(nameof(Index));
   }
 
@@ -115,7 +115,7 @@ public class InmueblesController : Controller
   public IActionResult FiltrarContratosFechas(FiltrarFechaView filtrarFechaView)
   {
 
-    var lista = repo.inmueblesDisponiblesPorFechas(filtrarFechaView.fechaDesde, filtrarFechaView.fechaHasta);
+    var lista = repositorioInmueble.inmueblesDisponiblesPorFechas(filtrarFechaView.fechaDesde, filtrarFechaView.fechaHasta);
     return View("Index", lista);
 
   }

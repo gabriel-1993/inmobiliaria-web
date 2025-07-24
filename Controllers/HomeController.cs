@@ -13,13 +13,13 @@ public class HomeController : Controller
   private readonly RepositorioInquilino repositorioInquilino;
   private readonly RepositorioContrato repositorioContrato;
 
-  public HomeController(ILogger<HomeController> logger)
+  public HomeController(ILogger<HomeController> logger, RepositorioPropietario repositorioPropietario, RepositorioInmueble repositorioInmueble, RepositorioInquilino repositorioInquilino, RepositorioContrato repositorioContrato)
   {
     _logger = logger;
-    repositorioPropietario = new RepositorioPropietario();
-    repositorioInmueble = new RepositorioInmueble();
-    repositorioInquilino = new RepositorioInquilino();
-    repositorioContrato = new RepositorioContrato();
+    this.repositorioPropietario = repositorioPropietario;
+    this.repositorioInmueble = repositorioInmueble;
+    this.repositorioInquilino = repositorioInquilino;
+    this.repositorioContrato = repositorioContrato;
   }
 
   [Authorize]

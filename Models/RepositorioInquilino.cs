@@ -2,14 +2,16 @@ using MySql.Data.MySqlClient;
 
 namespace InmobiliariaVargasHuancaTorrez.Models;
 
-public class RepositorioInquilino
+public class RepositorioInquilino : RepositorioBase
 {
-  string ConectionString = "Server=localhost;User=root;Password=;Database=inmobiliaria;SslMode=none";
+  public RepositorioInquilino(IConfiguration configuration) : base(configuration)
+  {
+  }
 
   public List<Inquilino> ObtenerTodos()
   {
     List<Inquilino> inquilinos = new List<Inquilino>();
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"SELECT {nameof(Inquilino.Id)}, {nameof(Inquilino.Dni)}, {nameof(Inquilino.Apellido)}, {nameof(Inquilino.Nombre)}, {nameof(Inquilino.Telefono)}, {nameof(Inquilino.TelefonoSecundario)}, {nameof(Inquilino.Estado)} FROM inquilinos";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -40,7 +42,7 @@ public class RepositorioInquilino
   public Inquilino? Obtener(int id)
   {
     Inquilino? inquilino = null;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = "SELECT * FROM inquilinos WHERE id = @id";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -72,7 +74,7 @@ public class RepositorioInquilino
   public int Agregar(Inquilino inquilino)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"INSERT INTO inquilinos 
       ({nameof(Inquilino.Dni)}, {nameof(Inquilino.Apellido)}, {nameof(Inquilino.Nombre)}, {nameof(Inquilino.Telefono)}, {nameof(Inquilino.TelefonoSecundario)}, {nameof(Inquilino.Estado)}) 
@@ -96,7 +98,7 @@ public class RepositorioInquilino
   public int Modificar(Inquilino inquilino)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"UPDATE inquilinos SET
         {nameof(Inquilino.Dni)} = @dni,
@@ -124,7 +126,7 @@ public class RepositorioInquilino
   public int Desactivar(int id)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = "UPDATE inquilinos SET estado = 0 WHERE id = @id";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -141,7 +143,7 @@ public class RepositorioInquilino
   public int Activar(int id)
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = "UPDATE inquilinos SET estado = 1 WHERE id = @id";
       using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -158,7 +160,7 @@ public class RepositorioInquilino
   public int Cantidad()
   {
     int res = -1;
-    using (MySqlConnection connection = new MySqlConnection(ConectionString))
+    using (MySqlConnection connection = new MySqlConnection(connectionString))
     {
       var query = $@"SELECT COUNT(*) FROM inquilinos;";
       using (MySqlCommand command = new MySqlCommand(query, connection))

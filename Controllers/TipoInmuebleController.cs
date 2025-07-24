@@ -7,12 +7,12 @@ namespace InmobiliariaVargasHuancaTorrez.Controllers;
 public class TipoInmuebleController : Controller
 {
     private readonly ILogger<TipoInmuebleController> _logger;
-    private RepositorioTipoInmueble repo;
+    private RepositorioTipoInmueble repositorioTipoInmueble;
 
-    public TipoInmuebleController(ILogger<TipoInmuebleController> logger)
+    public TipoInmuebleController(ILogger<TipoInmuebleController> logger, RepositorioTipoInmueble repositorioTipoInmueble)
     {
         _logger = logger;
-        repo = new RepositorioTipoInmueble();
+        this.repositorioTipoInmueble = repositorioTipoInmueble;
     }
 
     [Authorize]
@@ -21,14 +21,14 @@ public class TipoInmuebleController : Controller
     {
         if (TempData.ContainsKey("Mensaje"))
             ViewBag.Mensaje = TempData["Mensaje"];
-        var lista = repo.ObtenerTodos();
+        var lista = repositorioTipoInmueble.ObtenerTodos();
         return View(lista);
     }
 
     [Authorize]
     public IActionResult Detalle(int id)
     {
-        var tipoInmueble = repo.Obtener(id);
+        var tipoInmueble = repositorioTipoInmueble.Obtener(id);
         if (tipoInmueble == null)
         {
             return RedirectToAction(nameof(Index));
@@ -46,7 +46,7 @@ public class TipoInmuebleController : Controller
         }
         else
         {
-            var tipoInmueble = repo.Obtener(id);
+            var tipoInmueble = repositorioTipoInmueble.Obtener(id);
             return View(tipoInmueble);
         }
     }
@@ -55,7 +55,7 @@ public class TipoInmuebleController : Controller
     [HttpPost]
     public IActionResult Agregar(TipoInmueble tipoInmueble)
     {
-        repo.Agregar(tipoInmueble);
+        repositorioTipoInmueble.Agregar(tipoInmueble);
         return RedirectToAction("Edicion", "Inmuebles");
     }
 
@@ -70,12 +70,12 @@ public class TipoInmuebleController : Controller
         }
         if (id == 0)
         {
-            repo.Agregar(tipoInmueble);
+            repositorioTipoInmueble.Agregar(tipoInmueble);
             TempData["Mensaje"] = "Tipo de inmueble agregado correctamente.";
         }
         else
         {
-            repo.Modificar(tipoInmueble);
+            repositorioTipoInmueble.Modificar(tipoInmueble);
             TempData["Mensaje"] = "Tipo de inmueble editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
@@ -84,7 +84,7 @@ public class TipoInmuebleController : Controller
     [Authorize(Policy = "Administrador")]
     public IActionResult Eliminar(int id)
     {
-        repo.Desactivar(id);
+        repositorioTipoInmueble.Desactivar(id);
         return RedirectToAction(nameof(Index));
     }
 
@@ -92,7 +92,7 @@ public class TipoInmuebleController : Controller
 
     public IActionResult Activar(int id)
     {
-        repo.Activar(id);
+        repositorioTipoInmueble.Activar(id);
         return RedirectToAction(nameof(Index));
     }
 

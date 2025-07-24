@@ -21,18 +21,15 @@ namespace InmobiliariaVargasHuancaTorrez.Controllers;
 public class UsuariosController : Controller
 {
     private readonly ILogger<UsuariosController> _logger;
-
-    private RepositorioUsuario repo;
-
+    private RepositorioUsuario repositorioUsuario;
     private readonly IConfiguration configuration;
-
     //encontrar wwwroot
     private readonly IWebHostEnvironment environment;
 
-    public UsuariosController(ILogger<UsuariosController> logger, IConfiguration configuration, IWebHostEnvironment environment)
+    public UsuariosController(ILogger<UsuariosController> logger, RepositorioUsuario repositorioUsuario, IConfiguration configuration, IWebHostEnvironment environment)
     {
         _logger = logger;
-        repo = new RepositorioUsuario();
+        this.repositorioUsuario = repositorioUsuario;
         this.configuration = configuration;
         this.environment = environment;
     }
@@ -42,7 +39,7 @@ public class UsuariosController : Controller
     {
         if (TempData.ContainsKey("Mensaje"))
             ViewBag.Mensaje = TempData["Mensaje"];
-        var lista = repo.ObtenerTodos();
+        var lista = repositorioUsuario.ObtenerTodos();
         return View(lista);
     }
 
@@ -55,7 +52,7 @@ public class UsuariosController : Controller
         }
         else
         {
-            var usuario = repo.Obtener(id);
+            var usuario = repositorioUsuario.Obtener(id);
             return View(usuario);
         }
     }
@@ -63,7 +60,7 @@ public class UsuariosController : Controller
     [Authorize(Policy = "Administrador")]
     public IActionResult Detalle(int id)
     {
-        var usuario = repo.Obtener(id);
+        var usuario = repositorioUsuario.Obtener(id);
         if (usuario == null)
         {
             return NotFound();
@@ -102,7 +99,7 @@ public class UsuariosController : Controller
                 return View("Edicion", usuario);
             }
 
-            int idNuevo = repo.Agregar(usuario);
+            int idNuevo = repositorioUsuario.Agregar(usuario);
             if (usuario.AvatarFile != null)
             {
                 string wwwPath = environment.WebRootPath;
@@ -121,7 +118,7 @@ public class UsuariosController : Controller
                     usuario.AvatarFile.CopyTo(stream);
                 }
                 usuario.Id = idNuevo;
-                repo.Modificar(usuario);
+                repositorioUsuario.Modificar(usuario);
             }
             TempData["Mensaje"] = "Usuario agregado correctamente.";
         }
@@ -151,7 +148,7 @@ public class UsuariosController : Controller
                     usuario.AvatarFile.CopyTo(stream);
                 }
             }
-            repo.Modificar(usuario);
+            repositorioUsuario.Modificar(usuario);
             TempData["Mensaje"] = "Usuario editado correctamente.";
         }
         return RedirectToAction(nameof(Index));
@@ -160,7 +157,7 @@ public class UsuariosController : Controller
     [Authorize(Policy = "Administrador")]
     public IActionResult Eliminar(int id)
     {
-        var usuario = repo.Obtener(id);
+        var usuario = repositorioUsuario.Obtener(id);
         if (usuario?.Avatar != null)
         {
             var ruta = Path.Combine(environment.WebRootPath, "img", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
@@ -168,17 +165,17 @@ public class UsuariosController : Controller
             {
                 System.IO.File.Delete(ruta);
                 usuario.Avatar = null;
-                repo.Modificar(usuario);
+                repositorioUsuario.Modificar(usuario);
             }
         }
-        repo.Baja(id);
+        repositorioUsuario.Baja(id);
         return RedirectToAction(nameof(Index));
     }
 
     [Authorize(Policy = "Administrador")]
     public IActionResult Habilitar(int id)
     {
-        repo.Habilitar(id);
+        repositorioUsuario.Habilitar(id);
         return RedirectToAction(nameof(Index));
     }
 
@@ -201,7 +198,7 @@ public class UsuariosController : Controller
                 iterationCount: 1000,
                 numBytesRequested: 256 / 8));
 
-            var usuario = repo.ObtenerPorEmail(login.Email);
+            var usuario = repositorioUsuario.ObtenerPorEmail(login.Email);
             if (usuario == null || usuario.Clave != hashed || !usuario.Estado)
             {
                 ModelState.AddModelError("", "El email o la clave no son correctos");
@@ -242,7 +239,7 @@ public class UsuariosController : Controller
     {
         if (TempData.ContainsKey("Mensaje"))
             ViewBag.Mensaje = TempData["Mensaje"];
-        var usuario = repo.Obtener(int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value));
+        var usuario = repositorioUsuario.Obtener(int.Parse(User.Claims.First(x => x.Type == "IdUsuario").Value));
         return View(usuario);
     }
 
@@ -251,7 +248,7 @@ public class UsuariosController : Controller
     {
         if (!ModelState.IsValid)
             return View("Perfil", usuario);
-        repo.Modificar(usuario);
+        repositorioUsuario.Modificar(usuario);
         TempData["Mensaje"] = "Datos guardados correctamente.";
         return RedirectToAction("Perfil");
     }
@@ -259,7 +256,7 @@ public class UsuariosController : Controller
     [Authorize]
     public IActionResult EliminarAvatar(int id)
     {
-        var usuario = repo.Obtener(id);
+        var usuario = repositorioUsuario.Obtener(id);
         if (usuario?.Avatar != null)
         {
             var ruta = Path.Combine(environment.WebRootPath, "img", $"avatar_{id}" + Path.GetExtension(usuario.Avatar));
@@ -267,7 +264,7 @@ public class UsuariosController : Controller
             {
                 System.IO.File.Delete(ruta);
                 usuario.Avatar = null;
-                repo.Modificar(usuario);
+                repositorioUsuario.Modificar(usuario);
                 TempData["Mensaje"] = "Avatar eliminado correctamente.";
             }
         }
@@ -300,7 +297,7 @@ public class UsuariosController : Controller
                 usuario.AvatarFile.CopyTo(stream);
             }
         }
-        repo.Modificar(usuario);
+        repositorioUsuario.Modificar(usuario);
         TempData["Mensaje"] = "Avatar modificado correctamente.";
         return RedirectToAction("Perfil");
     }
@@ -308,7 +305,7 @@ public class UsuariosController : Controller
     [Authorize]
     public IActionResult CambiarClave(int id, CambioClaveView claves)
     {
-        var usuario = repo.Obtener(id);
+        var usuario = repositorioUsuario.Obtener(id);
         if (!ModelState.IsValid)
         {
             ModelState.AddModelError("", "Escribe algo...");
@@ -334,7 +331,7 @@ public class UsuariosController : Controller
                     iterationCount: 1000,
                     numBytesRequested: 256 / 8));
                 usuario.Clave = hashed;
-                repo.Modificar(usuario);
+                repositorioUsuario.Modificar(usuario);
                 TempData["Mensaje"] = "Clave cambiada correctamente.";
                 return RedirectToAction("Perfil");
             }
